@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate
 # from .forms import UserForm, ProfileForm
+from django.http import HttpResponse
 
 def join(request):
-    print(hello)
+    return HttpResponse('<h1>hello')
     # if request.method == 'POST':
     #     user_form = UserForm(request.POST)
     #     profile_form = ProfileForm(request.POST)
