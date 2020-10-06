@@ -1,0 +1,32 @@
+.base-container{
+    max-width: 720px;
+    text-align: center;
+}
+.btn-green{
+    color: white;
+    background-color: forestgreen;
+    border-color: forestgreen;
+}
+.btn-green:hover{
+    color: white;
+    background-color: rgb(27, 109, 27);
+    border-color: rgb(27, 109, 27);
+}
+
+.header-title{
+    float: left;
+    margin-bottom: 2em;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.header-login{
+    float: right;
+    color: black;
+    background-color: transparent;
+    border-color: forestgreen;;
+    border-width: 2px;
+}
+
+.mastfoot {
+    color: rgba(19, 17, 17, 0.5);
+  }
