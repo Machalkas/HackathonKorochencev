@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
-from .forms import CustomUserCreationForm, SignUpForm
+from .forms import SignUpForm
 
 from django.http import HttpResponse
 
@@ -16,8 +16,6 @@ def join(request):
             logout(request)
             login(request, user)
             return redirect('/')
-        else:
-            print(form.errors)
 
     else:
         form = SignUpForm()

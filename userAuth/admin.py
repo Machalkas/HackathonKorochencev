@@ -12,17 +12,17 @@ class CustomUserAdmin(UserAdmin):
     list_display = ('email', 'first_name', 'last_name','specialization',)
     list_filter = ('email', 'first_name', 'last_name','specialization',)
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
+        (None, {'fields': ('email', 'password','first_name', 'last_name', 'specialization')}),
         ('Permissions', {'fields': ('is_staff', 'is_active')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields': ('email', 'password1', 'password2', 'is_staff', 'is_active')}
+            'fields': ('email', 'first_name', 'last_name', 'specialization', 'password1', 'password2', 'is_staff', 'is_active')}
         ),
     )
-    search_fields = ('email',)
-    ordering = ('email',)
+    search_fields = ('email', 'first_name', 'last_name')
+    ordering = ('email', 'first_name', 'last_name') 
 
 
 admin.site.register(User, CustomUserAdmin) 
