@@ -1,8 +1,8 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
-from .forms import SignUpForm
-
+from .forms import SignUpForm, LoginForm
 from django.http import HttpResponse
+
 
 def join(request):
     if request.method == 'POST':
@@ -16,7 +16,26 @@ def join(request):
             logout(request)
             login(request, user)
             return redirect('/')
-
     else:
         form = SignUpForm()
     return render(request, 'userAuth/join.html', {'form':form})
+
+def user_login(request):
+    if request.method == "POST":
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            email=form.cleaned_data.get('email')
+            user_pass=form.cleaned_data.get('password')
+            user = authenticate(email=email, password=user_pass)
+            if user!=None and user.is_active:
+                    login(request, user)
+                    return redirect('/')   
+            else:
+                return HttpResponse("<h1>Error</h1><a href='/'>main</a>")        
+    else:
+        form = LoginForm()
+    return render(request, 'userAuth/login.html', {'form':form})
+
+def user_logout(request):
+    logout(request)
+    return redirect('/')    

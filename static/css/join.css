@@ -1,0 +1,21 @@
+.form{
+    width: 100%;
+    max-width: 330px;
+    padding: 15px;
+    margin: auto;
+}
+.base-container{
+    max-width: 720px;
+    text-align: center;
+}
+
+.btn-blue{
+    color: white;
+    background-color: royalblue;
+    border-color: royalblue;
+}
+.btn-blue:hover{
+    color: white;
+    background-color: rgb(55, 89, 192);
+    border-color: rgb(55, 89, 192);
+}

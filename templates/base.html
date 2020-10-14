@@ -1,5 +1,3 @@
-{% load static %}
-
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -7,19 +5,15 @@
     <meta charset="utf-8">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
         integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
-    <link rel="stylesheet" href="{% static 'main/css/style.css'%}">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    {% block style %}{% endblock style %}
     <!--адаптация под мобильный формат-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title %}{% endblock %}</title>
 </head>
 
 <body>
 
-    <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-    {% block header %}{% endblock%}
-    {% block main %}{% endblock%}
-    {% block footer %}{% endblock%}
-    </div>
+    {% block content %}{% endblock%}
 
 
 
