@@ -30,10 +30,11 @@ def user_login(request):
             if user!=None and user.is_active:
                     login(request, user)
                     return redirect('/')   
-            else:
-                return HttpResponse("<h1>Error</h1><a href='/'>main</a>")        
+            # else:
+            #     return HttpResponse("<h1>Error</h1><a href='/'>main</a>")        
     else:
         form = LoginForm()
+    form.errors.values
     return render(request, 'userAuth/login.html', {'form':form})
 
 def user_logout(request):
