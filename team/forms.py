@@ -8,6 +8,7 @@ class CreateTeamForm(forms.ModelForm):
     class Meta:
         model=Teams
         fields=('name','description','link')
+        
 
 class AdminPanel(forms.BaseModelForm):
     name=forms.CharField(label="Название" ,max_length=100)
