@@ -2,7 +2,7 @@ from django.db import models
 from django.conf import settings
 
 class Teams(models.Model):
-    name=models.CharField(max_length=100, null=False, verbose_name="Название команды")
+    name=models.CharField(max_length=100, null=False, unique=True, verbose_name="Название команды")
     description=models.TextField(null=True, blank=True, verbose_name="Описание")
     score=models.PositiveSmallIntegerField(default=0, verbose_name="Счет")
     link=models.CharField(max_length=2048 ,null=True, blank=True, verbose_name="Социальные ссылки")

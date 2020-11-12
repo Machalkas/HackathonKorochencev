@@ -2,19 +2,17 @@
 {% load static %}
 
 {% block style %}<link rel="stylesheet" href="{% static 'css/join.css'%}">{% endblock style %}
-{% block title %}Хакатон | Регистрация{% endblock title %}
+{% block title %}Хакатон | Создание команды{% endblock title %}
 {% block content %}
 <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
 <form method="post" class="form mt-5">
   {% csrf_token %}
-  <h2>Регистрация</h2>
+  <h2>Создание команды</h2>
   {% for field in form %}
   {{field.errors}}
   {{field}}
   {% endfor %}
-  <button type="submit" class="btn btn-primary btn-blue mt-3">Регистрация</button>
-  <br>
-  <a href="/auth/login" >Или войти</a>
+  <button type="submit" class="btn btn-primary btn-blue mt-3">Создать</button>
 </form>
 </div>
 {% endblock %}

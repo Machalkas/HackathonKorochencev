@@ -1,7 +1,7 @@
 from django import forms
 from .models import Teams, TeamsLeaders
 
-class CreateTeam(forms.BaseModelForm):
+class CreateTeamForm(forms.ModelForm):
     name=forms.CharField(label="Название" ,max_length=100)
     description=forms.CharField(label="Описание")
     link=forms.CharField(label="Ссылка", max_length=2048)

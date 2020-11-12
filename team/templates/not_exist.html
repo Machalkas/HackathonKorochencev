@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block style %}<link rel="stylesheet" href="{% static 'css/index.css'%}">{% endblock style %}
+{% block title %}Хакатон|Команда{% endblock title %}
+{% block content %}
+    <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <header class="mb-auto">
+            <div class="">
+                <h3 class="header-title">Хакатон</h3>
+                {% if request.user.is_authenticated %}
+                    <p>{{ request.user.first_name }}</p>
+                    <a href="auth/logout" class="btn btn-secondary btn-sm btn-red header-logout">Выйти</a>
+                {% else %}
+                    <a href="auth/login" class="btn btn-secondary btn-sm btn-blue header-login">Войти</a>
+                    <a href="auth/join" class="btn btn-secondary btn-sm btn-green header-join mr-1">Регистрация</a>
+                {% endif %}
+            </div>
+        </header>
+        <main role="main">
+            <h1 class="cover-heading">Вы не состаите в команде</h1>
+            <p class="lead">Создайте команду прямо сейчас и станьте капитаном команды</p>
+            <p class="lead">В дальнейшем вы сможете изменить капитана команды</p>
+            <p class="lead">
+                <a href="/team/create" class="btn btn-lg btn-green">Создать команду</a>
+            </p>
+        </main>
+        <footer class=" mastfoot mt-auto">
+            <div>
+                <p>Machalka</p>
+            </div>
+        </footer>
+
+    </div>
+    {% endblock content %}

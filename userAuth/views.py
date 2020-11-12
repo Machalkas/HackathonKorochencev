@@ -15,7 +15,8 @@ def join(request):
             user = authenticate(email=email, password=user_pass)
             logout(request)
             login(request, user)
-            return redirect('/')
+            url=request.GET.get('next','/')
+            return redirect(url) 
     else:
         form = SignUpForm()
     return render(request, 'userAuth/join.html', {'form':form})
@@ -29,7 +30,8 @@ def user_login(request):
             user = authenticate(email=email, password=user_pass)
             if user!=None and user.is_active:
                     login(request, user)
-                    return redirect('/')   
+                    url=request.GET.get('next','/')
+                    return redirect(url)   
             # else:
             #     return HttpResponse("<h1>Error</h1><a href='/'>main</a>")        
     else:
