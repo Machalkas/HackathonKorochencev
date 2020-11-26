@@ -20,7 +20,10 @@ def generateValidator():
 def viewTeam(request):
     if(request.user.team==None):
         return render(request, "not_exist.html")
-    return render(request, "view_team.html")
+    team_id=request.user.team.pk
+    team=Teams.objects.get(id=team_id)
+    members=User.objects.get
+    return render(request, "view_team.html",{'name':team.name, 'discription':team.description, 'url':team.url})
 
 @login_required(login_url='/auth/login')
 def createTeam(request):
@@ -48,6 +51,7 @@ def createTeam(request):
     else:
         return redirect("/team/view")
 
+@login_required(login_url='/auth/login')
 def addMember(request):
     pass
 # Create your views here.
