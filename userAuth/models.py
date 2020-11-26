@@ -10,9 +10,9 @@ class Manager(UserManager):
         user=self.model(email=email,)
         user.save(using=self._db)
         return user
-    def create_superuser(self, email, password=None):
-        user=self.model(email=email,)
-        user.username=""
+    def create_superuser(self, email, first_name, last_name, password=None):
+        user=self.model(email=email,first_name=first_name,last_name=last_name)
+        # user.username=""
         user.is_staff=True
         user.is_superuser=True
         user.set_password(password)

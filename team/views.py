@@ -5,6 +5,7 @@ from django.http import HttpResponse
 from .models import Teams, TeamsLeaders
 from .forms import CreateTeamForm
 from userAuth.models import User
+from .urlGenerator import generate
 # from django.contrib.auth.models import User
 
 @login_required(login_url='/auth/login')
@@ -20,8 +21,10 @@ def createTeam(request):
             form = CreateTeamForm(request.POST)
             if form.is_valid():
                 team=form.save()
+                team.url=generate()
                 id_team=Teams.objects.get(name=form.cleaned_data.get('name'))
                 user=User.objects.get(pk=request.user.pk)
+                print(team.url)
                 user.team=id_team
                 # tl=TeamsLeaders.objects.all()
                 # tl=TeamsLeaders
