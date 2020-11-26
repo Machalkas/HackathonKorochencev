@@ -8,6 +8,14 @@ from userAuth.models import User
 from .urlGenerator import generate
 # from django.contrib.auth.models import User
 
+def generateValidator():
+    while True:
+        s=generate()
+        try:
+            t=Teams.objects.get(url=s)
+        except:
+            return s
+
 @login_required(login_url='/auth/login')
 def viewTeam(request):
     if(request.user.team==None):
@@ -21,10 +29,9 @@ def createTeam(request):
             form = CreateTeamForm(request.POST)
             if form.is_valid():
                 team=form.save()
-                team.url=generate()
+                team.url=generateValidator()
                 id_team=Teams.objects.get(name=form.cleaned_data.get('name'))
                 user=User.objects.get(pk=request.user.pk)
-                print(team.url)
                 user.team=id_team
                 # tl=TeamsLeaders.objects.all()
                 # tl=TeamsLeaders
