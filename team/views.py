@@ -21,7 +21,7 @@ def viewTeam(request):
     if(request.user.team==None):
         return render(request, "not_exist.html")
     team_id=request.user.team.pk
-    team=Teams.objects.get(id=team_id)
+    team=Teams.objects.get(pk=team_id)
     members=User.objects.get
     return render(request, "view_team.html",{'name':team.name, 'discription':team.description, 'url':team.url})
 
