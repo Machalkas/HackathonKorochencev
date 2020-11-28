@@ -1,0 +1,11 @@
+.score-div{ 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60%;
+    width: 100%;
+}
+.score-p{
+    font-size: 5em;
+    text-shadow: goldenrod 5px 5px 0;
+}
