@@ -18,12 +18,20 @@
             </div>
         </header>
         <main role="main">
-            <h1 class="cover-heading">Вы не состаите в команде</h1>
-            <p class="lead">Создайте команду прямо сейчас и станьте капитаном команды</p>
-            <p class="lead">В дальнейшем вы сможете изменить капитана команды</p>
-            <p class="lead">
-                <a href="/team/create" class="btn btn-lg btn-green">Создать команду</a>
-            </p>
+            {% if request.user.team is None%}
+            <h1>Приглашение</h1>
+            <p>Вас приглашают в группу {{team}}</p>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="team_id" value="{{team}}" class="form-control mt-1">
+                <button type="submit" class="btn btn-primary btn-blue mt-3">Вступить</button>
+            </form>
+            {%else%}
+            <br>
+            <h1>Вы уже состаите в команде</h1>
+            <p>Прежде чем вступить в эту команду, покиньте текущую команду</p>
+            <a href="/team/view" class="btn btn-primary">Моя команда</a>
+            {%endif%}
         </main>
         <!-- <footer class=" mastfoot mt-auto">
             <div>

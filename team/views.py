@@ -9,8 +9,14 @@ from .urlGenerator import generate
 # from django.contrib.auth.models import User
 
 def generateValidator():
+    count=0
+    size=10
     while True:
-        s=generate()
+        count+=1
+        if count>50:
+            size+=1
+        print(size)
+        s=generate(size=size)
         try:
             t=Teams.objects.get(url=s)
         except:
@@ -26,7 +32,7 @@ def viewTeam(request):
     members=[]
     for i in User.objects.filter(team=team_pk):
         members.append(i)
-    return render(request, "view_team.html",{'team_name':team.name, 'discription':team.description, 'url':team.url, 'score':team.score, 'lider_id':lider_id, 'members':members})
+    return render(request, "view_team.html",{'team_name':team.name, 'discription':team.description, 'url':request.META['HTTP_HOST']+'/team/invite/'+team.url, 'score':team.score, 'lider_id':lider_id, 'members':members})
 
 @login_required(login_url='/auth/login')
 def createTeam(request):
@@ -55,6 +61,15 @@ def createTeam(request):
         return redirect("/team/view")
 
 @login_required(login_url='/auth/login')
-def addMember(request):
-    pass
+def addMember(request,key):
+        if request.method=='POST':
+            team_id=request.POST.get('team_id')
+            team_id=Teams.objects.get(name=team_id)
+            user=User.objects.get(pk=request.user.pk)
+            user.team=team_id
+            user.save()
+            return redirect("/team/view")
+        else:
+            team=Teams.objects.get(url=key)
+            return render(request,"invite.html",{'team':team.name})
 # Create your views here.

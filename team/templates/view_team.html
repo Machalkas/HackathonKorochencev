@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
-
+<!-- https://bootstrap-4.ru/docs/4.0/components/navs/#javascript-behavior -->
 {% block header%}
     <link rel="stylesheet" href="{% static 'css/index.css'%}">
     <link rel="stylesheet" href="{% static 'css/svg.css'%}">
@@ -15,8 +15,8 @@
                 {% if request.user.is_authenticated %}
                 <p>{{ request.user.first_name }}</p> <a href="../auth/logout" class="btn btn-secondary btn-sm btn-red header-logout">Выйти</a>
                 {% else %}
-                    <a href="auth/login" class="btn btn-secondary btn-sm btn-blue header-login">Войти</a>
-                    <a href="auth/join" class="btn btn-secondary btn-sm btn-green header-join mr-1">Регистрация</a>
+                    <a href="/auth/login" class="btn btn-secondary btn-sm btn-blue header-login">Войти</a>
+                    <a href="/auth/join" class="btn btn-secondary btn-sm btn-green header-join mr-1">Регистрация</a>
                 {% endif %}
             </div>
         </header>
