@@ -20,10 +20,13 @@ def generateValidator():
 def viewTeam(request):
     if(request.user.team==None):
         return render(request, "not_exist.html")
-    team_id=request.user.team.pk
-    team=Teams.objects.get(pk=team_id)
-    members=User.objects.get
-    return render(request, "view_team.html",{'name':team.name, 'discription':team.description, 'url':team.url})
+    team_pk=request.user.team.pk
+    team=Teams.objects.get(pk=team_pk)
+    lider_id=TeamsLeaders.objects.get(team_id=team_pk).user_id_id
+    members=[]
+    for i in User.objects.filter(team=team_pk):
+        members.append(i)
+    return render(request, "view_team.html",{'team_name':team.name, 'discription':team.description, 'url':team.url, 'lider_id':lider_id, 'members':members})
 
 @login_required(login_url='/auth/login')
 def createTeam(request):

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block style %}<link rel="stylesheet" href="{% static 'css/index.css'%}">{% endblock style %}
+{% block header%}<link rel="stylesheet" href="{% static 'css/index.css'%}">{% endblock header %}
 {% block title %}Хакатон|Команда{% endblock title %}
 {% block content %}
     <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
@@ -9,8 +9,7 @@
             <div class="">
                 <h3 class="header-title">Хакатон</h3>
                 {% if request.user.is_authenticated %}
-                    <p>{{ request.user.first_name }}</p>
-                    <a href="../auth/logout" class="btn btn-secondary btn-sm btn-red header-logout">Выйти</a>
+                <p>{{ request.user.first_name }}</p> <a href="../auth/logout" class="btn btn-secondary btn-sm btn-red header-logout">Выйти</a>
                 {% else %}
                     <a href="auth/login" class="btn btn-secondary btn-sm btn-blue header-login">Войти</a>
                     <a href="auth/join" class="btn btn-secondary btn-sm btn-green header-join mr-1">Регистрация</a>
@@ -18,18 +17,53 @@
             </div>
         </header>
         <main role="main">
-            <h1 class="cover-heading">{{request.user.team.pk}}</h1>
-            <!-- <p class="lead">Создайте команду прямо сейчас и станьте капитаном команды</p>
-            <p class="lead">В дальнейшем вы сможете изменить капитана команды</p>
-            <p class="lead">
-                <a href="/team/create" class="btn btn-lg btn-green">Создать команду</a> -->
-            </p>
+            <h1 class="cover-heading">{{team_name}}</h1>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="score" aria-selected="true">Счет</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="members" aria-selected="false">Участники</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Доп. информация</a>
+                </li>
+              </ul>
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                    ...
+                </div>
+                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                    {%for i in members%}
+                    <div class="row mb-3">
+                        <div class="col-4 themed-grid-col">{{i.first_name}} {{i.last_name}}</div>
+                        <div class="col-4 themed-grid-col"><a href="mailto:{{i.email}}">{{i.email}}</a></div>
+                        <div class="col-4 themed-grid-col">{{i.specialization}}</div>
+                      </div>
+                    {%endfor%}
+                </div>
+                <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
+                    <h3>Описание</h3>
+                    <p>{{discription}}</p>
+                </div>
+              </div>
+            <br>
+            {%if lider_id is request.user.id%}
+            <input type="text" value="{{url}}" id="url" style="min-height: 38px;"> <a onclick="copy()" class="btn btn-primary">Копировать</a>
+            {%endif%}
         </main>
         <footer class=" mastfoot mt-auto">
             <div>
                 <p>Machalka</p>
             </div>
         </footer>
-
     </div>
+    <script>
+        function copy(){
+            copy_text=document.getElementById('url');
+            copy_text.select();
+            copy_text.setSelectionRange(0, 99999);
+            document.execCommand("copy");
+        }
+    </script>
     {% endblock content %}
