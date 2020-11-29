@@ -1,14 +1,14 @@
 var delay=0;
-var number=0;
-function Increase(n,id){
+// var real=0;
+function Increase(n,id,real=0){
+    if (real<n)real+=1;
+    else if(real>n)real-=1;
     el=document.getElementById(id);
-    el.innerHTML=number;
-    number+=1;
-    if(number<=n){
-        if(n-number<35)if(delay<100) delay+=2;
-        setTimeout(Increase,delay,n,id)
+    el.innerHTML=real;
+    if(real!=n){
+        if(n-real<35)if(delay<100) delay+=2;
+        setTimeout(Increase,delay,n,id,real)
     }else{
-        delay=1;
-        number=0
+        delay=0;
     }
 }
