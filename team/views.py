@@ -72,4 +72,5 @@ def addMember(request,key):
         else:
             team=Teams.objects.get(url=key)
             return render(request,"invite.html",{'team':team.name})
+
 # Create your views here.
