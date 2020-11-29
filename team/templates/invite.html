@@ -1,43 +1,44 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block header%}<link rel="stylesheet" href="{% static 'css/index.css'%}">{% endblock header %}
+{% block header%}
+<link rel="stylesheet" href="{% static 'css/index.css'%}">{% endblock header %}
 {% block title %}Хакатон|Команда{% endblock title %}
 {% block content %}
-    <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-        <header class="mb-auto">
-            <div class="">
-                <h3 class="header-title">Хакатон</h3>
-                {% if request.user.is_authenticated %}
-                    <p>{{ request.user.first_name }}</p>
-                    <a href="/auth/logout" class="btn btn-secondary btn-sm btn-red header-logout">Выйти</a>
-                {% else %}
-                    <a href="/auth/login" class="btn btn-secondary btn-sm btn-blue header-login">Войти</a>
-                    <a href="/auth/join" class="btn btn-secondary btn-sm btn-green header-join mr-1">Регистрация</a>
-                {% endif %}
-            </div>
-        </header>
-        <main role="main">
-            {% if request.user.team is None%}
-            <h1>Приглашение</h1>
-            <p>Вас приглашают в группу {{team}}</p>
-            <form method="POST">
-                {% csrf_token %}
-                <input type="hidden" name="team_id" value="{{team}}" class="form-control mt-1">
-                <button type="submit" class="btn btn-primary btn-blue mt-3">Вступить</button>
-            </form>
-            {%else%}
-            <br>
-            <h1>Вы уже состаите в команде</h1>
-            <p>Прежде чем вступить в эту команду, покиньте текущую команду</p>
-            <a href="/team/view" class="btn btn-primary">Моя команда</a>
-            {%endif%}
-        </main>
-        <!-- <footer class=" mastfoot mt-auto">
+<div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="mb-auto">
+        <div class="">
+            <h3 class="header-title">Хакатон</h3>
+            {% if request.user.is_authenticated %}
+            <p>{{ request.user.first_name }}</p>
+            <a href="/auth/logout" class="btn btn-secondary btn-sm btn-red header-logout">Выйти</a>
+            {% else %}
+            <a href="/auth/login" class="btn btn-secondary btn-sm btn-blue header-login">Войти</a>
+            <a href="/auth/join" class="btn btn-secondary btn-sm btn-green header-join mr-1">Регистрация</a>
+            {% endif %}
+        </div>
+    </header>
+    <main role="main">
+        {% if request.user.team is None%}
+        <h1>Приглашение</h1>
+        <p>Вас приглашают в группу {{team}}</p>
+        <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="team_id" value="{{team}}" class="form-control mt-1">
+            <button type="submit" class="btn btn-primary btn-blue mt-3">Вступить</button>
+        </form>
+        {%else%}
+        <br>
+        <h1>Вы уже состаите в команде</h1>
+        <p>Прежде чем вступить в эту команду, покиньте текущую команду</p>
+        <a href="/team/view" class="btn btn-primary">Моя команда</a>
+        {%endif%}
+    </main>
+    <!-- <footer class=" mastfoot mt-auto">
             <div>
                 <p>Machalka</p>
             </div>
         </footer> -->
 
-    </div>
-    {% endblock content %}
+</div>
+{% endblock content %}

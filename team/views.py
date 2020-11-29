@@ -32,7 +32,7 @@ def viewTeam(request):
     members=[]
     for i in User.objects.filter(team=team_pk):
         members.append(i)
-    return render(request, "view_team.html",{'team_name':team.name, 'discription':team.description, 'url':request.META['HTTP_HOST']+'/team/invite/'+team.url, 'score':team.score, 'lider_id':lider_id, 'members':members})
+    return render(request, "view_team.html",{'team_name':team.name, 'discription':team.description,'link':team.link , 'url':request.META['HTTP_HOST']+'/team/invite/'+team.url, 'score':team.score, 'lider_id':lider_id, 'members':members})
 
 @login_required(login_url='/auth/login')
 def createTeam(request):
