@@ -91,5 +91,6 @@
     }
 </script>
 <script src="{% static 'js/number increase.js' %}"></script>
-<script>Increase({{ score }}, 'score');</script>
+<script src="{% static 'js/team/data update.js' %}"></script>
+<script>getScore('{{team_name}}','score');</script>
 {% endblock content %}

@@ -73,4 +73,16 @@ def addMember(request,key):
             team=Teams.objects.get(url=key)
             return render(request,"invite.html",{'team':team.name})
 
+
+def getScore(request):
+    if request.method=="GET":
+        try:
+            team=request.GET.get('team')
+            team=Teams.objects.get(pk=team)
+            return HttpResponse(team.score)
+        except:
+            return HttpResponse("None")
+    else:
+        return HttpResponse(request,'only GET')
+
 # Create your views here.
