@@ -6,4 +6,5 @@ urlpatterns = [
     path('create', views.createTeam, name="create-team"),
     path('invite/<key>/',views.addMember, name="invite"),
     path('score',views.getScore, name="getScore"),
+    path('manageteam',views.manageTeam, name="manageTeam"),
 ]

@@ -18,7 +18,7 @@ xhr.onload = function() {
     p=document.getElementById(ID);
     n=Number(xhr.responseText);
     Increase(n,ID,Number(p.innerHTML));
-    setTimeout(getScore,5000);
+    setTimeout(getScore,60000);
     }
   
   }

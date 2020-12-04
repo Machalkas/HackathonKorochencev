@@ -73,7 +73,15 @@ def addMember(request,key):
             team=Teams.objects.get(url=key)
             return render(request,"invite.html",{'team':team.name})
 
-
+def manageTeam(request):
+    if request.method=="POST":
+        team=request.POST.get('team')
+        disc=request.POST.get('disc')
+        link=request.POST.get('link')
+        print(team)
+        print(disc)
+        print(link)
+        return HttpResponse("Ok")
 def getScore(request):
     if request.method=="GET":
         try:

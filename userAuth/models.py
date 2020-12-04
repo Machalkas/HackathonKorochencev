@@ -31,7 +31,7 @@ class User(AbstractUser):
     objects=Manager()
 
     # def __str__(self):
-    #     return self.specialization
+    #     return self.team.name
 
     class Meta:
         verbose_name = 'Пользователь'
