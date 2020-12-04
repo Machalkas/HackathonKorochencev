@@ -26,8 +26,8 @@ def generateValidator():
 def viewTeam(request):
     if(request.user.team==None):
         return render(request, "not_exist.html")
-    team_pk=request.user.team.pk
-    team=Teams.objects.get(pk=team_pk)
+    team_pk=request.user.team.id
+    team=Teams.objects.get(id=team_pk)
     lider_id=TeamsLeaders.objects.get(team_id=team_pk).user_id_id
     members=[]
     for i in User.objects.filter(team=team_pk):
@@ -42,7 +42,7 @@ def createTeam(request):
             if form.is_valid():
                 team=form.save()
                 team.url=generateValidator()
-                id_team=Teams.objects.get(name=form.cleaned_data.get('name'))
+                id_team=Teams.objects.get(id=team.id)
                 user=User.objects.get(pk=request.user.pk)
                 user.team=id_team
                 # tl=TeamsLeaders.objects.all()
