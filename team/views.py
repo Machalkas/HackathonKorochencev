@@ -32,7 +32,8 @@ def viewTeam(request):
     members=[]
     for i in User.objects.filter(team=team_pk):
         members.append(i)
-    return render(request, "view_team.html",{'team_name':team.name, 'discription':team.description,'link':team.link , 'url':request.META['HTTP_HOST']+'/team/invite/'+team.url, 'score':team.score, 'lider_id':lider_id, 'members':members})
+    form=CreateTeamForm()
+    return render(request, "view_team.html",{'team_name':team.name, 'discription':team.description,'link':team.link , 'url':request.META['HTTP_HOST']+'/team/invite/'+team.url, 'score':team.score, 'lider_id':lider_id, 'members':members, 'form':form})
 
 @login_required(login_url='/auth/login')
 def createTeam(request):
@@ -45,10 +46,6 @@ def createTeam(request):
                 id_team=Teams.objects.get(id=team.id)
                 user=User.objects.get(pk=request.user.pk)
                 user.team=id_team
-                # tl=TeamsLeaders.objects.all()
-                # tl=TeamsLeaders
-                # tl.user_id=user.pk
-                # tl.team_id=id_team
                 tl=TeamsLeaders(user_id=user, team_id=id_team)
                 tl.save()
                 user.save()
@@ -75,13 +72,28 @@ def addMember(request,key):
 
 def manageTeam(request):
     if request.method=="POST":
-        team=request.POST.get('team')
-        disc=request.POST.get('disc')
-        link=request.POST.get('link')
-        print(team)
-        print(disc)
-        print(link)
-        return HttpResponse("Ok")
+        team=Teams.objects.get(id=request.user.team.id)
+        form=CreateTeamForm(request.POST, instance=team)
+        # form.save()
+        if form.is_valid():
+            team.name=request.POST.get('name')
+            team.description=request.POST.get('description')
+            team.link=request.POST.get('link')
+            team.save()
+            return HttpResponse("Ok")
+        else:
+            form=CreateTeamForm()
+            for field in form:
+                print(field.errors)
+    return HttpResponse("not ok")
+
+    #     team=request.POST.get('team')
+    #     disc=request.POST.get('disc')
+    #     link=request.POST.get('link')
+    #     print(team)
+    #     print(disc)
+    #     print(link)
+    #     return HttpResponse("Ok")
 def getScore(request):
     if request.method=="GET":
         try:

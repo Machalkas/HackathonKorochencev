@@ -85,25 +85,29 @@
                 <div id="message" class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
                     <form class="form mt-5" id="form" action=""><!-- method="POST" onsubmit="sendForm()"  -->
                         {% csrf_token %}
-                        <input type="text" name="team" placeholder="Название команды" value="{{team_name}}"
+                        <!-- <input type="text" name="team" placeholder="Название команды" value="{{team_name}}"
                             oninput="checkForm()" class="form-control mt-1" maxlength="100">
                         <textarea type="text" name="disc" placeholder="Описание" value="{{discription}}"
                             oninput="checkForm()" class="form-control mt-1" rows="5">{{discription}}</textarea>
                         <input type="text" name="link" placeholder="Ссылка для связи" value="{{link}}"
-                            oninput="checkForm()" class="form-control mt-1" maxlength="2048">
+                            oninput="checkForm()" class="form-control mt-1" maxlength="2048"> -->
+                            {% for field in form %}
+                            {{field.errors}}
+                            {{field}}
+                            {% endfor %} 
                         <input type="button" value="Отправить" class="btn btn-green mt-3" id="submit" disabled>
                     </form>
                     <div id="result_form"></div> 
                 </div>
                 {%endif%}
                 <script>
-                    let team = document.getElementsByName('team');
-                    let disc = document.getElementsByName('disc');
+                    let team = document.getElementsByName('name');
+                    let disc = document.getElementsByName('description');
                     let link = document.getElementsByName('link');
                     let sub = document.getElementById("submit");
-                    let l_team = team[0].value;
-                    let l_disc = disc[0].value;
-                    let l_link = link[0].value;
+                    let l_team = team[0].value = "{{team_name}}";
+                    let l_disc = disc[0].value = "{{discription}}";
+                    let l_link = link[0].value = "{{link}}";
                     function checkForm() {
                         if ((team[0].value != l_team || disc[0].value != l_disc || link[0].value != l_link) && (team[0].value != '' && disc[0].value != '' && link[0].value != '')) {
                             sub.disabled = false;
