@@ -80,20 +80,20 @@ def manageTeam(request):
             team.description=request.POST.get('description')
             team.link=request.POST.get('link')
             team.save()
-            return HttpResponse("Ok")
+            return HttpResponse('{\"status\":\"ok\",\"data\":{\"name\":\"'+team.name+'\",\"description\":\"'+team.description+'\",\"link\":\"'+team.link+'\"}}')
         else:
-            form=CreateTeamForm()
+            # form=CreateTeamForm()
+            json='{\"status\":\"error\",\"errors\":['
+            j=''
             for field in form:
-                print(field.errors)
-    return HttpResponse("not ok")
-
-    #     team=request.POST.get('team')
-    #     disc=request.POST.get('disc')
-    #     link=request.POST.get('link')
-    #     print(team)
-    #     print(disc)
-    #     print(link)
-    #     return HttpResponse("Ok")
+                if field.errors!=[]:
+                    j+=str(field.errors[0])+','
+                else:
+                    j+='"",'
+            j=j[:len(j)-1]
+            json+=j+']}'
+                # print(field.errors)
+            return HttpResponse(json)
 def getScore(request):
     if request.method=="GET":
         try:

@@ -23,7 +23,7 @@
         </div>
     </header>
     <main role="main" class="inner cover">
-        <h1 class="cover-heading">{{team_name}}</h1>
+        <h1 class="cover-heading" id='name'>{{team_name}}</h1>
 
 
         <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -75,10 +75,10 @@
             </div>
             <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
                 <h3>Описание</h3>
-                <p>{{discription}}</p>
+                <p id='description'>{{discription}}</p>
                 <br>
                 <h3>Ссылка для связи</h3>
-                <a href="{{link}}" target="_blank">{{link}}</a>
+                <a href="{{link}}" target="_blank" id='link'>{{link}}</a>
             </div>
             {%if lider_id is request.user.id%}
             <div class="tab-pane fade show active" id="manage" role="tabpanel" aria-labelledby="manage-tab">
@@ -92,8 +92,7 @@
                         <input type="text" name="link" placeholder="Ссылка для связи" value="{{link}}"
                             oninput="checkForm()" class="form-control mt-1" maxlength="2048"> -->
                             {% for field in form %}
-                            {{field.errors}}
-                            {{field}}
+                            {{field}}<p id="error_{{field.name}}"></p>
                             {% endfor %} 
                         <input type="button" value="Отправить" class="btn btn-green mt-3" id="submit" disabled>
                     </form>
@@ -106,10 +105,10 @@
                     let link = document.getElementsByName('link');
                     let sub = document.getElementById("submit");
                     let l_team = team[0].value = "{{team_name}}";
-                    let l_disc = disc[0].value = "{{discription}}";
+                    let l_desc = disc[0].value = "{{discription}}";
                     let l_link = link[0].value = "{{link}}";
                     function checkForm() {
-                        if ((team[0].value != l_team || disc[0].value != l_disc || link[0].value != l_link) && (team[0].value != '' && disc[0].value != '' && link[0].value != '')) {
+                        if ((team[0].value != l_team || disc[0].value != l_desc || link[0].value != l_link) && (team[0].value != '' && disc[0].value != '' && link[0].value != '')) {
                             sub.disabled = false;
                         }
                         else {
@@ -144,7 +143,7 @@
 <!-- <script>getScore('{{team_name}}','score');</script> -->
 {% endblock content %}
 {%block scripts%}
-<script src="{% static 'js/number increase.js' %}"></script>
-<script src="{% static 'js/team/data update.js' %}"></script>
-<script src="{% static 'js/team/ajax.js' %}"></script>
+<script src="{% static 'number increase.js' %}"></script>
+<script src="{% static 'data update.js' %}"></script>
+<script src="{% static 'ajax.js' %}"></script>
 {%endblock scripts%}

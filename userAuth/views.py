@@ -32,11 +32,10 @@ def user_login(request):
                     login(request, user)
                     url=request.GET.get('next','/')
                     return redirect(url)   
-            # else:
-            #     return HttpResponse("<h1>Error</h1><a href='/'>main</a>")        
+            else:
+                pass        
     else:
         form = LoginForm()
-    form.errors.values
     return render(request, 'userAuth/login.html', {'form':form})
 
 def user_logout(request):
