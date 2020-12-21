@@ -6,6 +6,7 @@ from .models import Teams, TeamsLeaders
 from .forms import CreateTeamForm
 from userAuth.models import User
 from .urlGenerator import generate
+import json as JS
 # from django.contrib.auth.models import User
 
 def generateValidator():
@@ -94,6 +95,13 @@ def manageTeam(request):
             json+=j+']}'
                 # print(field.errors)
             return HttpResponse(json)
+    elif request.method=="DELETE":
+        data=request.body.decode('utf-8').split('&')
+        for i in data:
+             user=User.objects.get(pk=i.split('=')[1])
+             user.team=None
+             user.save()
+        return HttpResponse("OK")
 def getScore(request):
     if request.method=="GET":
         try:

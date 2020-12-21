@@ -35,3 +35,21 @@ $("#submit").click(function () {
     });
     document.getElementById("submit").value = "Отправить";
 });
+
+function leaveTeam(pk) {
+    var send={delete_user:pk};
+    $.ajax({
+        headers: { "X-CSRFToken": token },
+        url: '/team/manageteam',
+        method: 'delete',
+        dataType: 'json',
+        success: function (data) {
+            console.log("OK");
+            window.location="/"
+        },
+        error: function (data) {
+            console.log("error");
+        },
+        data: send
+    });
+}

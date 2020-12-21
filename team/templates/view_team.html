@@ -24,7 +24,37 @@
     </header>
     <main role="main" class="inner cover">
         <h1 class="cover-heading" id='name'>{{team_name}}</h1>
-
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="teamSettings" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Параметры
+            </button>
+            <div class="dropdown-menu" aria-labelledby="teamSettings">
+              <a class="dropdown-item" data-toggle="modal" data-target="#leaveModal">Покинуть команду</a>
+              {%if lider_id is request.user.id%}
+              <a class="dropdown-item" href="#">Управление участниками</a>
+              {%endif%}
+            </div>
+          </div>
+        
+          <div class="modal fade" id="leaveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="exampleModalLongTitle">Вы уверены что хотите покинуть команду?</h5>
+                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                  </button>
+                </div>
+                <div class="modal-body">
+                  Подумайте...
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary btn-green header-join" data-dismiss="modal">Отмена</button>
+                  <button type="button" class="btn btn-primary btn-red header-logout"  data-dismiss="modal" onclick="leaveTeam({{request.user.id}})">Выйти</button>
+                </div>
+              </div>
+            </div>
+          </div>
 
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
@@ -143,6 +173,7 @@
 <!-- <script>getScore('{{team_name}}','score');</script> -->
 {% endblock content %}
 {%block scripts%}
+<script>var token = '{{csrf_token}}';</script>
 <script src="{% static 'number increase.js' %}"></script>
 <script src="{% static 'data update.js' %}"></script>
 <script src="{% static 'ajax.js' %}"></script>
