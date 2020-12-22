@@ -25,7 +25,7 @@
     <main role="main" class="inner cover">
         <h1 class="cover-heading" id='name'>{{team_name}}</h1>
         <div class="dropdown">
-            <button class="btn btn-secondary dropdown-toggle" type="button" id="teamSettings" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <button class="btn dropdown-toggle" type="button" id="teamSettings" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Параметры
             </button>
             <div class="dropdown-menu" aria-labelledby="teamSettings">
@@ -113,7 +113,7 @@
             {%if lider_id is request.user.id%}
             <div class="tab-pane fade show active" id="manage" role="tabpanel" aria-labelledby="manage-tab">
                 <div id="message" class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-                    <form class="form mt-5" id="form" action=""><!-- method="POST" onsubmit="sendForm()"  -->
+                    <form class="form mt-5" id="form" action="">
                         {% csrf_token %}
                         <!-- <input type="text" name="team" placeholder="Название команды" value="{{team_name}}"
                             oninput="checkForm()" class="form-control mt-1" maxlength="100">

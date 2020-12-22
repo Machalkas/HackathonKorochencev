@@ -1,12 +1,14 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
+from django.http import JsonResponse
+from django.core import serializers
 
 from .models import Teams, TeamsLeaders
 from .forms import CreateTeamForm
 from userAuth.models import User
 from .urlGenerator import generate
-import json as JS
+
 # from django.contrib.auth.models import User
 
 def generateValidator():
@@ -72,36 +74,39 @@ def addMember(request,key):
             return render(request,"invite.html",{'team':team.name})
 
 def manageTeam(request):
-    if request.method=="POST":
-        team=Teams.objects.get(id=request.user.team.id)
-        form=CreateTeamForm(request.POST, instance=team)
-        # form.save()
-        if form.is_valid():
-            team.name=request.POST.get('name')
-            team.description=request.POST.get('description')
-            team.link=request.POST.get('link')
-            team.save()
-            return HttpResponse('{\"status\":\"ok\",\"data\":{\"name\":\"'+team.name+'\",\"description\":\"'+team.description+'\",\"link\":\"'+team.link+'\"}}')
+    if request.is_ajax and request.method == "POST":
+        if request.POST.get('action')=='delete-members':
+            # print(request.POST.get("members[0]"))
+            i=0
+            while True:
+                user_pk=request.POST.get("members["+str(i)+"]")
+                if user_pk==None:
+                    break
+                user=User.objects.get(pk=user_pk)
+                user.team=None
+                user.save()
+                i+=1
+            return JsonResponse({"ok":""}, status=200)
+        elif request.POST.get('action')=='update':
+            team=Teams.objects.get(id=request.user.team.id)
+            form=CreateTeamForm(request.POST, instance=team)
+            url=team.url
+            if form.is_valid():
+                # team.name=request.POST.get('name')
+                # team.description=request.POST.get('description')
+                # team.link=request.POST.get('link')
+                team.url=url
+                team.save()
+                return JsonResponse({'data':{'name':team.name, 'description':team.description, 'link':team.link}},status=200)
+            else:
+                return JsonResponse({'error':'форма не валидна'}, status=400)
+        elif request.POST.get('action')=='request-score':
+            pass
+        elif request.POST.get('action')=='request-members':
+            pass
         else:
-            # form=CreateTeamForm()
-            json='{\"status\":\"error\",\"errors\":['
-            j=''
-            for field in form:
-                if field.errors!=[]:
-                    j+=str(field.errors[0])+','
-                else:
-                    j+='"",'
-            j=j[:len(j)-1]
-            json+=j+']}'
-                # print(field.errors)
-            return HttpResponse(json)
-    elif request.method=="DELETE":
-        data=request.body.decode('utf-8').split('&')
-        for i in data:
-             user=User.objects.get(pk=i.split('=')[1])
-             user.team=None
-             user.save()
-        return HttpResponse("OK")
+            return JsonResponse({},status=400)
+    return HttpResponse(request, 'only for AJAX')
 def getScore(request):
     if request.method=="GET":
         try:

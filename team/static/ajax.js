@@ -1,12 +1,15 @@
 $("#submit").click(function () {
     document.getElementById("submit").value = "Загрузка";
+    console.log($("#form").serialize());
+    console.log($("#form"));
     $.ajax({
         url: '/team/manageteam',
         method: 'post',
         dataType: 'html',
-        data: $("#form").serialize(),
+        data: $("#form").serialize()+"&action=update",
         success: function (data) {
-            // console.log(data);
+            console.log(data);
+            console.log("-------");
             var x = JSON.parse(data);
             // console.log(x);
             $('#name').html(x["data"]["name"]);
@@ -21,16 +24,13 @@ $("#submit").click(function () {
         error: function (data) {
             // console.log(data);
             try {
-                var x = JSON.parse(data);
-                $('#result_form').html("")
+                var x = JSON.parse(data["responseText"]);
+                $('#result_form').html(x["error"])
                 // console.log(x);
             }
             catch {
                 $('#result_form').html("Ошибка подключения к серверу")
             }
-            $('#error_name').html(x["errors"][0]);
-            $('#error_description').html(x["errors"][1]);
-            $('#error_link').html(x["errors"][2]);
         }
     });
     document.getElementById("submit").value = "Отправить";
@@ -38,18 +38,21 @@ $("#submit").click(function () {
 
 function leaveTeam(pk) {
     var send={delete_user:pk};
+    send={
+        action:"delete-members",
+        members:{0:pk}
+    };
     $.ajax({
         headers: { "X-CSRFToken": token },
         url: '/team/manageteam',
-        method: 'delete',
+        method: 'post',
         dataType: 'json',
+        data: send,
         success: function (data) {
-            console.log("OK");
-            window.location="/"
+            window.location="/";
         },
         error: function (data) {
             console.log("error");
         },
-        data: send
     });
 }
