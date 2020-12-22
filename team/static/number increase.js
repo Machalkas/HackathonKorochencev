@@ -1,5 +1,5 @@
 var delay=0;
-// var real=0;
+var real=0;
 function Increase(n,id,real=0){
     if(Math.abs(n-real)>=1000){
         var step=100;

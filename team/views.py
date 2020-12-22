@@ -36,7 +36,7 @@ def viewTeam(request):
     for i in User.objects.filter(team=team_pk):
         members.append(i)
     form=CreateTeamForm()
-    return render(request, "view_team.html",{'team_name':team.name, 'discription':team.description,'link':team.link , 'url':request.META['HTTP_HOST']+'/team/invite/'+team.url, 'score':team.score, 'lider_id':lider_id, 'members':members, 'form':form})
+    return render(request, "view_team.html",{'team_pk':team.pk,'team_name':team.name, 'discription':team.description,'link':team.link , 'url':request.META['HTTP_HOST']+'/team/invite/'+team.url, 'score':team.score, 'lider_id':lider_id, 'members':members, 'form':form})
 
 @login_required(login_url='/auth/login')
 def createTeam(request):
@@ -99,19 +99,25 @@ def manageTeam(request):
                 team.save()
                 return JsonResponse({'data':{'name':team.name, 'description':team.description, 'link':team.link}},status=200)
             else:
-                return JsonResponse({'error':'форма не валидна'}, status=400)
-        elif request.POST.get('action')=='request-score':
-            pass
-        elif request.POST.get('action')=='request-members':
-            pass
+                print(form.errors)
+                return JsonResponse({'error':form.errors}, status=400)   
+        else:
+            return JsonResponse({},status=400)
+    elif request.is_ajax and request.method=='GET':
+        if request.GET.get('action')=='request':
+            team=request.GET.get('team')
+            team=Teams.objects.get(pk=team)
+            return JsonResponse({'score':team.score})
         else:
             return JsonResponse({},status=400)
     return HttpResponse(request, 'only for AJAX')
+
+
 def getScore(request):
     if request.method=="GET":
         try:
             team=request.GET.get('team')
-            team=Teams.objects.get(pk=team)
+            team=Teams.objects.get(name=team)
             return HttpResponse(team.score)
         except:
             return HttpResponse("None")

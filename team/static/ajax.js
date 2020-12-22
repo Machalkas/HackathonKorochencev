@@ -25,7 +25,7 @@ $("#submit").click(function () {
             // console.log(data);
             try {
                 var x = JSON.parse(data["responseText"]);
-                $('#result_form').html(x["error"])
+                $('#result_form').html(x["error"]["name"]["0"])
                 // console.log(x);
             }
             catch {
@@ -37,8 +37,7 @@ $("#submit").click(function () {
 });
 
 function leaveTeam(pk) {
-    var send={delete_user:pk};
-    send={
+    let send={
         action:"delete-members",
         members:{0:pk}
     };
@@ -55,4 +54,24 @@ function leaveTeam(pk) {
             console.log("error");
         },
     });
+}
+
+function update(team_id, element_id){
+    let send={
+        action:"request",
+        team:team_id
+    }
+    $.ajax({
+    headers: { "X-CSRFToken": token },
+    url: '/team/manageteam',
+    method: 'get',
+    dataType: 'json',
+    data:send,
+    success: function(data){
+        // console.log(data);
+        let element=document.getElementById(element_id);
+        Increase(Number(data["score"]),element_id,Number(element.innerHTML));
+    }
+    });
+    setTimeout(update,1000,team_id,element_id);
 }

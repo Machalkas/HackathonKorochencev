@@ -79,7 +79,7 @@
 
 
         <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" id="score" role="tabpanel" aria-labelledby="score-tab">
+            <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="score-tab">
                 <h2>Счет</h2>
                 <br>
                 <div class="trophy">
@@ -170,11 +170,11 @@
         document.execCommand("copy");
     }
 </script>
-<!-- <script>getScore('{{team_name}}','score');</script> -->
 {% endblock content %}
 {%block scripts%}
 <script>var token = '{{csrf_token}}';</script>
 <script src="{% static 'number increase.js' %}"></script>
-<script src="{% static 'data update.js' %}"></script>
+<!-- <script src="{% static 'data update.js' %}"></script> -->
 <script src="{% static 'ajax.js' %}"></script>
+<script>update({{team_pk}},'score');</script>
 {%endblock scripts%}
