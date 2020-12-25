@@ -88,7 +88,33 @@ function updateMembers(members){
         if (members[i]['is_lider']==true){
             data+='<svg width="1.3em" height="1.3em"\nviewBox="0 0 16 16" class="bi bi-star-fill" fill="gold" xmlns="http://www.w3.org/2000/svg"\nstyle="margin-left:100%">\n<path\nd="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.283.95l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />\n</svg>\n';
         }
-        data+='</div>\n<div class="col-3 themed-grid-col">'+members[i]["first_name"]+' '+members[i]["last_name"]+'</div>\n<div class="col-3 themed-grid-col"><a href="mailto:'+members[i]["email"]+'">'+members[i]["email"]+'</a></div>\n<div class="col-3 themed-grid-col">'+members[i]["specialization"]+'</div>\n</div>';
+        data+='</div>\n<div class="col-3 themed-grid-col">'+members[i]["first_name"]+' '+members[i]["last_name"]+'</div>\n<div class="col-3 themed-grid-col"><a href="mailto:'+members[i]["email"]+'">'+members[i]["email"]+'</a></div>\n<div class="col-3 themed-grid-col">'+members[i]["specialization"]+'<a class="btn btn-secondary btn-sm btn-red header-logout" id="delete_member'+i+'" onclick="selectMember('+i+')" hidden="true">Удалить</a></div>\n</div>\n';
     }
     div.innerHTML=data;
+ }
+
+ function selectMember(i){
+     let btn=document.getElementById("delete_member"+i);
+    //  console.log(btn.style.color);
+    if(btn.style.color==''){
+        btn.style.color="white";
+        btn.style.backgroundColor="red";
+        btn.style.borderColor="red"
+
+    }
+    else{
+        btn.style.color='';
+        btn.style.backgroundColor="";
+        btn.style.borderColor=""
+    }
+ }
+
+ function activateManageMembers(){
+     let i=0;
+     let bt=document.getElementById('delete_member'+i);
+     while(bt){
+         bt.hidden=state;
+         i++;
+         bt=document.getElementById('delete_member'+i);
+     }
  }

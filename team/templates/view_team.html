@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% load static %}
 <!-- https://bootstrap-4.ru/docs/4.0/components/navs/#javascript-behavior -->
+<!-- https://bootstrap-4.ru/docs/4.0/components/dropdowns/ -->
+<!-- https://bootstrap-4.ru/docs/4.0/components/modal/ -->
 {% block header%}
 <link rel="stylesheet" href="{% static 'css/index.css'%}">
 <link rel="stylesheet" href="{% static 'css/svg.css'%}">
@@ -31,7 +33,7 @@
             <div class="dropdown-menu" aria-labelledby="teamSettings">
               <a class="dropdown-item" data-toggle="modal" data-target="#leaveModal">Покинуть команду</a>
               {%if lider_id is request.user.id%}
-              <a class="dropdown-item" href="#">Управление участниками</a>
+              <a class="dropdown-item" href="#" onclick="activateManageMembers()">Управление участниками</a>
               {%endif%}
             </div>
           </div>
