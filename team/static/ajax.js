@@ -68,7 +68,7 @@ function update(team_id, element_id){
     dataType: 'json',
     data:send,
     success: function(data){
-        console.log(data);
+        // console.log(data);
         let element=document.getElementById(element_id);
         Increase(Number(data["score"]),element_id,Number(element.innerHTML));
         updateMembers(data["members"]);
