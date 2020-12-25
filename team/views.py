@@ -18,7 +18,7 @@ def generateValidator():
         count+=1
         if count>50:
             size+=1
-        print(size)
+        # print(size)
         s=generate(size=size)
         try:
             t=Teams.objects.get(url=s)
@@ -99,7 +99,7 @@ def manageTeam(request):
                 team.save()
                 return JsonResponse({'data':{'name':team.name, 'description':team.description, 'link':team.link}},status=200)
             else:
-                print(form.errors)
+                # print(form.errors)
                 return JsonResponse({'error':form.errors}, status=400)   
         else:
             return JsonResponse({},status=400)
@@ -107,7 +107,16 @@ def manageTeam(request):
         if request.GET.get('action')=='request':
             team=request.GET.get('team')
             team=Teams.objects.get(pk=team)
-            return JsonResponse({'score':team.score})
+            members=User.objects.filter(team=team)
+            lider=TeamsLeaders.objects.get(team_id=team.pk)
+            # print(members[0].first_name)
+            m=[]
+            for i in members:
+                is_lider=False
+                if lider.user_id_id==i.pk:
+                    is_lider=True
+                m.append({'first_name':i.first_name, 'last_name':i.last_name, 'email':i.email, 'specialization':i.specialization, 'is_lider':is_lider})
+            return JsonResponse({'score':team.score,'members':m})
         else:
             return JsonResponse({},status=400)
     return HttpResponse(request, 'only for AJAX')
