@@ -1,3 +1,6 @@
+.btn{
+    border-width: 2px;
+}
 .base-container{
     max-width: 720px;
     text-align: center;
@@ -34,6 +37,16 @@
     background-color: rgb(196, 60, 36);
     border-color: rgb(196, 60, 36);
 }
+.btn-gold{
+    color: black;
+    background-color: white;
+    border-color: gold;
+}
+.btn-gold:hover{
+    color: white;
+    background-color:goldenrod;
+    border-color: gold;
+}
 .header-title{
     float: left;
     margin-bottom: 2em;
@@ -45,7 +58,6 @@
     color: black;
     background-color: transparent;
     border-color: forestgreen;
-    border-width: 2px;
 }
 
 .header-login{
@@ -53,14 +65,12 @@
     color: black;
     background-color: transparent;
     border-color: royalblue;
-    border-width: 2px;
 }
 .header-logout{
     float: right;
     color: black;
     background-color: transparent;
     border-color: tomato;
-    border-width: 2px;
 }
 .mastfoot {
     color: rgba(19, 17, 17, 0.5);

@@ -6,7 +6,7 @@ $("#submit").click(function () {
         url: '/team/manageteam',
         method: 'post',
         dataType: 'html',
-        data: $("#form").serialize()+"&action=update",
+        data: $("#form").serialize() + "&action=update",
         success: function (data) {
             console.log(data);
             console.log("-------");
@@ -37,9 +37,9 @@ $("#submit").click(function () {
 });
 
 function leaveTeam(pk) {
-    let send={
-        action:"delete-members",
-        members:{0:pk}
+    let send = {
+        action: "delete-members",
+        members: { 0: pk }
     };
     $.ajax({
         headers: { "X-CSRFToken": token },
@@ -48,7 +48,7 @@ function leaveTeam(pk) {
         dataType: 'json',
         data: send,
         success: function (data) {
-            window.location="/";
+            window.location = "/";
         },
         error: function (data) {
             console.log("error");
@@ -56,65 +56,183 @@ function leaveTeam(pk) {
     });
 }
 
-function update(team_id, element_id){
-    let send={
-        action:"request",
-        team:team_id
+function update(team_id, element_id) {
+    let send = {
+        action: "request",
+        team: team_id
     }
     $.ajax({
-    headers: { "X-CSRFToken": token },
-    url: '/team/manageteam',
-    method: 'get',
-    dataType: 'json',
-    data:send,
-    success: function(data){
-        // console.log(data);
-        let element=document.getElementById(element_id);
-        Increase(Number(data["score"]),element_id,Number(element.innerHTML));
-        updateMembers(data["members"]);
-    },
-    error:function(){
-        console.log("Ошибка подключения к серверу")
-    }
+        headers: { "X-CSRFToken": token },
+        url: '/team/manageteam',
+        method: 'get',
+        dataType: 'json',
+        data: send,
+        success: function (data) {
+            // console.log(data);
+            let element = document.getElementById(element_id);
+            Increase(Number(data["score"]), element_id, Number(element.innerHTML));
+            updateMembers(data["members"]);
+        },
+        error: function () {
+            console.log("Ошибка подключения к серверу")
+        }
     });
-    setTimeout(update,60000,team_id,element_id);
+    setTimeout(update, 60000, team_id, element_id);
 }
 
-function updateMembers(members){
-    let div=document.getElementById('members');
-    let data="";
-    for (let i=0; i<members.length; i++){
-        data+='<div class="row mb-3">\n<div class="col-1 themed-grid-col">\n';
-        if (members[i]['is_lider']==true){
-            data+='<svg width="1.3em" height="1.3em"\nviewBox="0 0 16 16" class="bi bi-star-fill" fill="gold" xmlns="http://www.w3.org/2000/svg"\nstyle="margin-left:100%">\n<path\nd="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.283.95l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />\n</svg>\n';
+function submitMembers() {
+    let btn = document.getElementById("set_leader0");
+    let j = 0;
+    let id = null;
+    while (btn) {
+        if (btn.style.backgroundColor == "goldenrod") {
+            id = btn.getAttribute('userid');
+            console.log(id);
+            break;
         }
-        data+='</div>\n<div class="col-3 themed-grid-col">'+members[i]["first_name"]+' '+members[i]["last_name"]+'</div>\n<div class="col-3 themed-grid-col"><a href="mailto:'+members[i]["email"]+'">'+members[i]["email"]+'</a></div>\n<div class="col-3 themed-grid-col">'+members[i]["specialization"]+'<a class="btn btn-secondary btn-sm btn-red header-logout" id="delete_member'+i+'" onclick="selectMember('+i+')" hidden="true">Удалить</a></div>\n</div>\n';
+        j += 1;
+        btn = document.getElementById("set_leader" + j);
     }
-    div.innerHTML=data;
- }
+    if (id != null) {
+        let send = {
+            action: "change-leader",
+            member: id,
+            team: team_pk
+        };
+        $.ajax({
+            headers: { "X-CSRFToken": token },
+            url: '/team/manageteam',
+            method: 'post',
+            dataType: 'json',
+            data: send,
+            success: function (data) {
+                update(team_pk, 'score');
+                cancelMembers;
+            },
+            error: function (data) {
+                console.log("error");
+                cancelMembers;
+            },
+        });
+    }
+}
 
- function selectMember(i){
-     let btn=document.getElementById("delete_member"+i);
+function updateMembers(members) {
+    let star_icon = '<svg width="1.3em" height="1.3em"\nviewBox="0 0 16 16" class="bi bi-star-fill" fill="gold" xmlns="http://www.w3.org/2000/svg"\nstyle="margin-left:100%">\n<path\nd="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.283.95l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />\n</svg>\n';
+    let div = document.getElementById('members');
+    let data = "";
+    for (let i = 0; i < members.length; i++) {
+        data += '<div class="row mb-3">\n<div class="col-1 themed-grid-col">\n';
+        if (members[i]['is_lider'] == true) {
+            data += star_icon;
+        }
+        data += '</div>\n<div class="col-3 themed-grid-col">' + members[i]["first_name"] + ' ' + members[i]["last_name"] + '</div>\n<div class="col-3 themed-grid-col"><a href="mailto:' + members[i]["email"] + '">' + members[i]["email"] + '</a></div>\n<div class="col-3 themed-grid-col">' + members[i]["specialization"] + '<a class="btn btn-secondary btn-sm btn-gold" id="set_leader' + i + '" userid=' + members[i]["id"] + ' onclick="selectLeader(' + i + ')" hidden="true">лидер</a> <a class="btn btn-secondary btn-sm btn-red header-logout" id="delete_member' + i + '" userid=' + members[i]["id"] + ' onclick="selectMember(' + i + ')" hidden="true">Удалить</a></div>\n</div>\n';
+    }
+    div.innerHTML = data;
+}
+
+function selectMember(i) {
+    let btn = document.getElementById("delete_member" + i);
     //  console.log(btn.style.color);
-    if(btn.style.color==''){
-        btn.style.color="white";
-        btn.style.backgroundColor="red";
-        btn.style.borderColor="red"
+    if (btn.style.color == '') {
+        btn.style.color = "white";
+        btn.style.backgroundColor = "red";
+        btn.style.borderColor = "red"
 
     }
-    else{
-        btn.style.color='';
-        btn.style.backgroundColor="";
-        btn.style.borderColor=""
+    else {
+        btn.style.color = '';
+        btn.style.backgroundColor = "";
+        btn.style.borderColor = ""
     }
- }
+}
+function selectLeader(i) {
+    let btn = document.getElementById("set_leader0");
+    let j = 0;
+    while (btn) {
+        if (j == i && btn.style.backgroundColor != "goldenrod") {
+            btn.style.backgroundColor = "goldenrod";
+            btn.style.color = "white";
+        }
+        else {
+            btn.style.backgroundColor = "";
+            btn.style.color = "";
+        }
+        j += 1;
+        btn = document.getElementById("set_leader" + j);
+    }
+}
+function activateManageMembers() {
+    let i = 0;
+    let delete_bt = document.getElementById('delete_member' + i);
+    let leader_bt = document.getElementById('set_leader' + i);
+    let sub = document.getElementById('submit_members');
+    let can = document.getElementById('cancel_members');
+    let state = !delete_bt.hidden;
+    sub.hidden = state;
+    can.hidden = state;
+    while (delete_bt) {
+        delete_bt.hidden = state;
+        leader_bt.hidden = state;
+        i++;
+        delete_bt = document.getElementById('delete_member' + i);
+        leader_bt = document.getElementById('set_leader' + i);
+    }
+}
+function cancelMembers() {
+    let i = 0;
+    let delete_bt = document.getElementById('delete_member' + i);
+    let leader_bt = document.getElementById('set_leader' + i);
+    let sub = document.getElementById('submit_members');
+    let can = document.getElementById('cancel_members');
+    let state = true;
+    sub.hidden = state;
+    can.hidden = state;
+    while (delete_bt) {
+        delete_bt.hidden = state;
+        leader_bt.hidden = state;
+        i++;
+        delete_bt = document.getElementById('delete_member' + i);
+        leader_bt = document.getElementById('set_leader' + i);
+    }
+}
 
- function activateManageMembers(){
-     let i=0;
-     let bt=document.getElementById('delete_member'+i);
-     while(bt){
-         bt.hidden=state;
-         i++;
-         bt=document.getElementById('delete_member'+i);
-     }
- }
+function submitMembers() {
+    let btn = document.getElementById("set_leader0");
+    let j = 0;
+    let id = null;
+    while (btn) {
+        if (btn.style.backgroundColor == "goldenrod") {
+            id = btn.getAttribute('userid');
+            console.log(id);
+            break;
+        }
+        j += 1;
+        btn = document.getElementById("set_leader" + j);
+    }
+    if (id != null) {
+        let send = {
+            action: "change-leader",
+            member: id,
+            team: team_pk
+        };
+        $.ajax({
+            headers: { "X-CSRFToken": token },
+            url: '/team/manageteam',
+            method: 'post',
+            dataType: 'json',
+            data: send,
+            success: function (data) {
+                // update(team_pk, 'score');
+                // cancelMembers;
+                window.location = "/";
+            },
+            error: function (data) {
+                console.log("error");
+                cancelMembers;
+            },
+        });
+    }
+}
+
+update(team_pk, 'score');

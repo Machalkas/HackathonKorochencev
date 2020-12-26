@@ -101,21 +101,31 @@ def manageTeam(request):
             else:
                 # print(form.errors)
                 return JsonResponse({'error':form.errors}, status=400)   
+        elif request.POST.get('action')=='change-leader':
+            leader=TeamsLeaders.objects.get(team_id=request.POST.get('team'))
+            user=User.objects.get(pk=request.POST.get('member'))
+            if user.team.pk==int(request.POST.get('team')):
+                leader.user_id_id=user.pk
+                leader.save()
+                return JsonResponse({"ok":""}, status=200)
+            else:
+                return JsonResponse({},status=400)
         else:
             return JsonResponse({},status=400)
+
     elif request.is_ajax and request.method=='GET':
         if request.GET.get('action')=='request':
             team=request.GET.get('team')
             team=Teams.objects.get(pk=team)
             members=User.objects.filter(team=team)
-            lider=TeamsLeaders.objects.get(team_id=team.pk)
+            leader=TeamsLeaders.objects.get(team_id=team.pk)
             # print(members[0].first_name)
             m=[]
             for i in members:
                 is_lider=False
-                if lider.user_id_id==i.pk:
+                if leader.user_id_id==i.pk:
                     is_lider=True
-                m.append({'first_name':i.first_name, 'last_name':i.last_name, 'email':i.email, 'specialization':i.specialization, 'is_lider':is_lider})
+                m.append({'id':i.pk,'first_name':i.first_name, 'last_name':i.last_name, 'email':i.email, 'specialization':i.specialization, 'is_lider':is_lider})
             return JsonResponse({'score':team.score,'members':m})
         else:
             return JsonResponse({},status=400)
@@ -132,5 +142,4 @@ def getScore(request):
             return HttpResponse("None")
     else:
         return HttpResponse(request,'only GET')
-
 # Create your views here.
