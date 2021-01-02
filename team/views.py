@@ -79,19 +79,26 @@ def manageTeam(request):
         if action=='delete-members':
             # user=User.objects.get(pk=request.POST.get('member'))
             if checkPermissions(request)[0]!=True and checkPermissions(request)[1]!=True:
-                return JsonResponse({"error":"Не достаточно прав для выполнения запроса "+action}, status=400)
+                return JsonResponse({"error":"Недостаточно прав для выполнения запроса "+action}, status=400)
             i=0
+            leader=TeamsLeaders.objects.get(team_id=request.user.team)
+            errors=''
             while True:
                 user_pk=request.POST.get("members["+str(i)+"]")
                 if user_pk==None:
                     break
                 user=User.objects.get(pk=user_pk)
-                user.team=None
-                user.save()
+                if leader.user_id_id==int(user_pk):
+                    errors+="Нельзя удалить пользователя "+user.email+" т.к. он является лидером команды\n"
+                else:
+                    user.team=None
+                    user.save()
                 i+=1
+            if errors!='':
+                return JsonResponse({"error":errors}, status=400)
             return JsonResponse({"ok":""}, status=200)
         elif checkPermissions(request)[0]!=True:
-                return JsonResponse({"error":"Не достаточно прав для выполнения запроса "+action}, status=400)
+                return JsonResponse({"error":"Недостаточно прав для выполнения запроса "+action}, status=400)
         elif action=='update':
             team=Teams.objects.get(id=request.user.team.id)
             form=CreateTeamForm(request.POST, instance=team)

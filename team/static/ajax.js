@@ -78,7 +78,7 @@ function update(team_id, element_id) {
             console.log("Ошибка подключения к серверу")
         }
     });
-    setTimeout(update, 1000, team_id, element_id);
+    setTimeout(update, 10000, team_id, element_id);
 }
 
 function submitMembers() {
