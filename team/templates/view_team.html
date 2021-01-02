@@ -31,28 +31,27 @@
               Параметры
             </button>
             <div class="dropdown-menu" aria-labelledby="teamSettings">
-              <a class="dropdown-item" data-toggle="modal" data-target="#leaveModal">Покинуть команду</a>
+              <a class="dropdown-item" data-toggle="modal" onclick="showModal('Вы уверены что хотите покинуть команду?','Подумой...',function(){leaveTeam({{request.user.pk}});},'','Выйти')">Покинуть команду</a>
               {%if lider_id is request.user.id%}
               <a class="dropdown-item" href="#" onclick="activateManageMembers()">Управление участниками</a>
               {%endif%}
             </div>
           </div>
         
-          <div class="modal fade" id="leaveModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLongTitle">Вы уверены что хотите покинуть команду?</h5>
+                  <h5 class="modal-title" id="modal-title"></h5>
                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                   </button>
                 </div>
-                <div class="modal-body">
-                  Подумайте...
+                <div class="modal-body" id="modal-body">
                 </div>
                 <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary btn-green header-join" data-dismiss="modal">Отмена</button>
-                  <button type="button" class="btn btn-primary btn-red header-logout"  data-dismiss="modal" onclick="leaveTeam({{request.user.id}})">Выйти</button>
+                  <button type="button" class="btn btn-secondary btn-green header-join" data-dismiss="modal" id="modal-cancel" onclick=""></button>
+                  <button type="button" class="btn btn-primary btn-red header-logout"  data-dismiss="modal" id="modal-submit" onclick=""></button>
                 </div>
               </div>
             </div>
@@ -93,10 +92,10 @@
             <div class="tab-pane fade" id="members" role="tabpanel" aria-labelledby="members-tab">
                 <!--список участников-->
             </div>
-            <div>
+            <!-- <div>
                 <a class="btn btn-primary btn-green" id="submit_members" hidden="true" onclick="submitMembers()">Применить</a>
                 <a class="btn btn-secondary" id="cancel_members" hidden="true" onclick="cancelMembers()">Отмена</a>
-            </div>
+            </div> -->
             <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
                 <h3>Описание</h3>
                 <p id='description'>{{discription}}</p>
@@ -166,7 +165,7 @@
 </script>
 {% endblock content %}
 {%block scripts%}
-<script>var token = '{{csrf_token}}'; var team_pk={{team_pk}};</script>
+<script>var token = '{{csrf_token}}'; var team_pk={{team_pk}}; var user_pk={{request.user.pk}};</script>
 <script src="{% static 'number increase.js' %}"></script>
 <!-- <script src="{% static 'data update.js' %}"></script> -->
 <script src="{% static 'ajax.js' %}"></script>

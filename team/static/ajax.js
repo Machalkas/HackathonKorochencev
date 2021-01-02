@@ -1,3 +1,5 @@
+var is_hidden=false;
+
 $("#submit").click(function () {
     document.getElementById("submit").value = "Загрузка";
     console.log($("#form").serialize());
@@ -118,6 +120,7 @@ function submitMembers() {
 }
 
 function updateMembers(members) {
+    let buttons ='<a class="btn btn-primary btn-green" id="submit_members" hidden="'+is_hidden+'" onclick="submitMembers()">Применить</a>\n<a class="btn btn-secondary" id="cancel_members" hidden="'+is_hidden+'" onclick="cancelMembers()">Отмена</a>\n';
     let star_icon = '<svg width="1.3em" height="1.3em"\nviewBox="0 0 16 16" class="bi bi-star-fill" fill="gold" xmlns="http://www.w3.org/2000/svg"\nstyle="margin-left:100%">\n<path\nd="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.283.95l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />\n</svg>\n';
     let div = document.getElementById('members');
     let data = "";
@@ -126,8 +129,9 @@ function updateMembers(members) {
         if (members[i]['is_lider'] == true) {
             data += star_icon;
         }
-        data += '</div>\n<div class="col-3 themed-grid-col">' + members[i]["first_name"] + ' ' + members[i]["last_name"] + '</div>\n<div class="col-3 themed-grid-col"><a href="mailto:' + members[i]["email"] + '">' + members[i]["email"] + '</a></div>\n<div class="col-3 themed-grid-col">' + members[i]["specialization"] + '<a class="btn btn-secondary btn-sm btn-gold" id="set_leader' + i + '" userid=' + members[i]["id"] + ' onclick="selectLeader(' + i + ')" hidden="true">лидер</a> <a class="btn btn-secondary btn-sm btn-red header-logout" id="delete_member' + i + '" userid=' + members[i]["id"] + ' onclick="selectMember(' + i + ')" hidden="true">Удалить</a></div>\n</div>\n';
+        data += '</div>\n<div class="col-3 themed-grid-col">' + members[i]["first_name"] + ' ' + members[i]["last_name"] + '</div>\n<div class="col-3 themed-grid-col"><a href="mailto:' + members[i]["email"] + '">' + members[i]["email"] + '</a></div>\n<div class="col-3 themed-grid-col">' + members[i]["specialization"] + '<a class="btn btn-secondary btn-sm btn-gold" id="set_leader' + i + '" userid=' + members[i]["id"] + ' onclick="selectLeader(' + i + ')" hidden="'+is_hidden+'">Лидер</a> <a class="btn btn-secondary btn-sm btn-red header-logout" id="delete_member' + i + '" userid=' + members[i]["id"] + ' onclick="selectMember(' + i + ')" hidden="'+is_hidden+'">Удалить</a></div>\n</div>\n';
     }
+    data+=buttons;
     div.innerHTML = data;
 }
 
@@ -169,6 +173,7 @@ function activateManageMembers() {
     let sub = document.getElementById('submit_members');
     let can = document.getElementById('cancel_members');
     let state = !delete_bt.hidden;
+    is_hidden=state;
     sub.hidden = state;
     can.hidden = state;
     while (delete_bt) {
@@ -198,6 +203,7 @@ function cancelMembers() {
 }
 
 function submitMembers() {
+    let is_success=false;
     let btn = document.getElementById("set_leader0");
     let j = 0;
     let id = null;
@@ -225,7 +231,9 @@ function submitMembers() {
             success: function (data) {
                 // update(team_pk, 'score');
                 // cancelMembers;
-                window.location = "/";
+                // window.location = "/";
+                is_success=true;
+                console.log("success");
             },
             error: function (data) {
                 console.log("error");
@@ -233,6 +241,61 @@ function submitMembers() {
             },
         });
     }
+
+    btn = document.getElementById("delete_member0");
+    j=0;
+    let index=0;
+    id='{"action": "delete-members","members":{';
+    while(btn){
+        if(btn.style.backgroundColor =="red"){
+            id+='"'+index+'":'+btn.getAttribute('userid')+',';
+            index+=1;
+        }
+        j+=1;
+        btn = document.getElementById("delete_member"+j);
+    }
+    if (id[id.length - 1] == ',') {
+        id = id.slice(0, id.length - 1);
+    }
+    id+='}}';
+    console.log(id);
+    send=JSON.parse(id);
+    console.log(send);
+    if(send['members'][0]){
+        $.ajax({
+            headers: { "X-CSRFToken": token },
+            url: '/team/manageteam',
+            method: 'post',
+            dataType: 'json',
+            data: send,
+            success: function (data) {
+                // update(team_pk, 'score');
+                // cancelMembers;
+                // window.location = "/";
+                is_success=true;
+                console.log("success");
+            },
+            error: function (data) {
+                console.log("error");
+                cancelMembers;
+            },
+        });
+    }
+    if(is_success){
+        window.location="/";
+    }
+}
+
+function showModal(title, body, onclick_submit, onclick_cancel, submit, cancel="Отмена"){
+    document.getElementById("modal-title").innerHTML=title;
+    document.getElementById("modal-body").innerHTML=body;
+    let c=document.getElementById("modal-cancel");
+    let s=document.getElementById("modal-submit");
+    c.innerHTML=cancel;
+    s.innerHTML=submit;
+    c.onclick=onclick_cancel;
+    s.onclick=onclick_submit;
+    $("#Modal").modal();
 }
 
 update(team_pk, 'score');
