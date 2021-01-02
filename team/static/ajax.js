@@ -24,11 +24,10 @@ $("#submit").click(function () {
             $('#result_form').html("")
         },
         error: function (data) {
-            // console.log(data);
+            console.log(data["error"]);
             try {
                 var x = JSON.parse(data["responseText"]);
                 $('#result_form').html(x["error"]["name"]["0"])
-                // console.log(x);
             }
             catch {
                 $('#result_form').html("Ошибка подключения к серверу")
@@ -53,7 +52,7 @@ function leaveTeam(pk) {
             window.location = "/";
         },
         error: function (data) {
-            console.log("error");
+            console.log(data["error"]);
         },
     });
 }
@@ -79,7 +78,7 @@ function update(team_id, element_id) {
             console.log("Ошибка подключения к серверу")
         }
     });
-    setTimeout(update, 60000, team_id, element_id);
+    setTimeout(update, 1000, team_id, element_id);
 }
 
 function submitMembers() {
@@ -112,7 +111,7 @@ function submitMembers() {
                 cancelMembers;
             },
             error: function (data) {
-                console.log("error");
+                console.log(data["error"]);
                 cancelMembers;
             },
         });
@@ -203,7 +202,7 @@ function cancelMembers() {
 }
 
 function submitMembers() {
-    let is_success=false;
+    var is_success=[null,null];
     let btn = document.getElementById("set_leader0");
     let j = 0;
     let id = null;
@@ -232,12 +231,15 @@ function submitMembers() {
                 // update(team_pk, 'score');
                 // cancelMembers;
                 // window.location = "/";
-                is_success=true;
+                is_success[0]=true;
+                success();
                 console.log("success");
             },
             error: function (data) {
-                console.log("error");
+                console.log(data["error"]);
                 cancelMembers;
+                is_success[0]=false;
+                success();
             },
         });
     }
@@ -268,21 +270,26 @@ function submitMembers() {
             method: 'post',
             dataType: 'json',
             data: send,
-            success: function (data) {
+            success: function (data, is_success) {
                 // update(team_pk, 'score');
                 // cancelMembers;
                 // window.location = "/";
-                is_success=true;
                 console.log("success");
+                is_success[1]=true;
+                success();
             },
-            error: function (data) {
+            error: function (data, is_success) {
                 console.log("error");
                 cancelMembers;
+                is_success[1]=false;
+                success();
             },
         });
     }
-    if(is_success){
-        window.location="/";
+    function success() {
+        if (is_success[0]==true || is_success[0]==true) {
+            window.location = "/";
+        }
     }
 }
 

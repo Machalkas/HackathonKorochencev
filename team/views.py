@@ -75,8 +75,11 @@ def addMember(request,key):
 
 def manageTeam(request):
     if request.is_ajax and request.method == "POST":
-        if request.POST.get('action')=='delete-members':
-            # print(request.POST.get("members[0]"))
+        action=request.POST.get('action')
+        if action=='delete-members':
+            # user=User.objects.get(pk=request.POST.get('member'))
+            if checkPermissions(request)[0]!=True and checkPermissions(request)[1]!=True:
+                return JsonResponse({"error":"Не достаточно прав для выполнения запроса "+action}, status=400)
             i=0
             while True:
                 user_pk=request.POST.get("members["+str(i)+"]")
@@ -87,7 +90,9 @@ def manageTeam(request):
                 user.save()
                 i+=1
             return JsonResponse({"ok":""}, status=200)
-        elif request.POST.get('action')=='update':
+        elif checkPermissions(request)[0]!=True:
+                return JsonResponse({"error":"Не достаточно прав для выполнения запроса "+action}, status=400)
+        elif action=='update':
             team=Teams.objects.get(id=request.user.team.id)
             form=CreateTeamForm(request.POST, instance=team)
             url=team.url
@@ -101,7 +106,7 @@ def manageTeam(request):
             else:
                 # print(form.errors)
                 return JsonResponse({'error':form.errors}, status=400)   
-        elif request.POST.get('action')=='change-leader':
+        elif action=='change-leader':
             leader=TeamsLeaders.objects.get(team_id=request.POST.get('team'))
             user=User.objects.get(pk=request.POST.get('member'))
             if user.team.pk==int(request.POST.get('team')):
@@ -109,9 +114,9 @@ def manageTeam(request):
                 leader.save()
                 return JsonResponse({"ok":""}, status=200)
             else:
-                return JsonResponse({},status=400)
+                return JsonResponse({"error":""}, status=400)
         else:
-            return JsonResponse({},status=400)
+            return JsonResponse({"error":"Новозможно обработать запрос "+action},status=400)
 
     elif request.is_ajax and request.method=='GET':
         if request.GET.get('action')=='request':
@@ -128,9 +133,12 @@ def manageTeam(request):
                 m.append({'id':i.pk,'first_name':i.first_name, 'last_name':i.last_name, 'email':i.email, 'specialization':i.specialization, 'is_lider':is_lider})
             return JsonResponse({'score':team.score,'members':m})
         else:
-            return JsonResponse({},status=400)
+            return JsonResponse({"error":""},status=400)
     return HttpResponse(request, 'only for AJAX')
 
+def checkPermissions(request):
+    leader=TeamsLeaders.objects.get(team_id=request.user.team)
+    return [request.user.pk==leader.user_id_id, request.POST.get("members[0]")==request.user.pk]
 
 def getScore(request):
     if request.method=="GET":

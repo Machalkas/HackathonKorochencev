@@ -33,7 +33,7 @@
             <div class="dropdown-menu" aria-labelledby="teamSettings">
               <a class="dropdown-item" data-toggle="modal" onclick="showModal('Вы уверены что хотите покинуть команду?','Подумой...',function(){leaveTeam({{request.user.pk}});},'','Выйти')">Покинуть команду</a>
               {%if lider_id is request.user.id%}
-              <a class="dropdown-item" href="#" onclick="activateManageMembers()">Управление участниками</a>
+              <a class="dropdown-item"  onclick="activateManageMembers()">Управление участниками</a>
               {%endif%}
             </div>
           </div>
