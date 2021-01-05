@@ -1,5 +1,5 @@
 var is_hidden=false;
-
+var btn_its_clear='<button type="button" class="btn btn-primary btn-red header-logout"  data-dismiss="modal" id="modal-submit">Ясно</button>';
 $("#submit").click(function () {
     document.getElementById("submit").value = "Загрузка";
     console.log($("#form").serialize());
@@ -52,7 +52,8 @@ function leaveTeam(pk) {
             window.location = "/";
         },
         error: function (data) {
-            console.log(data["error"]);
+            console.log(data.responseJSON["error"]);
+            showModal('Ошибка',data.responseJSON["error"],btn_its_clear);
         },
     });
 }
@@ -111,7 +112,8 @@ function submitMembers() {
                 cancelMembers;
             },
             error: function (data) {
-                console.log(data["error"]);
+                console.log(data.responseJson["error"]);
+                showModal('Ошибка',data.responseJSON["error"],btn_its_clear);
                 cancelMembers;
             },
         });
@@ -237,6 +239,8 @@ function submitMembers() {
             },
             error: function (data) {
                 console.log(data["error"]);
+                showModal('Ошибка',data.responseJSON["error"],btn_its_clear);
+                alert(data.responseJSON["error"]);
                 cancelMembers;
                 is_success[0]=false;
                 success();
@@ -280,6 +284,7 @@ function submitMembers() {
             },
             error: function (data, is_success) {
                 console.log("error");
+                alert(data["error"]);
                 cancelMembers;
                 is_success[1]=false;
                 success();
@@ -288,20 +293,16 @@ function submitMembers() {
     }
     function success() {
         if (is_success[0]==true || is_success[0]==true) {
+            console.log(is_success);
             window.location = "/";
         }
     }
 }
 
-function showModal(title, body, onclick_submit, onclick_cancel, submit, cancel="Отмена"){
+function showModal(title, body, footer){
     document.getElementById("modal-title").innerHTML=title;
     document.getElementById("modal-body").innerHTML=body;
-    let c=document.getElementById("modal-cancel");
-    let s=document.getElementById("modal-submit");
-    c.innerHTML=cancel;
-    s.innerHTML=submit;
-    c.onclick=onclick_cancel;
-    s.onclick=onclick_submit;
+    document.getElementById("modal-footer").innerHTML=footer;
     $("#Modal").modal();
 }
 

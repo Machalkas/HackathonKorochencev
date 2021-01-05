@@ -26,37 +26,8 @@
     </header>
     <main role="main" class="inner cover">
         <h1 class="cover-heading" id='name'>{{team_name}}</h1>
-        <div class="dropdown">
-            <button class="btn dropdown-toggle" type="button" id="teamSettings" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Параметры
-            </button>
-            <div class="dropdown-menu" aria-labelledby="teamSettings">
-              <a class="dropdown-item" data-toggle="modal" onclick="showModal('Вы уверены что хотите покинуть команду?','Подумой...',function(){leaveTeam({{request.user.pk}});},'','Выйти')">Покинуть команду</a>
-              {%if lider_id is request.user.id%}
-              <a class="dropdown-item"  onclick="activateManageMembers()">Управление участниками</a>
-              {%endif%}
-            </div>
-          </div>
+        <a onclick="showModal('Вы уверены что хотите покинуть команду?','Подумой...','&lt;button type=&quot;button&quot; class=&quot;btn btn-secondary btn-green header-join&quot; data-dismiss=&quot;modal&quot; id=&quot;modal-cancel&quot; onclick=&quot;&quot;&gt;Отмена&lt;/button&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-primary btn-red header-logout&quot;  data-dismiss=&quot;modal&quot; id=&quot;modal-submit&quot; onclick=&quot;leaveTeam({{request.user.pk}})&quot;&gt;Выйти&lt;/button&gt;')">Покинуть команду</a>
         
-          <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="modal-title"></h5>
-                  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                  </button>
-                </div>
-                <div class="modal-body" id="modal-body">
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary btn-green header-join" data-dismiss="modal" id="modal-cancel" onclick=""></button>
-                  <button type="button" class="btn btn-primary btn-red header-logout"  data-dismiss="modal" id="modal-submit" onclick=""></button>
-                </div>
-              </div>
-            </div>
-          </div>
-
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="score-tab" data-toggle="tab" href="#score" role="tab"
@@ -90,6 +61,10 @@
                 </div>
             </div>
             <div class="tab-pane fade" id="members" role="tabpanel" aria-labelledby="members-tab">
+                {%if lider_id is request.user.id%}
+                <a class="dropdown-item"  onclick="activateManageMembers()">Управление участниками</a>
+                {%endif%}
+                <div></div>
                 <!--список участников-->
             </div>
             <!-- <div>
@@ -108,12 +83,6 @@
                 <div id="message" class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
                     <form class="form mt-5" id="form" action="">
                         {% csrf_token %}
-                        <!-- <input type="text" name="team" placeholder="Название команды" value="{{team_name}}"
-                            oninput="checkForm()" class="form-control mt-1" maxlength="100">
-                        <textarea type="text" name="disc" placeholder="Описание" value="{{discription}}"
-                            oninput="checkForm()" class="form-control mt-1" rows="5">{{discription}}</textarea>
-                        <input type="text" name="link" placeholder="Ссылка для связи" value="{{link}}"
-                            oninput="checkForm()" class="form-control mt-1" maxlength="2048"> -->
                             {% for field in form %}
                             {{field}}<p id="error_{{field.name}}"></p>
                             {% endfor %} 
@@ -121,7 +90,6 @@
                     </form>
                     <div id="result_form"></div> 
                 </div>
-                {%endif%}
                 <script>
                     let team = document.getElementsByName('name');
                     let disc = document.getElementsByName('description');
@@ -140,6 +108,7 @@
                     }
                 </script>
             </div>
+            {%endif%}
 
 
         </div>
@@ -149,6 +118,24 @@
             class="btn btn-primary">Копировать</a>
         {%endif%}
     </main>
+
+    <!-- модальное окно -->
+    <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modal-title"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+            </div>
+            <div class="modal-footer" id="modal-footer">
+            </div>
+          </div>
+        </div>
+      </div>
     <!-- <footer class=" mastfoot mt-auto">
             <div class="inner">
                 <p>Machalka</p>

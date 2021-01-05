@@ -1,0 +1,116 @@
+<!-- <button type="button" class="btn btn-secondary btn-green header-join" data-dismiss="modal" id="modal-cancel" onclick="">Отмена</button><button type="button" class="btn btn-primary btn-red header-logout"  data-dismiss="modal" id="modal-submit" onclick="leaveTeam({{request.user.pk}})">Выйти</button>
+<button type="button" class="btn btn-primary btn-red header-logout"  data-dismiss="modal" id="modal-submit">Ясно</button>
+
+<div class="dropdown">
+    <button class="btn dropdown-toggle" type="button" id="teamSettings" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+      Параметры
+    </button>
+    <div class="dropdown-menu" aria-labelledby="teamSettings">
+      <a class="dropdown-item" data-toggle="modal" onclick="showModal('Вы уверены что хотите покинуть команду?','Подумой...','&lt;button type=&quot;button&quot; class=&quot;btn btn-secondary btn-green header-join&quot; data-dismiss=&quot;modal&quot; id=&quot;modal-cancel&quot; onclick=&quot;&quot;&gt;Отмена&lt;/button&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-primary btn-red header-logout&quot;  data-dismiss=&quot;modal&quot; id=&quot;modal-submit&quot; onclick=&quot;leaveTeam({{request.user.pk}})&quot;&gt;Выйти&lt;/button&gt;')">Покинуть команду</a>
+      {%if lider_id is request.user.id%}
+      <a class="dropdown-item"  onclick="activateManageMembers()">Управление участниками</a>
+      {%endif%}
+    </div>
+  </div> -->
+  <html>
+    <head>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+  <nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <a class="nav-item nav-link active" id="nav-score-tab" data-toggle="tab" role="tab" aria-controls="nav-score" aria-selected="true" href="#nav-score">Счет</a>
+      <a class="nav-item nav-link" id="nav-members-tab" data-toggle="tab" role="tab" aria-controls="nav-members" aria-selected="false" href="#nav-members">Участники</a>
+      <a class="nav-item nav-link" id="nav-info-tab" data-toggle="tab" role="tab" aria-controls="nav-info" aria-selected="false" href="#nav-info">Информация</a>
+      {%if lider_id is request.user.id%}
+      <a class="nav-item nav-link" id="nav-control-tab" data-toggle="tab" role="tab" aria-controls="nav-control" aria-selected="false" href="#nav-control">Управление</a>
+      {%endif%}
+    </div>
+  </nav>
+  <div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-score" role="tabpanel" aria-labelledby="nav-score-tab">
+      <h2>Счет</h2>
+                <br>
+                <div class="trophy">
+                    <div class="score-div">
+                        <p class="score-p" id="score">0</p>
+                    </div>
+                </div>
+    </div>
+    <div class="tab-pane fade" id="nav-members" role="tabpanel" aria-labelledby="nav-members-tab">
+      {%if lider_id is request.user.id%}
+      <a class="dropdown-item"  onclick="activateManageMembers()">Управление участниками</a>
+      {%endif%}
+      <div></div>
+      <!--список участников-->
+      <!-- <a class="btn btn-primary btn-green" id="submit_members" hidden="true" onclick="submitMembers()">Применить</a>
+      <a class="btn btn-secondary" id="cancel_members" hidden="true" onclick="cancelMembers()">Отмена</a> -->
+    </div>
+    <div class="tab-pane fade" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab">
+      <h3>Описание</h3>
+                <p id='description'>{{discription}}</p>
+                <br>
+                <h3>Ссылка для связи</h3>
+                <a href="{{link}}" target="_blank" id='link'>{{link}}</a>
+    </div>
+    {%if lider_id is request.user.id%}
+    <div class="tab-pane fade" id="nav-control" role="tabpanel" aria-labelledby="nav-control-tab">
+      <div id="message" class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <form class="form mt-5" id="form" action="">
+            {% csrf_token %}
+                {% for field in form %}
+                {{field}}<p id="error_{{field.name}}"></p>
+                {% endfor %} 
+            <input type="button" value="Отправить" class="btn btn-green mt-3" id="submit" disabled>
+        </form>
+        <div id="result_form"></div> 
+    </div>
+    <script>
+        let team = document.getElementsByName('name');
+        let disc = document.getElementsByName('description');
+        let link = document.getElementsByName('link');
+        let sub = document.getElementById("submit");
+        let l_team = team[0].value = "{{team_name}}";
+        let l_desc = disc[0].value = "{{discription}}";
+        let l_link = link[0].value = "{{link}}";
+        function checkForm() {
+            if ((team[0].value != l_team || disc[0].value != l_desc || link[0].value != l_link) && (team[0].value != '' && disc[0].value != '' && link[0].value != '')) {
+                sub.disabled = false;
+            }
+            else {
+                sub.disabled = true;
+            }
+        }
+    </script>
+    </div>
+    {%endif%}
+  </div>
+
+  <!-- <nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <a class="nav-item nav-link active" id="nav-home-tab" data-toggle="tab" href="#nav-home" role="tab" aria-controls="nav-home" aria-selected="true">Home</a>
+      <a class="nav-item nav-link" id="nav-profile-tab" data-toggle="tab" href="#nav-profile" role="tab" aria-controls="nav-profile" aria-selected="false">Profile</a>
+      <a class="nav-item nav-link" id="nav-contact-tab" data-toggle="tab" href="#nav-contact" role="tab" aria-controls="nav-contact" aria-selected="false">Contact</a>
+    </div>
+  </nav>
+  <div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+      3
+    </div>
+    <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
+     2
+    </div>
+    <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab">
+      1
+    </div>
+  </div> -->
+  <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+</body>
+</html>
