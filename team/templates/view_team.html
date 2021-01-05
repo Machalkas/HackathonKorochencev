@@ -28,91 +28,75 @@
         <h1 class="cover-heading" id='name'>{{team_name}}</h1>
         <a onclick="showModal('Вы уверены что хотите покинуть команду?','Подумой...','&lt;button type=&quot;button&quot; class=&quot;btn btn-secondary btn-green header-join&quot; data-dismiss=&quot;modal&quot; id=&quot;modal-cancel&quot; onclick=&quot;&quot;&gt;Отмена&lt;/button&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-primary btn-red header-logout&quot;  data-dismiss=&quot;modal&quot; id=&quot;modal-submit&quot; onclick=&quot;leaveTeam({{request.user.pk}})&quot;&gt;Выйти&lt;/button&gt;')">Покинуть команду</a>
         
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
-            <li class="nav-item">
-                <a class="nav-link active" id="score-tab" data-toggle="tab" href="#score" role="tab"
-                    aria-controls="score" aria-selected="true">Счет</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="members-tab" data-toggle="tab" href="#members" role="tab"
-                    aria-controls="members" aria-selected="false">Участники</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" id="info-tab" data-toggle="tab" href="#info" role="tab" aria-controls="contact"
-                    aria-selected="false">Информация</a>
-            </li>
-            {%if lider_id is request.user.id%}
-            <li class="nav-item">
-                <a class="nav-link" id="manage-tab" data-toggle="tab" href="#manage" role="tab" aria-controls="contact"
-                    aria-selected="false">Управление</a>
-            </li>
-            {%endif%}
-        </ul>
-
-
-        <div class="tab-content" id="myTabContent">
-            <div class="tab-pane fade show active" role="tabpanel" aria-labelledby="score-tab">
-                <h2>Счет</h2>
-                <br>
-                <div class="trophy">
-                    <div class="score-div">
-                        <p class="score-p" id="score">0</p>
-                    </div>
-                </div>
+        <nav>
+            <div class="nav nav-tabs" id="nav-tab" role="tablist">
+              <a class="nav-item nav-link active" id="nav-score-tab" data-toggle="tab" role="tab" aria-controls="nav-score" aria-selected="true" href="#nav-score">Счет</a>
+              <a class="nav-item nav-link" id="nav-members-tab" data-toggle="tab" role="tab" aria-controls="nav-members" aria-selected="false" href="#nav-members">Участники</a>
+              <a class="nav-item nav-link" id="nav-info-tab" data-toggle="tab" role="tab" aria-controls="nav-info" aria-selected="false" href="#nav-info">Информация</a>
+              {%if lider_id is request.user.id%}
+              <a class="nav-item nav-link" id="nav-control-tab" data-toggle="tab" role="tab" aria-controls="nav-control" aria-selected="false" href="#nav-control">Управление</a>
+              {%endif%}
             </div>
-            <div class="tab-pane fade" id="members" role="tabpanel" aria-labelledby="members-tab">
-                {%if lider_id is request.user.id%}
-                <a class="dropdown-item"  onclick="activateManageMembers()">Управление участниками</a>
-                {%endif%}
-                <div></div>
-                <!--список участников-->
+          </nav>
+
+          <div class="tab-content" id="nav-tabContent">
+            <div class="tab-pane fade show active" id="nav-score" role="tabpanel" aria-labelledby="nav-score-tab">
+              <h2>Счет</h2>
+                        <br>
+                        <div class="trophy">
+                            <div class="score-div">
+                                <p class="score-p" id="score">0</p>
+                            </div>
+                        </div>
             </div>
-            <!-- <div>
-                <a class="btn btn-primary btn-green" id="submit_members" hidden="true" onclick="submitMembers()">Применить</a>
-                <a class="btn btn-secondary" id="cancel_members" hidden="true" onclick="cancelMembers()">Отмена</a>
-            </div> -->
-            <div class="tab-pane fade" id="info" role="tabpanel" aria-labelledby="info-tab">
-                <h3>Описание</h3>
-                <p id='description'>{{discription}}</p>
-                <br>
-                <h3>Ссылка для связи</h3>
-                <a href="{{link}}" target="_blank" id='link'>{{link}}</a>
+            <div class="tab-pane fade" id="nav-members" role="tabpanel" aria-labelledby="nav-members-tab">
+              {%if lider_id is request.user.id%}
+              <a  onclick="activateManageMembers()">Управление участниками</a>
+              {%endif%}
+              <div id="members"></div>
+              <!--список участников-->
+              <!-- <a class="btn btn-primary btn-green" id="submit_members" hidden="true" onclick="submitMembers()">Применить</a>
+              <a class="btn btn-secondary" id="cancel_members" hidden="true" onclick="cancelMembers()">Отмена</a> -->
+            </div>
+            <div class="tab-pane fade" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab">
+              <h3>Описание</h3>
+                        <p id='description'>{{discription}}</p>
+                        <br>
+                        <h3>Ссылка для связи</h3>
+                        <a href="{{link}}" target="_blank" id='link'>{{link}}</a>
             </div>
             {%if lider_id is request.user.id%}
-            <div class="tab-pane fade show active" id="manage" role="tabpanel" aria-labelledby="manage-tab">
-                <div id="message" class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-                    <form class="form mt-5" id="form" action="">
-                        {% csrf_token %}
-                            {% for field in form %}
-                            {{field}}<p id="error_{{field.name}}"></p>
-                            {% endfor %} 
-                        <input type="button" value="Отправить" class="btn btn-green mt-3" id="submit" disabled>
-                    </form>
-                    <div id="result_form"></div> 
-                </div>
-                <script>
-                    let team = document.getElementsByName('name');
-                    let disc = document.getElementsByName('description');
-                    let link = document.getElementsByName('link');
-                    let sub = document.getElementById("submit");
-                    let l_team = team[0].value = "{{team_name}}";
-                    let l_desc = disc[0].value = "{{discription}}";
-                    let l_link = link[0].value = "{{link}}";
-                    function checkForm() {
-                        if ((team[0].value != l_team || disc[0].value != l_desc || link[0].value != l_link) && (team[0].value != '' && disc[0].value != '' && link[0].value != '')) {
-                            sub.disabled = false;
-                        }
-                        else {
-                            sub.disabled = true;
-                        }
+            <div class="tab-pane fade" id="nav-control" role="tabpanel" aria-labelledby="nav-control-tab">
+              <div id="message" class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+                <form class="form mt-5" id="form" action="">
+                    {% csrf_token %}
+                        {% for field in form %}
+                        {{field}}<p id="error_{{field.name}}"></p>
+                        {% endfor %} 
+                    <input type="button" value="Отправить" class="btn btn-green mt-3" id="submit" disabled>
+                </form>
+                <div id="result_form"></div> 
+            </div>
+            <script>
+                let team = document.getElementsByName('name');
+                let disc = document.getElementsByName('description');
+                let link = document.getElementsByName('link');
+                let sub = document.getElementById("submit");
+                let l_team = team[0].value = "{{team_name}}";
+                let l_desc = disc[0].value = "{{discription}}";
+                let l_link = link[0].value = "{{link}}";
+                function checkForm() {
+                    if ((team[0].value != l_team || disc[0].value != l_desc || link[0].value != l_link) && (team[0].value != '' && disc[0].value != '' && link[0].value != '')) {
+                        sub.disabled = false;
                     }
-                </script>
+                    else {
+                        sub.disabled = true;
+                    }
+                }
+            </script>
             </div>
             {%endif%}
-
-
-        </div>
-        <br>
+          </div>
         {%if lider_id is request.user.id%}
         <input type="text" value="{{url}}" id="url" style="min-height: 38px;" readonly="readonly"> <a onclick="copy()"
             class="btn btn-primary">Копировать</a>
