@@ -60,11 +60,32 @@
             </div>
             <div class="tab-pane fade" id="nav-info" role="tabpanel" aria-labelledby="nav-info-tab">
               <h3>Описание</h3>
-                        <p id='description'>{{discription}}</p>
+                        <pre id='description'></pre>
                         <br>
                         <h3>Ссылка для связи</h3>
                         <a href="{{link}}" target="_blank" id='link'>{{link}}</a>
             </div>
+            <script>
+              function formatText(text=""){
+                  let result="";
+                  for (i=0; i<text.length-5;){
+                    if(text.slice(i,i+5)=="[[n]]"){
+                      result+="\n";
+                      i+=5;
+                    }
+                    else if(text.slice(i,i+5)=="[[r]]"){
+                      result+="\r";
+                      i+=5;
+                    }
+                    else{
+                      result+=text[i];
+                      i+=1;
+                    }
+                  }
+                  return result;
+                }
+              document.getElementById("description").innerHTML=formatText("{{discription}}");
+            </script>
             {%if lider_id is request.user.id%}
             <div class="tab-pane fade" id="nav-control" role="tabpanel" aria-labelledby="nav-control-tab">
               <div id="message" class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
@@ -92,25 +113,6 @@
                     else {
                         sub.disabled = true;
                     }
-                }
-
-                function formatText(text=""){
-                  let result="";
-                  for (i=0; i<text.length-5;){
-                    if(text.slice(i,i+5)=="[[n]]"){
-                      result+="\n";
-                      i+=5;
-                    }
-                    else if(text.slice(i,i+5)=="[[r]]"){
-                      result+="\r";
-                      i+=5;
-                    }
-                    else{
-                      result+=text[i];
-                      i+=1;
-                    }
-                  }
-                  return result;
                 }
             </script>
             </div>

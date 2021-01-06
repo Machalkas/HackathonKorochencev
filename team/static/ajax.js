@@ -206,6 +206,19 @@ function cancelMembers() {
 
 function submitMembers() {
     var is_success=[null,null];
+    console.log(is_success);
+    is_success=changeLeader(is_success);
+    console.log(is_success);
+    is_success=deleteMembers(is_success);
+    console.log(is_success);
+    if (is_success[0]==true || is_success[0]==true) {
+        console.log(is_success);
+        window.location = "/";
+    }
+}
+
+function changeLeader(is_success){
+    console.log("start changeLeader");
     let btn = document.getElementById("set_leader0");
     let j = 0;
     let id = null;
@@ -235,8 +248,9 @@ function submitMembers() {
                 // cancelMembers;
                 // window.location = "/";
                 is_success[0]=true;
-                success();
+                // success();
                 console.log("success");
+                return is_success;
             },
             error: function (data) {
                 console.log(data["error"]);
@@ -244,11 +258,16 @@ function submitMembers() {
                 alert(data.responseJSON["error"]);
                 cancelMembers;
                 is_success[0]=false;
-                success();
+                return is_success;
+                // success();
             },
         });
     }
+    console.log("end changeLeader");
+}
 
+function deleteMembers(is_success){
+    console.log("start deleteMembers");
     btn = document.getElementById("delete_member0");
     j=0;
     let index=0;
@@ -281,23 +300,20 @@ function submitMembers() {
                 // window.location = "/";
                 console.log("success");
                 is_success[1]=true;
-                success();
+                // success();
+                return is_success;
             },
             error: function (data, is_success) {
                 console.log("error");
-                alert(data["error"]);
+                alert(data.responseJSON["error"]);
                 cancelMembers;
                 is_success[1]=false;
-                success();
+                // success();
+                return is_success;
             },
         });
     }
-    function success() {
-        if (is_success[0]==true || is_success[0]==true) {
-            console.log(is_success);
-            window.location = "/";
-        }
-    }
+    console.log("end deleteMembers");
 }
 
 function showModal(title, body, footer){
