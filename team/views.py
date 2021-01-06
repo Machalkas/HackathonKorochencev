@@ -36,7 +36,7 @@ def viewTeam(request):
     for i in User.objects.filter(team=team_pk):
         members.append(i)
     form=CreateTeamForm()
-    return render(request, "view_team.html",{'team_pk':team.pk,'team_name':team.name, 'discription':team.description,'link':team.link , 'url':request.META['HTTP_HOST']+'/team/invite/'+team.url, 'score':team.score, 'lider_id':lider_id, 'members':members, 'form':form})
+    return render(request, "view_team.html",{'team_pk':team.pk,'team_name':team.name, 'discription':team.description.replace("\r","[[r]]").replace("\n","[[n]]"),'link':team.link , 'url':request.META['HTTP_HOST']+'/team/invite/'+team.url, 'score':team.score, 'lider_id':lider_id, 'members':members, 'form':form})
 
 @login_required(login_url='/auth/login')
 def createTeam(request):

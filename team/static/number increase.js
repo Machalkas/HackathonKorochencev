@@ -2,11 +2,11 @@ var delay=0;
 var real=0;
 function Increase(n,id,real=0){
     if(Math.abs(n-real)>=1000){
-        var step=100;
+        var step=139;
         // console.log(step);
     }
     else if(Math.abs(n-real)>=100){
-        var step=10;
+        var step=21;
         // console.log(step);
     }else{
         var step=1;
