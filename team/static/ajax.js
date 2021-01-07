@@ -1,4 +1,4 @@
-var is_hidden=false;
+var is_hidden=true;
 var btn_its_clear='<button type="button" class="btn btn-primary btn-red header-logout"  data-dismiss="modal" id="modal-submit">Ясно</button>';
 $("#submit").click(function () {
     document.getElementById("submit").value = "Загрузка";
@@ -79,7 +79,7 @@ function update(team_id, element_id) {
             console.log("Ошибка подключения к серверу")
         }
     });
-    setTimeout(update, 10000, team_id, element_id);
+    setTimeout(update, 60000, team_id, element_id);
 }
 
 function submitMembers() {
@@ -122,7 +122,11 @@ function submitMembers() {
 
 function updateMembers(members) {
     console.log("is hidden "+is_hidden);
-    let buttons ='<a class="btn btn-primary btn-green" id="submit_members" hidden="'+is_hidden+'" onclick="submitMembers()">Применить</a>\n<a class="btn btn-secondary" id="cancel_members" hidden="'+is_hidden+'" onclick="cancelMembers()">Отмена</a>\n';
+    let hidden="";
+    if (is_hidden){
+        hidden="hidden";
+    }
+    let buttons ='<a class="btn btn-primary btn-green" id="submit_members" '+hidden+' onclick="submitMembers()">Применить</a>\n<a class="btn btn-secondary" id="cancel_members" '+hidden+' onclick="cancelMembers()">Отмена</a>\n';
     let star_icon = '<svg width="1.3em" height="1.3em"\nviewBox="0 0 16 16" class="bi bi-star-fill" fill="gold" xmlns="http://www.w3.org/2000/svg"\nstyle="margin-left:100%">\n<path\nd="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.283.95l-3.523 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z" />\n</svg>\n';
     let div = document.getElementById('members');
     let data = "";
@@ -131,7 +135,7 @@ function updateMembers(members) {
         if (members[i]['is_lider'] == true) {
             data += star_icon;
         }
-        data += '</div>\n<div class="col-3 themed-grid-col">' + members[i]["first_name"] + ' ' + members[i]["last_name"] + '</div>\n<div class="col-3 themed-grid-col"><a href="mailto:' + members[i]["email"] + '">' + members[i]["email"] + '</a></div>\n<div class="col-3 themed-grid-col">' + members[i]["specialization"] + '<a class="btn btn-secondary btn-sm btn-gold" id="set_leader' + i + '" userid=' + members[i]["id"] + ' onclick="selectLeader(' + i + ')" hidden="'+is_hidden+'">Лидер</a> <a class="btn btn-secondary btn-sm btn-red header-logout" id="delete_member' + i + '" userid=' + members[i]["id"] + ' onclick="selectMember(' + i + ')" hidden="'+is_hidden+'">Удалить</a></div>\n</div>\n';
+        data += '</div>\n<div class="col-3 themed-grid-col">' + members[i]["first_name"] + ' ' + members[i]["last_name"] + '</div>\n<div class="col-3 themed-grid-col"><a href="mailto:' + members[i]["email"] + '">' + members[i]["email"] + '</a></div>\n<div class="col-3 themed-grid-col">' + members[i]["specialization"] + '<a class="btn btn-secondary btn-sm btn-gold" id="set_leader' + i + '" userid=' + members[i]["id"] + ' onclick="selectLeader(' + i + ')" '+hidden+'>Лидер</a> <a class="btn btn-secondary btn-sm btn-red header-logout" id="delete_member' + i + '" userid=' + members[i]["id"] + ' onclick="selectMember(' + i + ')" '+hidden+'>Удалить</a></div>\n</div>\n';
     }
     data+=buttons;
     div.innerHTML = data;
@@ -202,17 +206,18 @@ function cancelMembers() {
         delete_bt = document.getElementById('delete_member' + i);
         leader_bt = document.getElementById('set_leader' + i);
     }
+    is_hidden=false;
 }
 
 function submitMembers() {
-    var is_success=[null,null];
-    console.log(is_success);
+    let is_success=[null,null];
     is_success=changeLeader(is_success);
-    console.log(is_success);
     is_success=deleteMembers(is_success);
-    console.log(is_success);
+}
+
+function checkSubmitMembers(is_success){
+    console.log("check");
     if (is_success[0]==true || is_success[0]==true) {
-        console.log(is_success);
         window.location = "/";
     }
 }
@@ -256,7 +261,7 @@ function changeLeader(is_success){
                 console.log(data["error"]);
                 showModal('Ошибка',data.responseJSON["error"],btn_its_clear);
                 alert(data.responseJSON["error"]);
-                cancelMembers;
+                // cancelMembers;
                 is_success[0]=false;
                 return is_success;
                 // success();
@@ -301,22 +306,30 @@ function deleteMembers(is_success){
                 console.log("success");
                 is_success[1]=true;
                 // success();
-                return is_success;
+                // return is_success;
+                if (is_success[0]==true || is_success[0]==true) {
+                    console.log("is_success");
+                    window.location = "/";
+                }
             },
             error: function (data, is_success) {
                 console.log("error");
                 alert(data.responseJSON["error"]);
-                cancelMembers;
+                // cancelMembers;
                 is_success[1]=false;
                 // success();
-                return is_success;
+                // return is_success;
+                if (is_success[0]==true || is_success[0]==true) {
+                    console.log("is_success");
+                    window.location = "/";
+                }
             },
         });
     }
     console.log("end deleteMembers");
 }
 
-function showModal(title, body, footer){
+function showModal(title, body, footer=btn_its_clear){
     document.getElementById("modal-title").innerHTML=title;
     document.getElementById("modal-body").innerHTML=body;
     document.getElementById("modal-footer").innerHTML=footer;
