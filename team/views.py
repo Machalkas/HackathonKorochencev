@@ -76,24 +76,20 @@ def addMember(request,key):
 def manageTeam(request):
     if request.is_ajax and request.method == "POST":
         action=request.POST.get('action')
-        if action=='delete-members':
+        if action=='delete-member':
             # user=User.objects.get(pk=request.POST.get('member'))
             if checkPermissions(request)[0]!=True and checkPermissions(request)[1]!=True:
                 return JsonResponse({"error":"Недостаточно прав для выполнения запроса"}, status=400)
-            i=0
+            errors=""
             leader=TeamsLeaders.objects.get(team_id=request.user.team)
-            errors=''
-            while True:
-                user_pk=request.POST.get("members["+str(i)+"]")
-                if user_pk==None:
-                    break
+            user_pk=request.POST.get("member")
+            if user_pk!=None:
                 user=User.objects.get(pk=user_pk)
                 if leader.user_id_id==int(user_pk):
                     errors+="Нельзя удалить пользователя "+user.email+" т.к. он является лидером команды\n"
                 else:
                     user.team=None
                     user.save()
-                i+=1
             if errors!='':
                 return JsonResponse({"error":errors}, status=400)
             return JsonResponse({"ok":""}, status=200)

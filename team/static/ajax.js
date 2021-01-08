@@ -39,8 +39,8 @@ $("#submit").click(function () {
 
 function leaveTeam(pk) {
     let send = {
-        action: "delete-members",
-        members: { 0: pk }
+        action: "delete-member",
+        member: pk
     };
     $.ajax({
         headers: { "X-CSRFToken": token },
