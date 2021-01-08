@@ -210,9 +210,70 @@ function cancelMembers() {
 }
 
 function submitMembers() {
-    let is_success=[null,null];
-    is_success=changeLeader(is_success);
-    is_success=deleteMembers(is_success);
+    let btn_del = document.getElementById("delete_member0");
+    let j = 0;
+    let index = 0;
+    delete_id = '{';
+    while (btn_del) {
+        if (btn_del.style.backgroundColor == "red") {
+            delete_id += '"' + index + '":' + btn_del.getAttribute('userid') + ',';
+            index += 1;
+        }
+        j += 1;
+        btn_del = document.getElementById("delete_member" + j);
+    }
+    if (delete_id[delete_id.length - 1] == ',') {
+        delete_id = delete_id.slice(0, delete_id.length - 1);
+    }
+    delete_id += '}';
+    delete_id = JSON.parse(delete_id);
+
+    let btn_leader = document.getElementById("set_leader0");
+    j = 0;
+    let leader_id = null;
+    while (btn_leader) {
+        if (btn_leader.style.backgroundColor == "goldenrod") {
+            leader_id = btn_leader.getAttribute('userid');
+            break;
+        }
+        j += 1;
+        btn_leader = document.getElementById("set_leader" + j);
+    }
+    let send = {
+        action: "update-members",
+        "delete-members": delete_id,
+        leader: leader_id,
+        team: team_pk
+    };
+    $.ajax({
+        headers: { "X-CSRFToken": token },
+        url: '/team/manageteam',
+        method: 'post',
+        dataType: 'json',
+        data: send,
+        success: function (data) {
+            update(team_pk, 'score');
+            cancelMembers;
+            window.location = "/";
+        },
+        error: function (data) {
+            console.log(data)
+            let error="";
+            try{
+                error+=data.responseJSON["change-leader"]["error"]+". ";
+            }
+            catch{}
+            try{
+                error+=data.responseJSON["delete-members"]["error"];
+            }
+            catch{}
+            if(error!=""){
+                showModal('Ошибка',error, btn_its_clear);
+            }
+            // alert(data.responseJSON["error"]);
+        },
+    });
+
 }
 
 function checkSubmitMembers(is_success){
@@ -223,14 +284,12 @@ function checkSubmitMembers(is_success){
 }
 
 function changeLeader(is_success){
-    console.log("start changeLeader");
     let btn = document.getElementById("set_leader0");
     let j = 0;
     let id = null;
     while (btn) {
         if (btn.style.backgroundColor == "goldenrod") {
             id = btn.getAttribute('userid');
-            console.log(id);
             break;
         }
         j += 1;
@@ -254,11 +313,9 @@ function changeLeader(is_success){
                 // window.location = "/";
                 is_success[0]=true;
                 // success();
-                console.log("success");
                 return is_success;
             },
             error: function (data) {
-                console.log(data["error"]);
                 showModal('Ошибка',data.responseJSON["error"],btn_its_clear);
                 alert(data.responseJSON["error"]);
                 // cancelMembers;
@@ -268,11 +325,9 @@ function changeLeader(is_success){
             },
         });
     }
-    console.log("end changeLeader");
 }
 
 function deleteMembers(is_success){
-    console.log("start deleteMembers");
     btn = document.getElementById("delete_member0");
     j=0;
     let index=0;
@@ -289,9 +344,7 @@ function deleteMembers(is_success){
         id = id.slice(0, id.length - 1);
     }
     id+='}}';
-    console.log(id);
     send=JSON.parse(id);
-    console.log(send);
     if(send['members'][0]){
         $.ajax({
             headers: { "X-CSRFToken": token },
@@ -303,30 +356,25 @@ function deleteMembers(is_success){
                 // update(team_pk, 'score');
                 // cancelMembers;
                 // window.location = "/";
-                console.log("success");
                 is_success[1]=true;
                 // success();
                 // return is_success;
                 if (is_success[0]==true || is_success[0]==true) {
-                    console.log("is_success");
                     window.location = "/";
                 }
             },
             error: function (data, is_success) {
-                console.log("error");
                 alert(data.responseJSON["error"]);
                 // cancelMembers;
                 is_success[1]=false;
                 // success();
                 // return is_success;
                 if (is_success[0]==true || is_success[0]==true) {
-                    console.log("is_success");
                     window.location = "/";
                 }
             },
         });
     }
-    console.log("end deleteMembers");
 }
 
 function showModal(title, body, footer=btn_its_clear){
