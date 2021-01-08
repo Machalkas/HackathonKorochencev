@@ -79,7 +79,7 @@ def manageTeam(request):
         if action=='delete-members':
             # user=User.objects.get(pk=request.POST.get('member'))
             if checkPermissions(request)[0]!=True and checkPermissions(request)[1]!=True:
-                return JsonResponse({"error":"Недостаточно прав для выполнения запроса "+action}, status=400)
+                return JsonResponse({"error":"Недостаточно прав для выполнения запроса"}, status=400)
             i=0
             leader=TeamsLeaders.objects.get(team_id=request.user.team)
             errors=''
@@ -97,8 +97,10 @@ def manageTeam(request):
             if errors!='':
                 return JsonResponse({"error":errors}, status=400)
             return JsonResponse({"ok":""}, status=200)
+
         elif checkPermissions(request)[0]!=True:
                 return JsonResponse({"error":"Недостаточно прав для выполнения запроса "+action}, status=400)
+
         elif action=='update':
             team=Teams.objects.get(id=request.user.team.id)
             form=CreateTeamForm(request.POST, instance=team)
@@ -113,17 +115,52 @@ def manageTeam(request):
             else:
                 # print(form.errors)
                 return JsonResponse({'error':form.errors}, status=400)   
-        elif action=='change-leader':
-            leader=TeamsLeaders.objects.get(team_id=request.POST.get('team'))
-            user=User.objects.get(pk=request.POST.get('member'))
-            if user.team.pk==int(request.POST.get('team')):
-                leader.user_id_id=user.pk
-                leader.save()
-                return JsonResponse({"ok":""}, status=200)
+
+        elif action=='update-members':
+            status=[{"change-leader":None, "delete-members":None},200]
+            try:
+                leader=TeamsLeaders.objects.get(team_id=request.POST.get('team'))
+            except:
+                status[0]["change-leader"]={"error":"Группа "+request.POST.get('team')+" не найдена"}
+                status[1]=400
             else:
-                return JsonResponse({"error":""}, status=400)
+                try:
+                    user=User.objects.get(pk=request.POST.get('leader'))
+                except:
+                    status[0]["change-leader"]={"error":"Лидер "+request.POST.get('leader')+" не найден"}
+                    status[1]=400
+                else:  
+                    if user.team.pk==int(request.POST.get('team')):
+                        leader.user_id_id=user.pk
+                        leader.save()
+                        status[0]["change-leader"]={"ok":""}
+                    else:
+                        status[0]["change-leader"]={"error":"Пользователь "+user.email+" не состаит в группе "+request.POST.get('team')}
+                        status[1]=400
+            i=0
+            leader=TeamsLeaders.objects.get(team_id=request.user.team)
+            errors=''
+            while True:
+                user_pk=request.POST.get("delete-members["+str(i)+"]")
+                if user_pk==None:
+                    break
+                user=User.objects.get(pk=user_pk)
+                if leader.user_id_id==int(user_pk):
+                    errors+="Нельзя удалить пользователя "+user.email+" т.к. он является лидером команды\n"
+                else:
+                    user.team=None
+                    user.save()
+                i+=1
+            if errors!='':
+                status[0]["delete-members"]={"error":errors}
+                status[1]=400
+            else:
+                status[0]["delete-members"]={"ok":""}
+            return JsonResponse(status[0],status=status[1])
+
         else:
             return JsonResponse({"error":"Новозможно обработать запрос "+action},status=400)
+
 
     elif request.is_ajax and request.method=='GET':
         if request.GET.get('action')=='request':
@@ -139,12 +176,16 @@ def manageTeam(request):
                     is_lider=True
                 m.append({'id':i.pk,'first_name':i.first_name, 'last_name':i.last_name, 'email':i.email, 'specialization':i.specialization, 'is_lider':is_lider})
             return JsonResponse({'score':team.score,'members':m})
+
         else:
             return JsonResponse({"error":""},status=400)
     return HttpResponse(request, 'only for AJAX')
 
 def checkPermissions(request):
-    leader=TeamsLeaders.objects.get(team_id=request.user.team)
+    try:
+        leader=TeamsLeaders.objects.get(team_id=request.user.team)
+    except:
+        return [None,None]
     return [request.user.pk==leader.user_id_id, request.POST.get("members[0]")==request.user.pk]
 
 def getScore(request):
