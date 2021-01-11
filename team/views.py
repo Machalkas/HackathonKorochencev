@@ -114,26 +114,29 @@ def manageTeam(request):
 
         elif action=='update-members':
             status=[{"change-leader":None, "delete-members":None},200]
-            try:
-                leader=TeamsLeaders.objects.get(team_id=request.POST.get('team'))
-            except:
-                status[0]["change-leader"]={"error":"Группа "+request.POST.get('team')+" не найдена"}
-                status[1]=400
-            else:
+            if request.POST.get('leader')!='':
                 try:
-                    user=User.objects.get(pk=request.POST.get('leader'))
+                    leader=TeamsLeaders.objects.get(team_id=request.POST.get('team'))
                 except:
-                    status[0]["change-leader"]={"error":"Лидер "+request.POST.get('leader')+" не найден"}
+                    status[0]["change-leader"]={"error":"Группа "+request.POST.get('team')+" не найдена"}
                     status[1]=400
-                else:  
-                    if user.team.pk==int(request.POST.get('team')):
-                        leader.user_id_id=user.pk
-                        leader.save()
-                        status[0]["change-leader"]={"ok":""}
-                    else:
-                        status[0]["change-leader"]={"error":"Пользователь "+user.email+" не состаит в группе "+request.POST.get('team')}
+                else:
+                    try:
+                        user=User.objects.get(pk=request.POST.get('leader'))
+                    except:
+                        status[0]["change-leader"]={"error":"Лидер "+request.POST.get('leader')+" не найден"}
                         status[1]=400
-            i=0
+                    else:  
+                        if user.team.pk==int(request.POST.get('team')):
+                            leader.user_id_id=user.pk
+                            leader.save()
+                            status[0]["change-leader"]={"ok":""}
+                        else:
+                            status[0]["change-leader"]={"error":"Пользователь "+user.email+" не состаит в группе "+request.POST.get('team')}
+                            status[1]=400
+            else:
+                status[0]["change-leader"]={"ok":""}
+            i=0#удаление пользователя
             leader=TeamsLeaders.objects.get(team_id=request.user.team)
             errors=''
             while True:

@@ -2,7 +2,7 @@ var is_hidden=true;
 var btn_its_clear='<button type="button" class="btn btn-primary btn-red header-logout"  data-dismiss="modal" id="modal-submit">Ясно</button>';
 $("#submit").click(function () {
     document.getElementById("submit").value = "Загрузка";
-    console.log($("#form").serialize());
+    // console.log($("#form").serialize());
     console.log($("#form"));
     $.ajax({
         url: '/team/manageteam',
@@ -10,8 +10,8 @@ $("#submit").click(function () {
         dataType: 'html',
         data: $("#form").serialize() + "&action=update",
         success: function (data) {
-            console.log(data);
-            console.log("-------");
+           // console.log(data);
+           // console.log("-------");
             var x = JSON.parse(data);
             // console.log(x);
             $('#name').html(x["data"]["name"]);
@@ -24,7 +24,7 @@ $("#submit").click(function () {
             $('#result_form').html("")
         },
         error: function (data) {
-            console.log(data["error"]);
+           // console.log(data["error"]);
             try {
                 var x = JSON.parse(data["responseText"]);
                 $('#result_form').html(x["error"]["name"]["0"])
@@ -52,8 +52,9 @@ function leaveTeam(pk) {
             window.location = "/";
         },
         error: function (data) {
-            console.log(data.responseJSON["error"]);
-            showModal('Ошибка',data.responseJSON["error"],btn_its_clear);
+           // console.log(data.responseJSON["error"]);
+            setTimeout(showModal,300,'Ошибка',data.responseJSON["error"]);
+            // showModal('Ошибка',data.responseJSON["error"],btn_its_clear);
         },
     });
 }
@@ -82,46 +83,8 @@ function update(team_id, element_id) {
     setTimeout(update, 60000, team_id, element_id);
 }
 
-function submitMembers() {
-    let btn = document.getElementById("set_leader0");
-    let j = 0;
-    let id = null;
-    while (btn) {
-        if (btn.style.backgroundColor == "goldenrod") {
-            id = btn.getAttribute('userid');
-            console.log(id);
-            break;
-        }
-        j += 1;
-        btn = document.getElementById("set_leader" + j);
-    }
-    if (id != null) {
-        let send = {
-            action: "change-leader",
-            member: id,
-            team: team_pk
-        };
-        $.ajax({
-            headers: { "X-CSRFToken": token },
-            url: '/team/manageteam',
-            method: 'post',
-            dataType: 'json',
-            data: send,
-            success: function (data) {
-                update(team_pk, 'score');
-                cancelMembers;
-            },
-            error: function (data) {
-                console.log(data.responseJson["error"]);
-                showModal('Ошибка',data.responseJSON["error"],btn_its_clear);
-                cancelMembers;
-            },
-        });
-    }
-}
-
 function updateMembers(members) {
-    console.log("is hidden "+is_hidden);
+   // console.log("is hidden "+is_hidden);
     let hidden="";
     if (is_hidden){
         hidden="hidden";
@@ -257,16 +220,20 @@ function submitMembers() {
             window.location = "/";
         },
         error: function (data) {
-            console.log(data)
+           console.log(data)
             let error="";
-            try{
-                error+=data.responseJSON["change-leader"]["error"]+". ";
+            try {
+                if (data.responseJSON["change-leader"]["error"] != undefined) {
+                    error += data.responseJSON["change-leader"]["error"] + ". ";
+                }
             }
-            catch{}
-            try{
-                error+=data.responseJSON["delete-members"]["error"];
+            catch { }
+            try {
+                if (data.responseJSON["delete-members"]["error"] != undefined) {
+                    error += data.responseJSON["delete-members"]["error"];
+                }
             }
-            catch{}
+            catch { }
             if(error!=""){
                 showModal('Ошибка',error, btn_its_clear);
             }
@@ -274,107 +241,6 @@ function submitMembers() {
         },
     });
 
-}
-
-function checkSubmitMembers(is_success){
-    console.log("check");
-    if (is_success[0]==true || is_success[0]==true) {
-        window.location = "/";
-    }
-}
-
-function changeLeader(is_success){
-    let btn = document.getElementById("set_leader0");
-    let j = 0;
-    let id = null;
-    while (btn) {
-        if (btn.style.backgroundColor == "goldenrod") {
-            id = btn.getAttribute('userid');
-            break;
-        }
-        j += 1;
-        btn = document.getElementById("set_leader" + j);
-    }
-    if (id != null) {
-        let send = {
-            action: "change-leader",
-            member: id,
-            team: team_pk
-        };
-        $.ajax({
-            headers: { "X-CSRFToken": token },
-            url: '/team/manageteam',
-            method: 'post',
-            dataType: 'json',
-            data: send,
-            success: function (data) {
-                // update(team_pk, 'score');
-                // cancelMembers;
-                // window.location = "/";
-                is_success[0]=true;
-                // success();
-                return is_success;
-            },
-            error: function (data) {
-                showModal('Ошибка',data.responseJSON["error"],btn_its_clear);
-                alert(data.responseJSON["error"]);
-                // cancelMembers;
-                is_success[0]=false;
-                return is_success;
-                // success();
-            },
-        });
-    }
-}
-
-function deleteMembers(is_success){
-    btn = document.getElementById("delete_member0");
-    j=0;
-    let index=0;
-    id='{"action": "delete-members","members":{';
-    while(btn){
-        if(btn.style.backgroundColor =="red"){
-            id+='"'+index+'":'+btn.getAttribute('userid')+',';
-            index+=1;
-        }
-        j+=1;
-        btn = document.getElementById("delete_member"+j);
-    }
-    if (id[id.length - 1] == ',') {
-        id = id.slice(0, id.length - 1);
-    }
-    id+='}}';
-    send=JSON.parse(id);
-    if(send['members'][0]){
-        $.ajax({
-            headers: { "X-CSRFToken": token },
-            url: '/team/manageteam',
-            method: 'post',
-            dataType: 'json',
-            data: send,
-            success: function (data, is_success) {
-                // update(team_pk, 'score');
-                // cancelMembers;
-                // window.location = "/";
-                is_success[1]=true;
-                // success();
-                // return is_success;
-                if (is_success[0]==true || is_success[0]==true) {
-                    window.location = "/";
-                }
-            },
-            error: function (data, is_success) {
-                alert(data.responseJSON["error"]);
-                // cancelMembers;
-                is_success[1]=false;
-                // success();
-                // return is_success;
-                if (is_success[0]==true || is_success[0]==true) {
-                    window.location = "/";
-                }
-            },
-        });
-    }
 }
 
 function showModal(title, body, footer=btn_its_clear){
