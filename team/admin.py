@@ -21,7 +21,8 @@ class TeamsAdmin(admin.ModelAdmin):
 
 class TeamsLeadersAdmin(admin.ModelAdmin):
     model=TeamsLeaders
-    list_display=('user_id','team_id')
+    list_display=('team_id', 'user_id')
+    search_fields=('team_id','user_id')
 
 admin.site.register(Teams, TeamsAdmin)
 admin.site.register(TeamsLeaders, TeamsLeadersAdmin)
