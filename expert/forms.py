@@ -28,4 +28,4 @@ class Solutionform(forms.ModelForm):
 class SolutionadminForm(forms.ModelForm):
     class Meta:
         model=Solution
-        fields=('solution', 'solution_file', 'score')
+        fields=('team', 'task', 'solution', 'solution_file', 'score')
