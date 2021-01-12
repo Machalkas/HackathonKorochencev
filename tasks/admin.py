@@ -4,17 +4,17 @@ from .models import Task,Solution
 
 class TaskAdmin(admin.ModelAdmin):
     add_form=TaskAdminForm
-    list_display=('title', 'deadline')
+    list_display=('title', 'deadline', 'created')
     list_filter=('deadline',)
     search_fields=('title',)
-    ordering=('title','deadline')
+    ordering=('title','created','deadline')
 
 class SolutionAdmin(admin.ModelAdmin):
     add_form=SolutionadminForm
-    list_display=('task','team')
-    list_filter=('task',)
+    list_display=('task','team', 'created')
+    list_filter=('team',)
     search_fields=('team','task')
-    ordering=('task','team')
+    ordering=('task','team', 'created')
 
     
 admin.site.register(Task, TaskAdmin)

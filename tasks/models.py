@@ -9,6 +9,7 @@ class Task(models.Model):
     task_file=models.FileField(blank=True, null=True, verbose_name="Файл задания")
     cost=models.PositiveIntegerField(blank=False, null=False, default=0, verbose_name="Максимальный балл за задание")
     deadline=models.DateTimeField(blank=False, null=False, default=datetime.now, verbose_name="Дедлайн")
+    created=models.DateTimeField(blank=False, null=False, auto_now_add=True, verbose_name="Создано")
     def __str__(self):
         return self.title
     class Meta:
@@ -21,8 +22,9 @@ class Solution(models.Model):
     solution=models.TextField(blank=False,verbose_name="Решение")
     solution_file=models.FileField(blank=True, null=True, verbose_name="Файл решения")
     score=models.PositiveIntegerField(blank=True, null=True, verbose_name="Баллы за задание")
+    created=models.DateTimeField(blank=False, null=False, auto_now_add=True, verbose_name="Создано")
     def __str__(self):
-        return self.task
+        return self.task.title
     class Meta:
         verbose_name = 'Решение'
         verbose_name_plural = 'Решения'

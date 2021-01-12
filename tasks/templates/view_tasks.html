@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+<!-- https://bootstrap-4.ru/docs/4.0/components/navs/#javascript-behavior -->
+<!-- https://bootstrap-4.ru/docs/4.0/components/dropdowns/ -->
+<!-- https://bootstrap-4.ru/docs/4.0/components/modal/ -->
+{% block header%}
+<link rel="stylesheet" href="{% static 'css/index.css'%}">
+<!-- <link rel="stylesheet" href="{% static 'css/svg.css'%}"> -->
+<!-- <link rel="stylesheet" href="{% static 'css/score.css'%}"> -->
+<link rel="stylesheet" href="{% static 'css/join.css'%}">
+{% endblock header %}
+{% block title %}Хакатон|Задания{% endblock title %}
+{% block content %}
+<div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <header class="mb-auto">
+        <div class="">
+            <h3 class="header-title">Хакатон</h3>
+            {% if request.user.is_authenticated %}
+            <p>{{ request.user.first_name }}</p> <a href="../auth/logout"
+                class="btn btn-secondary btn-sm btn-red header-logout">Выйти</a>
+            {% else %}
+            <a href="/auth/login" class="btn btn-secondary btn-sm btn-blue header-login">Войти</a>
+            <a href="/auth/join" class="btn btn-secondary btn-sm btn-green header-join mr-1">Регистрация</a>
+            {% endif %}
+        </div>
+    </header>
+    <main role="main" class="inner cover">
+        <h1 class="cover-heading">Задания</h1>
+        {%if task %}
+        <p>empty</p>
+        {%endif%}
+        {% for task in tasks %}
+        <div class="card bg-light mb-3" style="max-width: 30rem; margin-left: auto; margin-right: auto;">
+            <div class="card-header"><h5>{{task.title}}</h5></div>
+            <div class="card-body">
+              <!-- <h5 class="card-title">Light card title</h5> -->
+              <p class="card-text">{{task.task}}</p>
+            </div>
+          </div>
+        {%endfor%}
+    </main>
+
+    <!-- модальное окно -->
+    <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modal-title"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+            </div>
+            <div class="modal-footer" id="modal-footer">
+            </div>
+          </div>
+        </div>
+      </div>
+    <!-- <footer class=" mastfoot mt-auto">
+            <div class="inner">
+                <p>Machalka</p>
+            </div>
+        </footer> -->
+</div>
+<script>
+    function copy() {
+        copy_text = document.getElementById('url');
+        copy_text.select();
+        copy_text.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+    }
+</script>
+{% endblock content %}
+{%block scripts%}
+<script>var token = '{{csrf_token}}'; var user_pk={{request.user.pk}};</script>
+<!-- <script src="{% static 'data update.js' %}"></script> -->
+<!-- <script src="{% static 'ajax.js' %}"></script> -->
+<!-- <script>update(team_pk,'score');</script> -->
+{%endblock scripts%}
