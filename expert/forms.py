@@ -3,7 +3,7 @@ from .models import Task, Solution
 
 class TaskForm(forms.ModelForm):
     title=forms.CharField(max_length=100, label="Заголовок")
-    task=forms.TextField(label="Задание")
+    task=forms.CharField(label="Задание")
     task_file=forms.FileField(required=False, label="Файл задания")
     cost=forms.IntegerField(label="Максимальный балл за задание")
     deadline=forms.DateTimeField(label="Дедлайн")

@@ -1,5 +1,6 @@
 from django.db import models
 from team.models import Teams
+from datetime import datetime
 
 
 class Task(models.Model):
@@ -7,7 +8,7 @@ class Task(models.Model):
     task=models.TextField(blank=False, verbose_name="Задание")
     task_file=models.FileField(blank=True, null=True, verbose_name="Файл задания")
     cost=models.PositiveIntegerField(blank=False, null=False, default=0, verbose_name="Максимальный балл за задание")
-    deadline=models.DateTimeField(blank=False, null=False, auto_now_add=True, verbose_name="Дедлайн")
+    deadline=models.DateTimeField(blank=False, null=False, default=datetime.now, verbose_name="Дедлайн")
     def __str__(self):
         return self.title
     class Meta:
