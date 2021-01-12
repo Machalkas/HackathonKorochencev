@@ -6,4 +6,5 @@ urlpatterns = [
     # path('/<key>/', views.viewTask, name="view-task"),
     # path('create-task', views.createTask, name="create-task"),
     # path('create-solution',views.createSolution, name="create-solution"),
+    path('managetasks', views.manageTasks, name="manage-tasks"),
 ]

@@ -24,20 +24,8 @@
             {% endif %}
         </div>
     </header>
-    <main role="main" class="inner cover">
-        <h1 class="cover-heading">Задания</h1>
-        {%if task %}
-        <p>empty</p>
-        {%endif%}
-        {% for task in tasks %}
-        <div class="card bg-light mb-3" style="max-width: 30rem; margin-left: auto; margin-right: auto;">
-            <div class="card-header"><h5>{{task.title}}</h5></div>
-            <div class="card-body">
-              <!-- <h5 class="card-title">Light card title</h5> -->
-              <p class="card-text">{{task.task}}</p>
-            </div>
-          </div>
-        {%endfor%}
+    <main role="main" id="main" class="inner cover">
+        <!-- список заданий -->
     </main>
 
     <!-- модальное окно -->
@@ -64,11 +52,8 @@
         </footer> -->
 </div>
 <script>
-    function copy() {
-        copy_text = document.getElementById('url');
-        copy_text.select();
-        copy_text.setSelectionRange(0, 99999);
-        document.execCommand("copy");
+    function createTasks(tasks){
+        console.log(tasks);
     }
 </script>
 {% endblock content %}
