@@ -8,7 +8,7 @@ from .models import Task, Solution
 from .forms import TaskForm, Solutionform
 
 def viewTasks(request):
-    return render(request, "view_tasks.html",{"tasks":tasks})
+    return render(request, "view_tasks.html")
 
 
 def manageTasks(request):
