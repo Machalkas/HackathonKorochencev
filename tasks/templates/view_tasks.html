@@ -6,9 +6,8 @@
 <!-- https://getbootstrap.com/docs/4.0/components/card/ -->
 {% block header%}
 <link rel="stylesheet" href="{% static 'css/index.css'%}">
-<!-- <link rel="stylesheet" href="{% static 'css/svg.css'%}"> -->
-<!-- <link rel="stylesheet" href="{% static 'css/score.css'%}"> -->
 <link rel="stylesheet" href="{% static 'css/join.css'%}">
+<link rel="stylesheet" href="{% static 'card_style.css'%}">
 {% endblock header %}
 {% block title %}Хакатон|Задания{% endblock title %}
 {% block content %}
@@ -55,62 +54,8 @@
 </div>
 {% endblock content %}
 {%block scripts%}
-<script>var token = '{{csrf_token}}'; var user_pk={{request.user.pk}};</script>
-<!-- <script src="{% static 'data update.js' %}"></script> -->
-<!-- <script src="{% static 'ajax.js' %}"></script> -->
-<!-- <script>update(team_pk,'score');</script> -->
+<script src="{% static 'get_tasks.js' %}"></script>
 <style>
-.card-title-complited{
-    color: darkgray;
-}
-.complited{
-    position: absolute;
-    top: 0.95em;
-    right: 1em;
-    color: black;
-}
-.card{
-    border-width: 2px;
-}
-.card:hover{
-    border-color:black;
-}
+
 </style>
-<script>
-    var x=null;
-    function createTasks(active, complited){
-        let m = document.getElementById("main");
-        let cards = "";
-        for (let i=0; i<active.length; i++){
-            if(active[i]['task'].length>=483){
-                active[i]['task']=active[i]['task'].slice(0,483)+"..."
-            }
-            cards+='<div class="card bg-light mb-4" style="max-width: 30rem; margin-left: auto; margin-right: auto;">\n<div class="card-header"><h5>'+active[i]["title"]+'</h5></div>\n<div class="card-body">\n<p class="card-text">'+active[i]['task']+'</p>\n</div>\n</div>\n';
-        }
-        for (let i=0; i<complited.length; i++){
-            if(complited[i]['task'].length>=483){
-                complited[i]['task']=complited[i]['task'].slice(0,483)+"..."
-            }
-            cards+='<div class="card bg-light mb-4" style="max-width: 30rem; margin-left: auto; margin-right: auto;">\n<div class="card-header"><h5 class="card-title-complited">'+complited[i]["title"]+'</h5><h6 class="card-title-complited complited">завершено</h6></div>\n<div class="card-body">\n<p class="card-text card-title-complited">'+complited[i]['task']+'</p>\n</div>\n</div>\n';
-        }
-        m.innerHTML=cards;    
-    }
-    function getTasks() {
-        let send={"action":"get-tasks"}
-        $.ajax({
-            url: '/tasks/managetasks',
-            method: 'get',
-            dataType: 'json',
-            data: send,
-            success: function (data) {
-                createTasks(data["active"], data["complited"]);
-            },
-            error: function () {
-                console.log("Ошибка подключения к серверу");
-            }
-        });
-        setTimeout(getTasks, 60000);
-    }
-    getTasks();
-</script>
 {%endblock scripts%}

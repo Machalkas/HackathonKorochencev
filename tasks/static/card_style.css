@@ -1,0 +1,15 @@
+.card-title-complited{
+    color: darkgray;
+}
+.complited{
+    position: absolute;
+    top: 0.95em;
+    right: 1em;
+    color: black;
+}
+.card{
+    border-width: 2px;
+}
+.card:hover{
+    border-color:black;
+}
