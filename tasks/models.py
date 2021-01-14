@@ -24,7 +24,10 @@ class Solution(models.Model):
     score=models.PositiveIntegerField(blank=True, null=True, verbose_name="Баллы за задание")
     created=models.DateTimeField(blank=False, null=False, auto_now_add=True, verbose_name="Создано")
     def __str__(self):
-        return self.task.title
+        try:
+            return self.task.title
+        except:
+            return "Не найдено"
     class Meta:
         verbose_name = 'Решение'
         verbose_name_plural = 'Решения'

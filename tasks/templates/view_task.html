@@ -24,9 +24,15 @@
             {% endif %}
         </div>
     </header>
-    <h1 style="padding-bottom: 1em;">{{title}}</h1>
     <main role="main" id="main" class="inner cover">
-        <p>{{task}}</p>
+        <div><h1 style="padding-bottom: 1em;">{{title}}</h1></div>
+        <div><p>{{task}}</p></div>
+        {%if deadline%}
+        <div><p>Дедлайн: {{deadline}}</p><p>ПИПиПОП</p></div>
+        {%endif%}
+        {% if is_leader %}
+        <a href="create-solution" class="btn btn-success">Загрузить решение</a>
+        {% endif %}
     </main>
 
     <!-- модальное окно -->

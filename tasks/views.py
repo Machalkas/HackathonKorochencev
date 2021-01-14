@@ -7,17 +7,36 @@ from django.utils import timezone
 from .models import Task, Solution
 from .forms import TaskForm, Solutionform
 
+from team.models import TeamsLeaders
+
 def viewTasks(request):
     return render(request, "view_tasks.html")
 
-def viewTask(request, key):
+def viewTask(request, task_pk):
+    months = {0:"января", 1:"февраля", 2:"марта", 3:"апреля", 4:"мая", 5:"июня", 6:"июля", 7:"августа", 8:"сентября", 9:"октября", 10:"ноября", 11:"декабря"}
     try:
-        task=Task.objects.get(pk=key)
+        TeamsLeaders.objects.get(user_id=request.user.pk)
+    except:
+        is_leader=False
+    else:
+        is_leader=True
+    try:
+        task=Task.objects.get(pk=task_pk)
+        t=task.deadline.timetuple()
+        h=str(t[3])
+        m=str(t[4])
+        if(t[3]<10):
+            h="0"+h
+        if(t[4]<10):
+            m="0"+m
+        deadline=str(t[2])+" "+months[t[1]]+" "+str(t[0])+" "+h+":"+m
     except:
         return render(request, "view_task.html",{'title':'Ошибка', 'task':'Задание не найдено'})
     else:
-        return render(request, "view_task.html",{'title':task.title, 'task':task.task})
+        return render(request, "view_task.html",{'title':task.title, 'task':task.task, "deadline":deadline, 'is_leader':is_leader})
 
+def createSolution(request, task_pk):
+    return HttpResponse("ok")
 
 def manageTasks(request):
     if request.is_ajax and request.method=="POST":
