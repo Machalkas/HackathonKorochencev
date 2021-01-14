@@ -7,7 +7,7 @@
 {% block header%}
 <link rel="stylesheet" href="{% static 'css/index.css'%}">
 <link rel="stylesheet" href="{% static 'css/join.css'%}">
-<link rel="stylesheet" href="{% static 'card_style.css'%}">
+<!-- <link rel="stylesheet" href="{% static 'card_style.css'%}"> -->
 {% endblock header %}
 {% block title %}Хакатон|Задания{% endblock title %}
 {% block content %}
@@ -24,10 +24,28 @@
             {% endif %}
         </div>
     </header>
-    <h1 style="padding-bottom: 1em;">Задания</h1>
+    <h1 style="padding-bottom: 1em;">{{title}}</h1>
     <main role="main" id="main" class="inner cover">
-        <!-- список заданий -->
+        <p>{{task}}</p>
     </main>
+
+    <!-- модальное окно -->
+    <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modal-title"></h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body" id="modal-body">
+            </div>
+            <div class="modal-footer" id="modal-footer">
+            </div>
+          </div>
+        </div>
+      </div>
     <!-- <footer class=" mastfoot mt-auto">
             <div class="inner">
                 <p>Machalka</p>
@@ -36,5 +54,8 @@
 </div>
 {% endblock content %}
 {%block scripts%}
-<script src="{% static 'get_tasks.js' %}"></script>
+<!-- <script src="{% static 'get_tasks.js' %}"></script> -->
+<style>
+
+</style>
 {%endblock scripts%}

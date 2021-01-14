@@ -10,6 +10,14 @@ from .forms import TaskForm, Solutionform
 def viewTasks(request):
     return render(request, "view_tasks.html")
 
+def viewTask(request, key):
+    try:
+        task=Task.objects.get(pk=key)
+    except:
+        return render(request, "view_task.html",{'title':'Ошибка', 'task':'Задание не найдено'})
+    else:
+        return render(request, "view_task.html",{'title':task.title, 'task':task.task})
+
 
 def manageTasks(request):
     if request.is_ajax and request.method=="POST":
@@ -22,9 +30,9 @@ def manageTasks(request):
             tasks=Task.objects.all()
             for i in tasks:
                 if i.deadline>now:
-                    active.append({'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline})
+                    active.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline})
                 else:
-                    completed.append({'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline})
+                    completed.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline})
             return JsonResponse({'active':active, 'complited':completed})
 
             
