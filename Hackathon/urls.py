@@ -22,4 +22,5 @@ urlpatterns = [
     path('auth/', include('userAuth.urls')),
     path('team/', include('team.urls')),
     path('tasks/', include('tasks.urls')),
+    path('company/' ,include('company.urls')),
 ]

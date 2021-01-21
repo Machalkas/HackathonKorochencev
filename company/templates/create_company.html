@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block header%}<link rel="stylesheet" href="{% static 'css/join.css'%}">{% endblock header %}
+{% block title %}Хакатон | Создание компании{% endblock title %}
+{% block content %}
+<div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+<form method="post" class="form mt-5">
+  {% csrf_token %}
+  <h2>Создание компании</h2>
+  {% for field in form %}
+  {{field.errors}}
+  {{field}}
+  {% endfor %}
+  <button type="submit" class="btn btn-primary btn-blue mt-3">Создать</button>
+</form>
+</div>
+{% endblock %}

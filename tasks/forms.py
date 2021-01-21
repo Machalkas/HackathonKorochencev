@@ -18,13 +18,13 @@ class TaskAdminForm(forms.ModelForm):
 
 
 class SolutionForm(forms.ModelForm):
-    solution=forms.CharField(widget=forms.Textarea(attrs={'class':'form-control mt-1', 'placeholder':'Решение'}))
+    # solution=forms.CharField(widget=forms.Textarea(attrs={'class':'form-control mt-1', 'placeholder':'Решение'}))
     solution_file=forms.FileField(required=False, label="Файл решения")
     class Meta:
         model=Solution
-        fields=('solution', 'solution_file')
+        fields=('solution_file',)
 
 class SolutionadminForm(forms.ModelForm):
     class Meta:
         model=Solution
-        fields=('team', 'task', 'solution', 'solution_file', 'score')
+        fields=('team', 'task', 'solution_file', 'score')

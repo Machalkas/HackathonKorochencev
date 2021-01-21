@@ -21,7 +21,7 @@ class Task(models.Model):
 class Solution(models.Model):
     team=models.ForeignKey(Teams, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Команда")
     task=models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Задача")
-    solution=models.TextField(blank=False,verbose_name="Решение")
+    # solution=models.TextField(blank=False,verbose_name="Решение")
     solution_file=models.FileField(blank=True, null=True, verbose_name="Файл решения")
     score=models.PositiveIntegerField(blank=True, null=True, verbose_name="Баллы за задание")
     created=models.DateTimeField(blank=False, null=False, auto_now_add=True, verbose_name="Создано")
