@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'userAuth',
     'team',
     'tasks',
+    'company',
 ]
 
 MIDDLEWARE = [
