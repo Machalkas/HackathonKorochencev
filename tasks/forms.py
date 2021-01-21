@@ -2,11 +2,11 @@ from django import forms
 from .models import Task, Solution
 
 class TaskForm(forms.ModelForm):
-    title=forms.CharField(max_length=100, label="Заголовок")
-    task=forms.CharField(label="Задание")
-    task_file=forms.FileField(required=False, label="Файл задания")
-    cost=forms.IntegerField(label="Максимальный балл за задание")
-    deadline=forms.DateTimeField(label="Дедлайн")
+    title=forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class':'form-control mt-1', 'placeholder':'Заголовок'}))
+    task=forms.CharField(widget=forms.TextInput(attrs={'class':'form-control mt-1', 'placeholder':'Задание'}))
+    task_file=forms.FileField(required=False, widget=forms.TextInput(attrs={'class':'form-control mt-1', 'placeholder':'Файл задания'}))
+    cost=forms.IntegerField(widget=forms.TextInput(attrs={'class':'form-control mt-1', 'placeholder':'Баллы за задание'}))
+    deadline=forms.DateTimeField(widget=forms.TextInput(attrs={'class':'form-control mt-1', 'placeholder':'Дедлайн'}))
     class Meta:
         model=Task
         fields=('title', 'task', 'task_file', 'cost', 'deadline')
@@ -17,10 +17,9 @@ class TaskAdminForm(forms.ModelForm):
         fields=('title', 'task', 'task_file', 'cost', 'deadline')
 
 
-class Solutionform(forms.ModelForm):
-    solution=forms.CharField(label="Решение")
+class SolutionForm(forms.ModelForm):
+    solution=forms.CharField(widget=forms.Textarea(attrs={'class':'form-control mt-1', 'placeholder':'Решение'}))
     solution_file=forms.FileField(required=False, label="Файл решения")
-    score=forms.IntegerField(required=False, label="Баллы за задание")
     class Meta:
         model=Solution
         fields=('solution', 'solution_file')

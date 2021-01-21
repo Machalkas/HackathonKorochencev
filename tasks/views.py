@@ -5,7 +5,7 @@ from datetime import datetime
 from django.utils import timezone
 
 from .models import Task, Solution
-from .forms import TaskForm, Solutionform
+from .forms import TaskForm, SolutionForm
 
 from team.models import TeamsLeaders
 
@@ -33,10 +33,20 @@ def viewTask(request, task_pk):
     except:
         return render(request, "view_task.html",{'title':'Ошибка', 'task':'Задание не найдено'})
     else:
-        return render(request, "view_task.html",{'title':task.title, 'task':task.task, "deadline":deadline, 'is_leader':is_leader})
+        form=SolutionForm()
+        return render(request, "view_task.html",{'form':form, 'title':task.title, 'task':task.task, "deadline":deadline, 'is_leader':is_leader})
 
 def createSolution(request, task_pk):
-    return HttpResponse("ok")
+    task=Task.objects.get(pk=task_pk)
+    if request.method=="POST":
+        form=SolutionForm(request.POST, request.FILES)
+        if form.is_valid():
+            solution=form.save()
+            solution.save()
+            redirect('tasks')     
+    else:
+        form=SolutionForm()
+    return render(request, "create_solution.html",{"form":form,'task':task.task})
 
 def manageTasks(request):
     if request.is_ajax and request.method=="POST":
