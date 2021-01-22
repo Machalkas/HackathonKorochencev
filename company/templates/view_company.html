@@ -3,39 +3,27 @@
 <!-- https://bootstrap-4.ru/docs/4.0/components/navs/#javascript-behavior -->
 <!-- https://bootstrap-4.ru/docs/4.0/components/dropdowns/ -->
 <!-- https://bootstrap-4.ru/docs/4.0/components/modal/ -->
-{% block header%}
+{% block head%}
 <link rel="stylesheet" href="{% static 'css/index.css'%}">
 <link rel="stylesheet" href="{% static 'css/svg.css'%}">
 <link rel="stylesheet" href="{% static 'css/score.css'%}">
 <link rel="stylesheet" href="{% static 'css/join.css'%}">
-{% endblock header %}
+{% endblock head %}
 {% block title %}Хакатон | {{company.name}}{% endblock title %}
 {% block content %}
 <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-    <header class="mb-auto">
-        <div class="">
-            <h3 class="header-title">Хакатон</h3>
-            {% if request.user.is_authenticated %}
-            <p>{{ request.user.first_name }}</p> <a href="../auth/logout"
-                class="btn btn-secondary btn-sm btn-red header-logout">Выйти</a>
-            {% else %}
-            <a href="/auth/login" class="btn btn-secondary btn-sm btn-blue header-login">Войти</a>
-            <a href="/auth/join" class="btn btn-secondary btn-sm btn-green header-join mr-1">Регистрация</a>
-            {% endif %}
-        </div>
-    </header>
+  {% include "header.html" %}
     <main role="main" class="inner cover">
-        <div>
+      <div>
         <h1 class="cover-heading" id='name'>{{company.name}}</h1>
         {{company.description}}
-    </div>
-    <div>
+      </div>
+      <div>
         {%for i in rep%}
         {{i.first_name}}<br>{{i.last_name}}
         {%endfor%}
-    </div>
+      </div>
     </main>
-
     <!-- модальное окно -->
     <div class="modal fade" id="Modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
