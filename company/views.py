@@ -15,8 +15,6 @@ def viewCompany(request):
         representatives=[]
         for i in representatives_id:
             representatives.append(User.objects.get(pk=i.user_id_id))
-        print(representatives)
-
     except:
         return render(request, "company_not_exist.html")
     return render(request, "view_company.html", {'company':company, 'rep':representatives})
