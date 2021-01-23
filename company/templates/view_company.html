@@ -11,16 +11,18 @@
 {% endblock head %}
 {% block title %}Хакатон | {{company.name}}{% endblock title %}
 {% block content %}
-<div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-  {% include "header.html" %}
+<style>.box-shadow {box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);}</style>
+{% include "header.html" %}
+<div class="base-container d-flex w-100 h-100 p-3 pt-md-5 mx-auto flex-column">
     <main role="main" class="inner cover">
       <div>
-        <h1 class="cover-heading" id='name'>{{company.name}}</h1>
-        {{company.description}}
+        <h1 class="cover-heading display-4" id='name'>{{company.name}}</h1>
+        <p class="lead">{{company.description}}</p>
       </div>
       <div>
+        <h3 class="display-6">Представители</h3>
         {%for i in rep%}
-        {{i.first_name}}<br>{{i.last_name}}
+        <p class="lead">{{i.first_name}} {{i.last_name}}</p>
         {%endfor%}
       </div>
     </main>

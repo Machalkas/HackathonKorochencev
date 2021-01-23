@@ -4,19 +4,8 @@
 {% block head%}<link rel="stylesheet" href="{% static 'css/index.css'%}">{% endblock head %}
 {% block title %}Хакатон | Компания{% endblock title %}
 {% block content %}
+{% include "header.html" %}
     <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-        <header class="mb-auto">
-            <div class="">
-                <h3 class="header-title">Хакатон</h3>
-                {% if request.user.is_authenticated %}
-                    <p>{{ request.user.first_name }}</p>
-                    <a href="/auth/logout" class="btn btn-secondary btn-sm btn-red header-logout">Выйти</a>
-                {% else %}
-                    <a href="/auth/login" class="btn btn-secondary btn-sm btn-blue header-login">Войти</a>
-                    <a href="/auth/join" class="btn btn-secondary btn-sm btn-green header-join mr-1">Регистрация</a>
-                {% endif %}
-            </div>
-        </header>
         <main role="main">
             <h1 class="cover-heading">Компания не существует</h1>
             <p class="lead">Вы не представляете никакую компанию</p>
