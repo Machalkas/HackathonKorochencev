@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head%}
+<link rel="stylesheet" href="{% static 'css/index.css'%}">
+<link rel="stylesheet" href="{% static 'css/join.css'%}">
+<link rel="stylesheet" href="{% static 'fields.css'%}">
+{% endblock head %}
+{% block title %}Хакатон | Вход{% endblock title %}
+{% block content %}
+<nav class="nav nav-tabs justify-content-center mt-2">
+  <a class="nav-item nav-link active" id="nav-login-tab" data-toggle="tab" href="#nav-login" role="tab"
+    aria-controls="nav-login" aria-selected="true">Вход</a>
+  <a class="nav-item nav-link" id="nav-singup-tab" data-toggle="tab" href="#nav-singup" role="tab"
+    aria-controls="nav-singup" aria-selected="false">Регистрация</a>
+</nav>
+<div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+  <div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active" id="nav-login" role="tabpanel" aria-labelledby="nav-login-tab">
+      <form method="post" class="form mt-3" id="login_form">
+        {% csrf_token %}
+        <h2>Вход</h2>
+        {% for field in login_form %}
+        {{field}}<p id="login_error_{{field.name}}"></p>
+        {% endfor %}
+        <div id="login_result_form"></div>
+        <input type="button" value="Войти" class="btn btn-primary btn-blue mt-3" id="login_submit">
+      </form>
+    </div>
+    <div class="tab-pane fade" id="nav-singup" role="tabpanel" aria-labelledby="nav-singup-tab">
+      <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <form method="post" class="form mt-3" id="singup_form">
+          {% csrf_token %}
+          <h2>Регистрация</h2>
+          {% for field in singup_form %}
+          {{field}}<p id="singup_error_{{field.name}}"></p>
+          {% endfor %}
+          <div id="singup_result_form"></div>
+          <input type="button" value="Регистрация" class="btn btn-primary btn-blue mt-3" id="singup_submit">
+        </form>
+      </div>
+    </div>
+  </div>
+  {% endblock %}
+  {%block scripts%}
+  <script src="{% static 'scripts.js' %}"></script>
+  {%endblock%}

@@ -1,25 +1,30 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from .forms import SignUpForm, LoginForm
-from django.http import HttpResponse
+from django.http import JsonResponse
 
 
-def join(request):
-    if request.method == 'POST':
-        form = SignUpForm(request.POST)
-        if  form.is_valid():
-            user=form.save()
-            user.save()
-            email = form.cleaned_data.get('email')
-            user_pass = form.cleaned_data.get('password1')
-            user = authenticate(email=email, password=user_pass)
-            logout(request)
-            login(request, user)
-            url=request.GET.get('next','/')
-            return redirect(url) 
-    else:
-        form = SignUpForm()
-    return render(request, 'userAuth/join.html', {'form':form})
+# def join(request):
+#     if request.method == 'POST':
+#         form = SignUpForm(request.POST)
+#         if  form.is_valid():
+#             user=form.save()
+#             user.save()
+#             email = form.cleaned_data.get('email')
+#             user_pass = form.cleaned_data.get('password1')
+#             user = authenticate(email=email, password=user_pass)
+#             logout(request)
+#             login(request, user)
+#             url=request.GET.get('next','/')
+#             return redirect(url) 
+#     else:
+#         form = SignUpForm()
+#     return render(request, 'userAuth/join.html', {'form':form})
+def sendForm(request):
+    if request.method=="GET":
+        login_form=LoginForm()
+        singup_form=SignUpForm()
+        return render(request, 'userAuth/auth.html', {"login_form":login_form, "singup_form":singup_form})
 
 def user_login(request):
     if request.method == "POST":
@@ -40,4 +45,23 @@ def user_login(request):
 
 def user_logout(request):
     logout(request)
-    return redirect('/')    
+    return redirect('/auth')    
+
+def ajax(request):
+    if request.is_ajax and request.method=="POST":
+        action=request.POST.get('action')
+        if action=='login':
+            form=LoginForm(request.POST)
+            if form.is_valid():
+                email=form.cleaned_data.get('email')
+                user_pass=form.cleaned_data.get('password')
+                user = authenticate(email=email, password=user_pass)
+                if user!=None and user.is_active:
+                    login(request, user)
+                    url=request.GET.get('next','/')
+                    return JsonResponse({"url":url}, status=200)
+                else:
+                    return JsonResponse({"error":"Не правильный логин или пароль"}, status=400)
+            else:
+                return JsonResponse({"error":form.errors}, status=400)
+                    
