@@ -7,13 +7,13 @@
 {% block head%}
 <link rel="stylesheet" href="{% static 'css/index.css'%}">
 <link rel="stylesheet" href="{% static 'css/join.css'%}">
-<link rel="stylesheet" href="{% static 'card_style.css'%}">
+<link rel="stylesheet" href="{% static 'tasks/card_style.css'%}">
 {% endblock head %}
 {% block title %}Хакатон | Задания{% endblock title %}
 {% block content %}
 {% include "header.html" %}
 <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-    <h1 style="padding-bottom: 1em;">Задания</h1>
+    <h1 style="padding-bottom: 1em;" id="tasks">Задания</h1>
     <main role="main" id="main" class="inner cover">
         <!-- список заданий -->
     </main>
@@ -25,5 +25,6 @@
 </div>
 {% endblock content %}
 {%block scripts%}
-<script src="{% static 'get_tasks.js' %}"></script>
+<script>var img_empty="{%static 'svg/empty.svg'%}"</script>
+<script src="{% static 'tasks/get_tasks.js' %}"></script>
 {%endblock scripts%}

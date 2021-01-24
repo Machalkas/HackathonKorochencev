@@ -64,4 +64,18 @@ def ajax(request):
                     return JsonResponse({"error":"Не правильный логин или пароль"}, status=400)
             else:
                 return JsonResponse({"error":form.errors}, status=400)
+        elif action=='singup':
+            form=SignUpForm(request.POST)
+            if form.is_valid():
+                user=form.save()
+                user.save()
+                email = form.cleaned_data.get('email')
+                user_pass = form.cleaned_data.get('password1')
+                user = authenticate(email=email, password=user_pass)
+                logout(request)
+                login(request, user)
+                url=request.GET.get('next','/')
+                return JsonResponse({"url":url}, status=200)
+            else:
+                return JsonResponse({"error":form.errors}, status=400)
                     

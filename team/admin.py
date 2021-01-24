@@ -8,12 +8,12 @@ class TeamsAdmin(admin.ModelAdmin):
     list_display=('name','score')
     list_filter=('score',)
     fieldsets=(
-        (None,{'fields':('name','description','score','link','url')}),
+        (None,{'fields':('name','score','link','url')}),
     )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
-            'fields':('name','description','link')}
+            'fields':('name','link')}
         ),
     )
     search_fields=('name',)

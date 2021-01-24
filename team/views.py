@@ -35,29 +35,15 @@ def viewTeam(request):
     for i in User.objects.filter(team=team_pk):
         members.append(i)
     form=CreateTeamForm()
-    return render(request, "view_team.html",{'team_pk':team.pk,'team_name':team.name, 'discription':team.description.replace("\r","[[r]]").replace("\n","[[n]]"),'link':team.link , 'url':request.META['HTTP_HOST']+'/team/invite/'+team.url, 'score':team.score, 'lider_id':lider_id, 'members':members, 'form':form})
+    return render(request, "view_team.html",{'team_pk':team.pk,'team_name':team.name, 'link':team.link , 'url':request.META['HTTP_HOST']+'/team/invite/'+team.url, 'score':team.score, 'lider_id':lider_id, 'members':members, 'form':form}) # 'discription':team.description.replace("\r","[[r]]").replace("\n","[[n]]"),
 
 @login_required(login_url='/auth/login')
-def createTeam(request):
+def sendForm(request):
     if request.user.team==None:
-        if request.method=="POST":
-            form = CreateTeamForm(request.POST)
-            if form.is_valid():
-                team=form.save()
-                team.url=generateValidator()
-                id_team=Teams.objects.get(id=team.id)
-                user=User.objects.get(pk=request.user.pk)
-                user.team=id_team
-                tl=TeamsLeaders(user_id=user, team_id=id_team)
-                tl.save()
-                user.save()
-                team.save()
-                return redirect("/team/view")
-        else:
+        if request.method=="GET":
             form=CreateTeamForm()
-        return render(request, "create_team.html", {'form':form})
-    else:
-        return redirect("/team/view")
+            return render(request, "create_team.html", {'form':form})
+    return redirect("/team/view")
 
 @login_required(login_url='/auth/login')
 def addMember(request,key):
@@ -76,7 +62,6 @@ def manageTeam(request):
     if request.is_ajax and request.method == "POST":
         action=request.POST.get('action')
         if action=='delete-member':
-            # user=User.objects.get(pk=request.POST.get('member'))
             if checkPermissions(request)[0]!=True and checkPermissions(request)[1]!=True:
                 return JsonResponse({"error":"Недостаточно прав для выполнения запроса"}, status=400)
             errors=""
@@ -92,25 +77,33 @@ def manageTeam(request):
             if errors!='':
                 return JsonResponse({"error":errors}, status=400)
             return JsonResponse({"ok":""}, status=200)
-
-        elif checkPermissions(request)[0]!=True:
+        elif action=="create-team":
+            form = CreateTeamForm(request.POST)
+            if form.is_valid():
+                team=form.save()
+                team.url=generateValidator()
+                id_team=Teams.objects.get(id=team.id)
+                user=User.objects.get(pk=request.user.pk)
+                user.team=id_team
+                tl=TeamsLeaders(user_id=user, team_id=id_team)
+                tl.save()
+                user.save()
+                team.save()
+                return JsonResponse({"url":"/team/view"}, status=200)
+            else:
+                return JsonResponse({"error":form.errors}, status=400)
+        elif checkPermissions(request)[0]!=True:#повышение прав доступа
                 return JsonResponse({"error":"Недостаточно прав для выполнения запроса "+action}, status=400)
-
         elif action=='update':
             team=Teams.objects.get(id=request.user.team.id)
             form=CreateTeamForm(request.POST, instance=team)
             url=team.url
             if form.is_valid():
-                # team.name=request.POST.get('name')
-                # team.description=request.POST.get('description')
-                # team.link=request.POST.get('link')
                 team.url=url
                 team.save()
                 return JsonResponse({'data':{'name':team.name, 'description':team.description, 'link':team.link}},status=200)
             else:
-                # print(form.errors)
                 return JsonResponse({'error':form.errors}, status=400)   
-
         elif action=='update-members':
             status=[{"change-leader":None, "delete-members":None},200]
             if request.POST.get('leader')!='':
@@ -155,7 +148,6 @@ def manageTeam(request):
             else:
                 status[0]["delete-members"]={"ok":""}
             return JsonResponse(status[0],status=status[1])
-
         else:
             return JsonResponse({"error":"Новозможно обработать запрос "+action},status=400)
 

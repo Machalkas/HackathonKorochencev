@@ -5,7 +5,7 @@ $("#submit").click(function () {
     // console.log($("#form").serialize());
     console.log($("#form"));
     $.ajax({
-        url: '/team/manageteam',
+        url: '/team/ajax',
         method: 'post',
         dataType: 'html',
         data: $("#form").serialize() + "&action=update",
@@ -15,10 +15,10 @@ $("#submit").click(function () {
             var x = JSON.parse(data);
             // console.log(x);
             $('#name').html(x["data"]["name"]);
-            $('#description').html(x["data"]["description"]);
+            // $('#description').html(x["data"]["description"]);
             $('#link').html(x["data"]["link"]);
             l_team = x["data"]["name"];
-            l_desc = x["data"]["description"];
+            // l_desc = x["data"]["description"];
             l_link = x["data"]["link"];
             checkForm();
             $('#result_form').html("")
@@ -44,7 +44,7 @@ function leaveTeam(pk) {
     };
     $.ajax({
         headers: { "X-CSRFToken": token },
-        url: '/team/manageteam',
+        url: '/team/ajax',
         method: 'post',
         dataType: 'json',
         data: send,
@@ -66,7 +66,7 @@ function update(team_id, element_id) {
     }
     $.ajax({
         headers: { "X-CSRFToken": token },
-        url: '/team/manageteam',
+        url: '/team/ajax',
         method: 'get',
         dataType: 'json',
         data: send,
@@ -210,7 +210,7 @@ function submitMembers() {
     };
     $.ajax({
         headers: { "X-CSRFToken": token },
-        url: '/team/manageteam',
+        url: '/team/ajax',
         method: 'post',
         dataType: 'json',
         data: send,
@@ -248,6 +248,50 @@ function showModal(title, body, footer=btn_its_clear){
     document.getElementById("modal-body").innerHTML=body;
     document.getElementById("modal-footer").innerHTML=footer;
     $("#Modal").modal();
+}
+
+var create_team_result_form = document.getElementById("create_team_result_form");
+$("#create_team_submit").click(function () {
+    if (checkForm(document.forms["create_team_form"])) {
+        $.ajax({
+            url: '/team/ajax',
+            method: 'post',
+            dataType: 'html',
+            data: $("#create_team_form").serialize() + "&action=create-team",
+            success: function (data) {
+                test = data;
+                data = JSON.parse(data);
+                location = data["url"];
+            },
+            error: function (data) {
+                data = JSON.parse(data["responseText"]);
+                try {
+                    create_team_result_form.innerHTML = data["error"]['name'][0];
+                } catch {
+                    create_team_result_form.innerHTML = data["error"];
+                }
+            }
+        })
+    }
+    else {
+        create_team_result_form.innerHTML = "Заполните все обязательные поля"
+    }
+});
+function checkForm(form) {
+    let is_valid = true;
+    let elem_valid = [];
+    elem_valid.length = form.elements.length;
+    for (let i = 0; i < form.elements.length; i++) {
+        let valid = true;
+        form.elements[i].style = "";
+        if (form.elements[i].required && form.elements[i].value == "") {
+            form.elements[i].style = "background-color:rgba(248, 37, 37, 0.527);";
+            valid = false;
+            is_valid = false;
+        }
+        elem_valid[i] = valid;
+    }
+    return is_valid;
 }
 
 update(team_pk, 'score');

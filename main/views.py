@@ -7,7 +7,7 @@ def index(request):
     if request.user.is_authenticated:
         user=User.objects.get(pk=request.user.pk)
         if user.is_specialist:
-            return redirect("company/view")
-        return redirect("/team/view")
+            return redirect("company")
+        return redirect("/team")
     return render(request, "main/index.html")
     

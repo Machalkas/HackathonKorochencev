@@ -1,18 +1,23 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block head%}<link rel="stylesheet" href="{% static 'css/join.css'%}">{% endblock head %}
+{% block head%}
+<link rel="stylesheet" href="{% static 'css/join.css'%}">
+<link rel="stylesheet" href="{% static 'css/fields_required.css'%}">
+{% endblock head %}
 {% block title %}Хакатон | Создание команды{% endblock title %}
 {% block content %}
 <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-<form method="post" class="form mt-5">
+<form method="post" class="form mt-5" id="create_team_form">
   {% csrf_token %}
   <h2>Создание команды</h2>
   {% for field in form %}
-  {{field.errors}}
-  {{field}}
+  {{field}}<p id="create_team_error_{{field.name}}"></p>
   {% endfor %}
-  <button type="submit" class="btn btn-primary btn-blue mt-3">Создать</button>
-</form>
+  <div id="create_team_result_form"></div>
+  <input type="button" value="Создать" class="btn btn-primary btn-blue mt-3" id="create_team_submit"></form>
 </div>
 {% endblock %}
+{%block scripts%}
+<script src="{% static 'team/ajax.js' %}"></script>
+{%endblock%}

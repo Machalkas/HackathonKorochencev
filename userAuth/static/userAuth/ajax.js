@@ -1,5 +1,6 @@
 var test;
 var login_result_form = document.getElementById("login_result_form");
+var singup_result_form = document.getElementById("singup_result_form");
 $("#login_submit").click(function () {
     if (checkForm(document.forms["login_form"])) {
         $.ajax({
@@ -24,6 +25,32 @@ $("#login_submit").click(function () {
     }
     else {
         login_result_form.innerHTML = "Заполните все обязательные поля"
+    }
+});
+$("#singup_submit").click(function () {
+    if (checkForm(document.forms["singup_form"])) {
+        $.ajax({
+            url: '/auth/ajax',
+            method: 'post',
+            dataType: 'html',
+            data: $("#singup_form").serialize() + "&action=singup",
+            success: function (data) {
+                test = data;
+                data = JSON.parse(data);
+                location = data["url"];
+            },
+            error: function (data) {
+                data = JSON.parse(data["responseText"]);
+                try {
+                    singup_result_form.innerHTML = data["error"]['email'][0];
+                } catch {
+                    singup_result_form.innerHTML = data["error"];
+                }
+            }
+        })
+    }
+    else {
+        singup_result_form.innerHTML = "Заполните все обязательные поля"
     }
 });
 function checkForm(form) {
