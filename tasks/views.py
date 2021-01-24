@@ -59,12 +59,10 @@ def manageTasks(request):
             tasks=Task.objects.all()
             for i in tasks:
                 if i.deadline>now:
-                    active.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline})
+                    active.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline, 'company':i.company.name})
                 else:
-                    completed.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline})
-            return JsonResponse({'active':active, 'complited':completed})
-
-            
+                    completed.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline, 'company':i.company.name})
+            return JsonResponse({'active':active, 'complited':completed})    
     else:
         return HttpResponse("Не поддерживаемый запрос")
 

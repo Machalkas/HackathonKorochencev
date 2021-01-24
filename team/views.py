@@ -23,12 +23,18 @@ def generateValidator():
             t=Teams.objects.get(url=s)
         except:
             return s
+            
+def viewTeams(request):
+    return render(request, "view_teams.html")
 
-@login_required(login_url='/auth/login')
-def viewTeam(request):
-    if(request.user.team==None):
-        return render(request, "not_exist.html")
-    team_pk=request.user.team.id
+# @login_required(login_url='/auth')
+def viewTeam(request, key=None):
+    if key!=None:
+        team_pk=Teams.objects.get(name=key).pk
+    else:
+        if(request.user.team==None):
+            return render(request, "not_exist.html")
+        team_pk=request.user.team.id
     team=Teams.objects.get(id=team_pk)
     lider_id=TeamsLeaders.objects.get(team_id=team_pk).user_id_id
     members=[]
@@ -37,7 +43,7 @@ def viewTeam(request):
     form=CreateTeamForm()
     return render(request, "view_team.html",{'team_pk':team.pk,'team_name':team.name, 'link':team.link , 'url':request.META['HTTP_HOST']+'/team/invite/'+team.url, 'score':team.score, 'lider_id':lider_id, 'members':members, 'form':form}) # 'discription':team.description.replace("\r","[[r]]").replace("\n","[[n]]"),
 
-@login_required(login_url='/auth/login')
+@login_required(login_url='/auth')
 def sendForm(request):
     if request.user.team==None:
         if request.method=="GET":
@@ -45,7 +51,7 @@ def sendForm(request):
             return render(request, "create_team.html", {'form':form})
     return redirect("/team/view")
 
-@login_required(login_url='/auth/login')
+@login_required(login_url='/auth')
 def addMember(request,key):
         if request.method=='POST':
             team_id=request.POST.get('team_id')
@@ -89,7 +95,7 @@ def manageTeam(request):
                 tl.save()
                 user.save()
                 team.save()
-                return JsonResponse({"url":"/team/view"}, status=200)
+                return JsonResponse({"url":"/team/"}, status=200)
             else:
                 return JsonResponse({"error":form.errors}, status=400)
         elif checkPermissions(request)[0]!=True:#повышение прав доступа
@@ -150,9 +156,7 @@ def manageTeam(request):
             return JsonResponse(status[0],status=status[1])
         else:
             return JsonResponse({"error":"Новозможно обработать запрос "+action},status=400)
-
-
-    elif request.is_ajax and request.method=='GET':
+    elif request.is_ajax and request.method=='GET':#GET
         if request.GET.get('action')=='request':
             team=request.GET.get('team')
             team=Teams.objects.get(pk=team)
@@ -166,7 +170,12 @@ def manageTeam(request):
                     is_lider=True
                 m.append({'id':i.pk,'first_name':i.first_name, 'last_name':i.last_name, 'email':i.email, 'specialization':i.specialization, 'is_lider':is_lider})
             return JsonResponse({'score':team.score,'members':m})
-
+        elif request.GET.get('action')=="get-teams":
+            teams=[]
+            t=Teams.objects.all().order_by("-score")
+            for i in t:
+                teams.append({"pk":i.pk, "name":i.name, "score":i.score})
+            return JsonResponse({'teams':teams}) 
         else:
             return JsonResponse({"error":""},status=400)
     return HttpResponse(request, 'only for AJAX')
@@ -188,4 +197,4 @@ def getScore(request):
             return HttpResponse("None")
     else:
         return HttpResponse(request,'only GET')
-# Create your views here.
+# Create your views here.  

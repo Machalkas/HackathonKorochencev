@@ -6,7 +6,7 @@ from .models import CompanyRepresentatives, Company
 from django.http import HttpResponse
 
 
-@login_required(login_url='/auth/login')
+@login_required(login_url='/auth')
 def viewCompany(request):
     try:
         company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.pk).company_id_id
@@ -20,7 +20,7 @@ def viewCompany(request):
     return render(request, "view_company.html", {'company':company, 'rep':representatives})
 
 
-@login_required(login_url='/auth/login')
+@login_required(login_url='/auth')
 def createCompany(request):
     if request.method=="POST":
         form=CompanyForm(request.POST)
