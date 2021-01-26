@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from .forms import SignUpForm, LoginForm
 from django.http import JsonResponse
+from .models import User
 
 
 # def join(request):
@@ -46,6 +47,16 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return redirect('/auth')    
+
+def profile(request, key=None):
+    if key==None:
+        user=request.user
+    else:
+        try:
+            user=User.objects.get(pk=key)
+        except:
+            user=request.user
+    return render(request, "userAuth/profile.html", {"user":user})
 
 def ajax(request):
     if request.is_ajax and request.method=="POST":

@@ -49,7 +49,7 @@ def sendForm(request):
         if request.method=="GET":
             form=CreateTeamForm()
             return render(request, "create_team.html", {'form':form})
-    return redirect("/team/view")
+    return redirect("/team")
 
 @login_required(login_url='/auth')
 def addMember(request,key):
@@ -59,7 +59,7 @@ def addMember(request,key):
             user=User.objects.get(pk=request.user.pk)
             user.team=team_id
             user.save()
-            return redirect("/team/view")
+            return redirect("/team")
         else:
             team=Teams.objects.get(url=key)
             return render(request,"invite.html",{'team':team.name})

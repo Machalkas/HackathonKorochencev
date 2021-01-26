@@ -1,6 +1,7 @@
 var test;
 var login_result_form = document.getElementById("login_result_form");
 var singup_result_form = document.getElementById("singup_result_form");
+var style="border-color:red; background-color:rgba(248, 37, 37, 0.525); color:white;";
 $("#login_submit").click(function () {
     if (checkForm(document.forms["login_form"])) {
         $.ajax({
@@ -15,16 +16,17 @@ $("#login_submit").click(function () {
             },
             error: function (data) {
                 data = JSON.parse(data["responseText"]);
-                try {
-                    login_result_form.innerHTML = data["error"]['email'][0];
-                } catch {
-                    login_result_form.innerHTML = data["error"];
-                }
+                console.log(data);
+                let errors="";
+                errors+='<p class="lead" style="font-size: 1em;">'+data["error"]+'</p>\n';
+                login_result_form.innerHTML=errors;
+                login_result_form.style=style;
             }
         })
     }
     else {
         login_result_form.innerHTML = "Заполните все обязательные поля"
+        login_result_form.style=style;
     }
 });
 $("#singup_submit").click(function () {
@@ -41,16 +43,30 @@ $("#singup_submit").click(function () {
             },
             error: function (data) {
                 data = JSON.parse(data["responseText"]);
-                try {
-                    singup_result_form.innerHTML = data["error"]['email'][0];
-                } catch {
-                    singup_result_form.innerHTML = data["error"];
+                console.log(data);
+                let errors="";
+                try{
+                    for(let i of data["error"]['email']){
+                        // console.log(i);
+                        errors+='<p class="lead" style="font-size: 1em;">'+i+'</p>\n';
+                    }
                 }
+                catch{}
+                try{
+                    for(let i of data["error"]['password2']){
+                        // console.log(i);
+                        errors+='<p class="lead" style="font-size: 1em;">'+i+'</p>\n';
+                    }
+                }
+                catch{}
+                singup_result_form.innerHTML=errors;
+                singup_result_form.style=style;
             }
         })
     }
     else {
-        singup_result_form.innerHTML = "Заполните все обязательные поля"
+        singup_result_form.innerHTML = "Заполните все обязательные поля";
+        singup_result_form.style=style;
     }
 });
 function checkForm(form) {

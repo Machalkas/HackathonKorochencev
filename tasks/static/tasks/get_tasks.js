@@ -5,7 +5,7 @@ function createTasks(active, complited){
     let cards = "";
     if(active.length==0 && complited.length==0){
         document.getElementById("tasks").innerHTML="Пусто...";
-        m.innerHTML='<img src="'+img_empty+'" alt="пусто..." style="width: 60%; margin-top: 3%; margin-bottom: 2%;">\n<p class="lead">Сейчас нет никаких заданий</p>\n<p class="lead">Заходите позже</p>';
+        m.innerHTML='<img src="'+img_empty+'" alt="пусто..." style="width: 60%; margin-top: 3%; margin-bottom: 2%;">\n<p class="lead">Сейчас нет никаких заданий</p>\n<p class="lead">Заходи позже</p>';
     }
     else{
         for (let i=0; i<active.length; i++){
