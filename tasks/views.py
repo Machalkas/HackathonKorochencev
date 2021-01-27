@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
+from django import forms
 # from django.contrib.auth.decorators import login_required
 from datetime import datetime
 from django.utils import timezone
@@ -14,39 +15,41 @@ def viewTasks(request):
 
 def viewTask(request, task_pk):
     months = {0:"января", 1:"февраля", 2:"марта", 3:"апреля", 4:"мая", 5:"июня", 6:"июля", 7:"августа", 8:"сентября", 9:"октября", 10:"ноября", 11:"декабря"}
-    try:
-        TeamsLeaders.objects.get(user_id=request.user.pk)
-    except:
-        is_leader=False
-    else:
-        is_leader=True
-    try:
-        task=Task.objects.get(pk=task_pk)
-        t=task.deadline.timetuple()
-        h=str(t[3])
-        m=str(t[4])
-        if(t[3]<10):
-            h="0"+h
-        if(t[4]<10):
-            m="0"+m
-        deadline=str(t[2])+" "+months[t[1]]+" "+str(t[0])+" "+h+":"+m
-    except:
-        return render(request, "view_task.html",{'title':'Ошибка', 'task':'Задание не найдено'})
-    else:
-        form=SolutionForm()
-        return render(request, "view_task.html",{'form':form, 'title':task.title, 'task':task.task, "deadline":deadline, 'is_leader':is_leader})
-
-def createSolution(request, task_pk):
-    task=Task.objects.get(pk=task_pk)
     if request.method=="POST":
         form=SolutionForm(request.POST, request.FILES)
         if form.is_valid():
             solution=form.save()
+            solution.task=Task.objects.get(pk=task_pk)
+            solution.team=request.user.team
             solution.save()
-            redirect('tasks')     
+            return redirect("/tasks")
     else:
-        form=SolutionForm()
-    return render(request, "create_solution.html",{"form":form,'task':task.task})
+        try:
+            TeamsLeaders.objects.get(user_id=request.user.pk)
+        except:
+            is_leader=False
+        else:
+            is_leader=True
+        try:
+            task=Task.objects.get(pk=task_pk)
+            t=task.deadline.timetuple()
+            h=str(t[3])
+            m=str(t[4])
+            if(t[3]<10):
+                h="0"+h
+            if(t[4]<10):
+                m="0"+m
+            deadline=str(t[2])+" "+months[t[1]]+" "+str(t[0])+" "+h+":"+m
+        except:
+            return render(request, "view_task.html",{'title':'Ошибка', 'task':'Задание не найдено'})
+        else:
+            form=SolutionForm()
+            now = timezone.now()
+            is_active=False
+            if task.deadline>=now:
+                is_active=True
+            return render(request, "view_task.html",{'form':form, 'title':task.title, 'task':task.task, 'company':task.company, "deadline":deadline, 'is_leader':is_leader, "is_active":is_active})
+
 
 def manageTasks(request):
     if request.is_ajax and request.method=="POST":
@@ -58,7 +61,7 @@ def manageTasks(request):
             completed=[]
             tasks=Task.objects.all()
             for i in tasks:
-                if i.deadline>now:
+                if i.deadline>=now:
                     active.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline, 'company':i.company.name})
                 else:
                     completed.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline, 'company':i.company.name})

@@ -217,7 +217,7 @@ function submitMembers() {
         success: function (data) {
             update(team_pk, 'score');
             cancelMembers;
-            window.location = "/";
+            window.location.reload();
         },
         error: function (data) {
            console.log(data)
@@ -252,7 +252,7 @@ function showModal(title, body, footer=btn_its_clear){
 
 var create_team_result_form = document.getElementById("create_team_result_form");
 $("#create_team_submit").click(function () {
-    if (checkForm(document.forms["create_team_form"])) {
+    if (createTeamCheckForm(document.forms["create_team_form"])) {
         $.ajax({
             url: '/team/ajax',
             method: 'post',
@@ -277,7 +277,7 @@ $("#create_team_submit").click(function () {
         create_team_result_form.innerHTML = "Заполните все обязательные поля"
     }
 });
-function checkForm(form) {
+function createTeamCheckForm(form) {
     let is_valid = true;
     let elem_valid = [];
     elem_valid.length = form.elements.length;

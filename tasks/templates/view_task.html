@@ -17,18 +17,18 @@
         <div><h1 style="padding-bottom: 1em;">{{title}}</h1></div>
         <div><p>{{task}}</p></div>
         {%if deadline%}
-        <div><p>Дедлайн: {{deadline}}</p><p>ПИПиПОП</p></div>
+        <div><p>Дедлайн: {{deadline}}</p><p>{{company}}</p></div>
         {%endif%}
-        {% if is_leader %}
+        {% if is_leader and is_active%}
         <a class="btn btn-success" data-toggle="collapse" href="#solutionForm" role="button" aria-expanded="false" aria-controls="solutionForm">Загрузить решение</a>
         <div class="collapse" id="solutionForm">
-          <form method="post" class="form mt-5">
+          <form method="post" class="form mt-5"  enctype="multipart/form-data">
             {% csrf_token %}
             {% for field in form %}
             {{field.errors}}
             {{field}}
             {% endfor %}
-            <button type="submit" class="btn btn-primary btn-blue mt-3">Загрузка</button>
+            <button type="submit" class="btn btn-primary btn-blue mt-3">Отправка</button>
           </form>
         </div>
         {% endif %}

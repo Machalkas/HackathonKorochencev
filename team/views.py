@@ -67,6 +67,7 @@ def addMember(request,key):
 def manageTeam(request):
     if request.is_ajax and request.method == "POST":
         action=request.POST.get('action')
+        print(checkPermissions(request))
         if action=='delete-member':
             if checkPermissions(request)[0]!=True and checkPermissions(request)[1]!=True:
                 return JsonResponse({"error":"Недостаточно прав для выполнения запроса"}, status=400)
@@ -107,7 +108,7 @@ def manageTeam(request):
             if form.is_valid():
                 team.url=url
                 team.save()
-                return JsonResponse({'data':{'name':team.name, 'description':team.description, 'link':team.link}},status=200)
+                return JsonResponse({'data':{'name':team.name, 'link':team.link}},status=200)
             else:
                 return JsonResponse({'error':form.errors}, status=400)   
         elif action=='update-members':
@@ -185,7 +186,12 @@ def checkPermissions(request):
         leader=TeamsLeaders.objects.get(team_id=request.user.team)
     except:
         return [None,None]
-    return [request.user.pk==leader.user_id_id, request.POST.get("members[0]")==request.user.pk]
+    status=[False,False]
+    if request.POST.get("member")!=None:
+        status[1]=int(request.POST.get("member"))==request.user.pk
+    status[0]=request.user.pk==leader.user_id_id
+    print(status)
+    return status
 
 def getScore(request):
     if request.method=="GET":

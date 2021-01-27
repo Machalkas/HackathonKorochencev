@@ -77,7 +77,7 @@
           }
           return result;
         }
-        document.getElementById("description").innerHTML = formatText("{{discription}}");
+        // document.getElementById("description").innerHTML = formatText("{{discription}}");
       </script>
       {%if lider_id is request.user.id%}
       <div class="tab-pane fade" id="nav-control" role="tabpanel" aria-labelledby="nav-control-tab">
@@ -93,14 +93,14 @@
         </div>
         <script>
           let team = document.getElementsByName('name');
-          let disc = document.getElementsByName('description');
+          // let disc = document.getElementsByName('description');
           let link = document.getElementsByName('link');
           let sub = document.getElementById("submit");
           let l_team = team[0].value = "{{team_name}}";
-          let l_desc = disc[0].value = formatText("{{discription}}");
+          // let l_desc = disc[0].value = formatText("{{discription}}");
           let l_link = link[0].value = "{{link}}";
           function checkForm() {
-            if ((team[0].value != l_team || disc[0].value != l_desc || link[0].value != l_link) && (team[0].value != '' && disc[0].value != '' && link[0].value != '')) {
+            if ((team[0].value != l_team  || link[0].value != l_link) && (team[0].value != '' && link[0].value != '')) {//|| disc[0].value != l_desc  && disc[0].value != ''
               sub.disabled = false;
             }
             else {

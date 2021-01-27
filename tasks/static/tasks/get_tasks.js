@@ -38,7 +38,7 @@ function createTasks(active, complited){
                 m="0"+d.getMinutes();
             }
             let date=d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear()+' '+h+":"+m;
-            cards+='<a class="a-card" href="'+complited[i]["pk"]+'">\n<div class="card bg-light mb-4">\n<div class="card-header card-color-complited"><h5>'+complited[i]["title"]+'</h5><h6 class="complited">завершено</h6></div>\n<div class="card-body card-color-complited">\n<p>'+complited[i]['task']+'</p>\n</div>\n<div class="card-footer card-color-complited">\n<p class="card-footer-text card-deadline">дедлайн<p>\n<p class="card-footer-text card-datetime">'+date+'<p><p class="card-footer-text card-organisation">'+active[i]['company']+'</p>\n</div>\n</div>\n</a>\n';
+            cards+='<a class="a-card" href="'+complited[i]["pk"]+'">\n<div class="card bg-light mb-4">\n<div class="card-header card-color-complited"><h5>'+complited[i]["title"]+'</h5><h6 class="complited">завершено</h6></div>\n<div class="card-body card-color-complited">\n<p>'+complited[i]['task']+'</p>\n</div>\n<div class="card-footer card-color-complited">\n<p class="card-footer-text card-deadline">дедлайн<p>\n<p class="card-footer-text card-datetime">'+date+'<p><p class="card-footer-text card-organisation">'+complited[i]['company']+'</p>\n</div>\n</div>\n</a>\n';
         }
         m.innerHTML=cards;
     }    

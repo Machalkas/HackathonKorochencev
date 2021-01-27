@@ -9,7 +9,7 @@
 <link rel="stylesheet" href="{% static 'css/score.css'%}">
 <link rel="stylesheet" href="{% static 'css/join.css'%}">
 {% endblock head %}
-{% block title %}Хакатон | {{company.name}}{% endblock title %}
+{% block title %}Хакатон | Профиль{% endblock title %}
 {% block content %}
 {% include "header.html" %}
 <div class="base-container d-flex w-100 h-100 p-3 pt-md-5 mx-auto flex-column">
@@ -17,6 +17,7 @@
        <h1 class="cover-heading" id='name'>Профиль</h1>  <!--  display-4 -->
         <p class="lead">{{user.first_name}}</p>
         <p class="lead">{{user.last_name}}</p>
+        <p class="lead">{{user.email}}</p>
         <p class="lead">{{user.specialization}}</p>
         <p class="lead">{{user.team}}</p>
     </main>

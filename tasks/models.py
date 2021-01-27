@@ -19,10 +19,10 @@ class Task(models.Model):
         verbose_name_plural = 'Задачи'
 
 class Solution(models.Model):
-    team=models.ForeignKey(Teams, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Команда")
-    task=models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=False, verbose_name="Задача")
+    team=models.ForeignKey(Teams, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Команда")
+    task=models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Задача")
     # solution=models.TextField(blank=False,verbose_name="Решение")
-    solution_file=models.FileField(blank=True, null=True, verbose_name="Файл решения")
+    solution_file=models.FileField(blank=False, null=True, verbose_name="Файл решения")
     score=models.PositiveIntegerField(blank=True, null=True, verbose_name="Баллы за задание")
     created=models.DateTimeField(blank=False, null=False, auto_now_add=True, verbose_name="Создано")
     def __str__(self):
