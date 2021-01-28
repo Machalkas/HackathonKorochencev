@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'team',
     'tasks',
     'company',
+    'django_cleanup',
 ]
 
 MIDDLEWARE = [
