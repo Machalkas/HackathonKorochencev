@@ -18,6 +18,7 @@ def viewTask(request, task_pk):
     if request.method=="POST":
         form=SolutionForm(request.POST, request.FILES)
         if form.is_valid():
+            now = timezone.now()
             solution=form.save()
             solution.task=Task.objects.get(pk=task_pk)
             solution.team=request.user.team
@@ -43,12 +44,12 @@ def viewTask(request, task_pk):
         except:
             return render(request, "view_task.html",{'title':'Ошибка', 'task':'Задание не найдено'})
         else:
-            form=SolutionForm()
+            form=SolutionForm()#initial={"team":request.user.team, "task":task}
             now = timezone.now()
             is_active=False
             if task.deadline>=now:
                 is_active=True
-            return render(request, "view_task.html",{'form':form, 'title':task.title, 'task':task.task, 'company':task.company, "deadline":deadline, 'is_leader':is_leader, "is_active":is_active})
+            return render(request, "view_task.html",{'form':form, 'title':task.title, 'task':task.task, 'file':task.task_file, 'company':task.company, "deadline":deadline, 'is_leader':is_leader, "is_active":is_active})
 
 
 def manageTasks(request):

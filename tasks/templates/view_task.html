@@ -15,10 +15,13 @@
 <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <main role="main" id="main" class="inner cover">
         <div><h1 style="padding-bottom: 1em;">{{title}}</h1></div>
-        <div><p>{{task}}</p></div>
-        {%if deadline%}
-        <div><p>Дедлайн: {{deadline}}</p><p>{{company}}</p></div>
+        <div>
+          <p>{{task}}</p>
+        {%if file is not None%}
+        <a href="/media/{{file}}" target="_blank"><p>{{file}}</p></a>
         {%endif%}
+      </div>
+        <div><p>Дедлайн: {{deadline}}</p><p>{{company}}</p></div>
         {% if is_leader and is_active%}
         <a class="btn btn-success" data-toggle="collapse" href="#solutionForm" role="button" aria-expanded="false" aria-controls="solutionForm">Загрузить решение</a>
         <div class="collapse" id="solutionForm">
