@@ -9,7 +9,7 @@
 <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <main role="main">
         {% if request.user.team is None%}
-        <h1>Приглашение</h1>
+        <h1 class=" display-4">Приглашение</h1>
         <p>Вас приглашают в группу {{team}}</p>
         <form method="POST">
             {% csrf_token %}

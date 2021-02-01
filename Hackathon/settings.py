@@ -87,6 +87,29 @@ DATABASES = {
     }
 }
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'hackathon',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'HOST': '127.0.0.1',
+#         'PORT': '3306',
+#     }
+# }
+
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'kingdom',
+#         'USER': 'king',
+#         'PASSWORD': 'DaDaDa4546',
+#         'HOST': '192.168.119.209',
+#         'PORT': '',
+#     }
+# }
+
 
 # Password validation
 # https://docs.djangoproject.com/en/3.1/ref/settings/#auth-password-validators
@@ -130,6 +153,7 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR,"userAuth/static"),
     os.path.join(BASE_DIR,"tasks/static"),
     os.path.join(BASE_DIR,"team/static"),
+    os.path.join(BASE_DIR,"company/static"),
   )
 
 MEDIA_URL = '/media/'

@@ -14,7 +14,7 @@
 {% include "header.html" %}
 <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
   <main role="main" class="inner cover">
-    <h1 class="cover-heading" id='name'>{{team_name}}</h1>
+    <h1 class="cover-heading display-4" id='name'>{{team_name}}</h1>
     <a style="margin-top: 1em;"
       onclick="showModal('Вы уверены что хотите покинуть команду?','Подумой...','&lt;button type=&quot;button&quot; class=&quot;btn btn-secondary btn-green header-join&quot; data-dismiss=&quot;modal&quot; id=&quot;modal-cancel&quot; onclick=&quot;&quot;&gt;Отмена&lt;/button&gt;&lt;button type=&quot;button&quot; class=&quot;btn btn-primary btn-red header-logout&quot;  data-dismiss=&quot;modal&quot; id=&quot;modal-submit&quot; onclick=&quot;leaveTeam({{request.user.pk}})&quot;&gt;Выйти&lt;/button&gt;')">Покинуть
       команду</a>

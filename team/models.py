@@ -6,7 +6,7 @@ class Teams(models.Model):
     # description=models.TextField(null=True, blank=True, verbose_name="Описание")
     score=models.PositiveSmallIntegerField(default=0, verbose_name="Счет")
     link=models.CharField(max_length=2048, blank=True, default="", verbose_name="Социальные ссылки")
-    url=models.CharField(max_length=2048, blank=True, default="", unique=True, verbose_name="Ссылка для вступления в команду")
+    url=models.CharField(max_length=2048,blank=True, default="", unique=True, verbose_name="Ссылка для вступления в команду")
 
     def __str__(self):
         return self.name

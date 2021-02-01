@@ -11,7 +11,7 @@ from .forms import TaskForm, SolutionForm
 from team.models import TeamsLeaders
 
 def viewTasks(request):
-    return render(request, "view_tasks.html")
+    return render(request, "tasks/view_tasks.html")
 
 def viewTask(request, task_pk):
     months = {0:"января", 1:"февраля", 2:"марта", 3:"апреля", 4:"мая", 5:"июня", 6:"июля", 7:"августа", 8:"сентября", 9:"октября", 10:"ноября", 11:"декабря"}
@@ -42,21 +42,22 @@ def viewTask(request, task_pk):
                 m="0"+m
             deadline=str(t[2])+" "+months[t[1]]+" "+str(t[0])+" "+h+":"+m
         except:
-            return render(request, "view_task.html",{'title':'Ошибка', 'task':'Задание не найдено'})
+            return render(request, "tasks/view_task.html",{'title':'Ошибка', 'task':'Задание не найдено'})
         else:
             form=SolutionForm()#initial={"team":request.user.team, "task":task}
             now = timezone.now()
             is_active=False
             if task.deadline>=now:
                 is_active=True
-            return render(request, "view_task.html",{'form':form, 'title':task.title, 'task':task.task, 'file':task.task_file, 'company':task.company, "deadline":deadline, 'is_leader':is_leader, "is_active":is_active})
+            return render(request, "tasks/view_task.html",{'form':form, 'title':task.title, 'task':task.task, 'file':task.task_file, 'company':task.company, "deadline":deadline, 'is_leader':is_leader, "is_active":is_active})
 
 
 def manageTasks(request):
     if request.is_ajax and request.method=="POST":
         pass
     elif request.is_ajax and request.method=="GET":
-        if request.GET.get('action')=="get-tasks":
+        action=request.GET.get('action')
+        if action=="get-tasks":
             now = timezone.now()
             active=[]
             completed=[]
