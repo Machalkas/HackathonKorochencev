@@ -26,7 +26,7 @@ function createCompanies(companies){
             else if(n<=4){
                 count = count+" кейса"
             }
-            cards+='<a class="a-card" href="'+companies[i]["pk"]+'">\n<div class="card bg-light mb-4">\n<div class="card-header"><h5>'+companies[i]["name"]+'</h5></div>\n<div class="card-body" style="height: 10em;">\n<p>'+companies[i]["description"]+'</p>\n</div><div class="card-footer"><p>'+count+'</p></div>\n</div>\n</a>\n';
+            cards+='<a class="a-card" href="view/'+companies[i]["pk"]+'">\n<div class="card bg-light mb-4">\n<div class="card-header"><h5>'+companies[i]["name"]+'</h5></div>\n<div class="card-body" style="height: 10em;">\n<p>'+companies[i]["description"]+'</p>\n</div><div class="card-footer"><p>'+count+'</p></div>\n</div>\n</a>\n';
         }
         m.innerHTML=cards;
     }    

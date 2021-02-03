@@ -4,10 +4,10 @@ from team.models import Teams
 
 class TaskForm(forms.ModelForm):
     title=forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class':'form-control mt-1', 'placeholder':'Заголовок'}))
-    task=forms.CharField(widget=forms.TextInput(attrs={'class':'form-control mt-1', 'placeholder':'Задание'}))
-    task_file=forms.FileField(required=False, widget=forms.TextInput(attrs={'class':'form-control mt-1', 'placeholder':'Файл задания'}))
-    cost=forms.IntegerField(widget=forms.TextInput(attrs={'class':'form-control mt-1', 'placeholder':'Баллы за задание'}))
-    deadline=forms.DateTimeField(widget=forms.TextInput(attrs={'class':'form-control mt-1', 'placeholder':'Дедлайн'}))
+    task=forms.CharField(widget=forms.Textarea(attrs={'class':'form-control mt-1', 'placeholder':'Задание'}))
+    task_file=forms.FileField(required=False, widget=forms.FileInput(attrs={'class':'form-control mt-1', 'placeholder':'Файл задания'}))
+    cost=forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control mt-1', 'placeholder':'Баллы за задание'}))
+    deadline=forms.DateTimeField(widget=forms.DateTimeInput(attrs={'class':'form-control mt-1','id':'datepicker', 'placeholder':'Дедлайн'}))
     class Meta:
         model=Task
         fields=('title', 'task', 'task_file', 'cost', 'deadline')

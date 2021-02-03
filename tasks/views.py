@@ -51,6 +51,10 @@ def viewTask(request, task_pk):
                 is_active=True
             return render(request, "tasks/view_task.html",{'form':form, 'title':task.title, 'task':task.task, 'file':task.task_file, 'company':task.company, "deadline":deadline, 'is_leader':is_leader, "is_active":is_active})
 
+def createTask(request):
+    if request.method=="GET":
+        form=TaskForm()
+        return render(request, "tasks/create_task.html", {"form":form})
 
 def manageTasks(request):
     if request.is_ajax and request.method=="POST":

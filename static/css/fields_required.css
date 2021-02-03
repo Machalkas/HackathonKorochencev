@@ -1,7 +1,7 @@
-input:required:valid {
+textarea:required:valid, input:required:valid {
     border-color: green;
 }
   
-input:required:invalid {
+textarea:required:invalid, input:required:invalid {
     border-color: red;
 }

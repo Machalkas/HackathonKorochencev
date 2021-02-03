@@ -11,16 +11,26 @@ from django.http import HttpResponse, JsonResponse
 def viewCompanies(request):
     return render(request,"company/view_companies.html")
 
-def viewCompany(request):
-    try:
-        company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.pk).company_id_id
-        company=Company.objects.get(pk=company_id)
-        representatives_id=CompanyRepresentatives.objects.filter(company_id_id=company_id)
-        representatives=[]
-        for i in representatives_id:
-            representatives.append(User.objects.get(pk=i.user_id_id))
-    except:
-        return render(request, "company_not_exist.html")
+def viewCompany(request, key=None):
+    if key==None:
+        try:
+            company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.pk).company_id_id
+            company=Company.objects.get(pk=company_id)
+            representatives_id=CompanyRepresentatives.objects.filter(company_id_id=company_id)
+            representatives=[]
+            for i in representatives_id:
+                representatives.append(User.objects.get(pk=i.user_id_id))
+        except:
+            return render(request, "company_not_exist.html")
+    else:
+        try:
+            company=Company.objects.get(pk=key)
+            representatives_id=CompanyRepresentatives.objects.filter(company_id_id=company.pk)
+            representatives=[]
+            for i in representatives_id:
+                representatives.append(User.objects.get(pk=i.user_id_id))
+        except:
+            return HttpResponse("Not Found", status=404)
     return render(request, "company/view_company.html", {'company':company, 'rep':representatives})
 
 @login_required(login_url='/auth')
@@ -45,6 +55,6 @@ def manageCompany(request):
             companies=[]
             for i in Company.objects.all():
                 companies.append({'pk':i.pk, 'name':i.name, 'description':i.description, 'tasks': Task.objects.filter(company=i).count()})
-            return JsonResponse({"companies":companies})
+            return JsonResponse({"companies":companies}, status=200)
         else:
-            return JsonResponse({"error":"Незивестная команда"})
+            return JsonResponse({"error":"Незивестная команда"}, status=400)
