@@ -57,6 +57,7 @@
     if (checkForm(document.forms["task_form"])) {
         let x=$("#task_form")[0];
         var formData = new FormData(x);
+        formData.append("action", "upload-task")
         $.ajax({
             url: '/tasks/managetasks',
             method: 'post',

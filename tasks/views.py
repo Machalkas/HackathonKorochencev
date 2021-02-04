@@ -63,7 +63,7 @@ def createTask(request):
 def manageTasks(request):
     if request.is_ajax and request.method=="POST":
         action=request.POST.get('action')
-        if action=="upload-task" or action==None:
+        if action=="upload-task":
             form=TaskForm(request.POST, request.FILES)
             if form.is_valid():
                 company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.pk).company_id_id
