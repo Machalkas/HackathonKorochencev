@@ -21,7 +21,9 @@
         <a href="/media/{{file}}" target="_blank"><p>{{file}}</p></a>
         {%endif%}
       </div>
+      {%if deadline is not None%}
         <div><p>Дедлайн: {{deadline}}</p><p>{{company}}</p></div>
+      {%endif%}
         {% if is_leader and is_active%}
         <a class="btn btn-success" data-toggle="collapse" href="#solutionForm" role="button" aria-expanded="false" aria-controls="solutionForm">Загрузить решение</a>
         <div class="collapse" id="solutionForm">

@@ -8,12 +8,36 @@
 <link rel="stylesheet" href="{% static 'css/index.css'%}">
 <link rel="stylesheet" href="{% static 'css/join.css'%}">
 <link rel="stylesheet" href="{% static 'tasks/card_style.css'%}">
+<style>
+    .create-tack-div{
+    border: 2px solid forestgreen;
+    border-radius: 10px;
+    max-width: 70%;
+}
+</style>
 {% endblock head %}
 {% block title %}Хакатон | Задания{% endblock title %}
 {% block content %}
 {% include "header.html" %}
 <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <h1 class=" display-4" style="padding-bottom: 1em;" id="tasks">Задания</h1>
+    {%if is_specialist%}
+    <div class="container create-tack-div mb-5" id="create-tack-div">
+        <button id="btn-close" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="mb-3">
+            <h3>Создать задание</h3>
+        </div>
+        <div>
+            <p class="lead" style="margin-bottom: -.2em;">Добавьте свое задание</p>
+            <p class="lead">и оно появится в ленте.</p>
+        </div>
+        <div style=" margin-bottom: 0.5em;">
+            <a class="btn btn-green btn-big" href="create">Создать</a>
+        </div>
+    </div>
+    {%endif%}
     <main role="main" id="main" class="inner cover">
         <!-- список заданий -->
     </main>
@@ -22,4 +46,10 @@
 {%block scripts%}
 <script>var img_empty="{%static 'svg/empty.svg'%}"</script>
 <script src="{% static 'tasks/get_tasks.js' %}"></script>
+<script>
+$("#btn-close").click(function(){
+    $("#create-tack-div").fadeOut(300);
+    }
+)
+</script>
 {%endblock scripts%}

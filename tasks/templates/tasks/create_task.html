@@ -8,6 +8,28 @@
 <link rel="stylesheet" href="{% static 'css/index.css'%}">
 <link rel="stylesheet" href="{% static 'css/join.css'%}">
 <link rel="stylesheet" href="{% static 'tasks/css/bootstrap-datetimepicker.min.css'%}">
+<style>
+.message{
+    position: absolute;
+    top: 13.5em;
+    position: absolute;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+    border: 2px solid forestgreen;
+    border-radius: 5px;
+    min-height: 3em;
+    width: 18.8em;
+    max-width: 40em;
+    display: none;
+}
+.message_text{
+    margin-left: auto;
+    margin-right: auto;
+}
+</style>
 <!-- <link rel="stylesheet" href="{% static 'card_style.css'%}"> -->
 {% endblock head %}
 {% block title %}Хакатон | Загрузка решения{% endblock title %}
@@ -17,11 +39,8 @@
     <main role="main" id="main" class="inner cover">
         <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
             <h1 class=" display-4">Загрузка задания</h1>
+            <div class="message" id="message"><p class="message_text" id="message_text">hello</p></div>
             <form method="post" class="form mt-5" enctype="multipart/form-data" id="task_form">
-                  <!-- {% for field in form %}
-                  {{field.errors}}
-                  {{field}}
-                  {% endfor %}  -->
                   {% csrf_token %}
                   {{form.title}}
                   {{form.task}}
@@ -63,16 +82,17 @@
             method: 'post',
             dataType: 'json',
             headers: {'X-CSRFToken': document.getElementsByName("csrfmiddlewaretoken")[0].value},
-            data: formData, //$("#task_form").serialize() + "&action=upload-task",
-            // async: false,
-            // cache: false,
+            data: formData,
+            async: false,
+            cache: false,
             contentType: false,
             processData: false,
             success: function (data) {
-                test = data;
-                data = JSON.parse(data);
                 console.log(data["ok"]);
                 document.getElementById("task_form").reset();
+                $("#message")[0].innerText="Задание "+data["ok"]+" загружено";
+                $("#message").fadeIn();
+                $("#message").fadeOut(5000);
             },
             error: function (data) {
                 data = JSON.parse(data["responseText"]);
