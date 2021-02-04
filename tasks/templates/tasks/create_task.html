@@ -7,6 +7,7 @@
 {% block head%}
 <link rel="stylesheet" href="{% static 'css/index.css'%}">
 <link rel="stylesheet" href="{% static 'css/join.css'%}">
+<link rel="stylesheet" href="{% static 'tasks/css/bootstrap-datetimepicker.min.css'%}">
 <!-- <link rel="stylesheet" href="{% static 'card_style.css'%}"> -->
 {% endblock head %}
 {% block title %}Хакатон | Загрузка решения{% endblock title %}
@@ -16,54 +17,78 @@
     <main role="main" id="main" class="inner cover">
         <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
             <h1 class=" display-4">Загрузка задания</h1>
-            <form method="post" class="form mt-5" enctype="multipart/form-data">
-                  {% csrf_token %}
+            <form method="post" class="form mt-5" enctype="multipart/form-data" id="task_form">
                   <!-- {% for field in form %}
                   {{field.errors}}
                   {{field}}
                   {% endfor %}  -->
+                  {% csrf_token %}
                   {{form.title}}
                   {{form.task}}
                   {{form.task_file}}
                   {{form.cost}}
-                  {{form.deadline}}
-                  <button type=" submit" class="btn btn-primary btn-blue mt-3">Загрузка</button>
-            </form>
-        </div>
-        <div class="container">
-            <div class="row">
-               <div class='col-sm-6'>
-                  <div class="form-group">
-                     <div class='input-group date' id='datetimepicker2'>
-                        <input type='text' class="form-control" />
-                        <span class="input-group-addon">
-                        <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
-                     </div>
+                  <div style="position: relative;">
+                    {{form.deadline}}
                   </div>
-               </div>
-               <script type="text/javascript">
-                  $(function () {
-                      $('#datetimepicker2').datetimepicker({
-                          locale: 'ru'
-                      });
-                  });
-               </script>
-            </div>
-         </div>
+                  <!-- <button type=" submit" class="btn btn-primary btn-blue mt-3">Загрузка</button> -->
+                  <input type="button" value="Загрузка" class="btn btn-primary btn-blue mt-3" id="upload_task">
+            </form>
+            <div id="form_result"></div>
+        </div>
     </main>
 </div>
 {% endblock content %}
 {%block scripts%}
 <!-- <script src="{% static 'get_tasks.js' %}"></script> -->
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.7.1/js/bootstrap-datepicker.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<!-- <script>
-   $(function() {
-    $("#datepicker").datepicker({
-    locale:'ru'
+<script src="{%static 'tasks/js/moment-with-locales.min.js'%}"></script>
+<script src="{%static 'tasks/js/bootstrap-datetimepicker.min.js'%}"></script>
+<script src="{%static 'js/check-form.js'%}"></script>
+<script type="text/javascript">
+    $(function () {
+      $('#datetimepicker2').datetimepicker({
+	    locale: 'ru'
+	  });
     });
-  });
-  </script> -->
+  </script>
+  <script>
+    var form_result = document.getElementById("form_result");
+    $("#upload_task").click(function (e) {
+        e.preventDefault();
+    if (checkForm(document.forms["task_form"])) {
+        let x=$("#task_form")[0];
+        var formData = new FormData(x);
+        $.ajax({
+            url: '/tasks/managetasks',
+            method: 'post',
+            dataType: 'json',
+            headers: {'X-CSRFToken': document.getElementsByName("csrfmiddlewaretoken")[0].value},
+            data: formData, //$("#task_form").serialize() + "&action=upload-task",
+            // async: false,
+            // cache: false,
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                test = data;
+                data = JSON.parse(data);
+                console.log(data["ok"]);
+                document.getElementById("task_form").reset();
+            },
+            error: function (data) {
+                data = JSON.parse(data["responseText"]);
+                console.log(data);
+                let errors="";
+                for (i in data["error"]){
+                    console.log(i);
+                    errors+='<p class="lead" style="font-size: 1em;">'+i+'</p>\n';
+                }
+                form_result.innerHTML=errors;
+                // form_result.style=style;
+            }
+        })
+    }
+    else {
+        form_result.innerHTML = "Заполните все обязательные поля"
+    }
+});
+</script>
 {%endblock scripts%}

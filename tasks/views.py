@@ -7,8 +7,8 @@ from django.utils import timezone
 
 from .models import Task, Solution
 from .forms import TaskForm, SolutionForm
-
 from team.models import TeamsLeaders
+from company.models import Company, CompanyRepresentatives
 
 def viewTasks(request):
     return render(request, "tasks/view_tasks.html")
@@ -19,11 +19,15 @@ def viewTask(request, task_pk):
         form=SolutionForm(request.POST, request.FILES)
         if form.is_valid():
             now = timezone.now()
-            solution=form.save()
-            solution.task=Task.objects.get(pk=task_pk)
-            solution.team=request.user.team
-            solution.save()
-            return redirect("/tasks")
+            task=Task.objects.get(pk=task_pk)
+            if task.deadline>=now:
+                solution=form.save()
+                solution.task=task
+                solution.team=request.user.team
+                solution.save()
+                return redirect("/tasks")
+            else:
+                return render(request, "tasks/view_task.html",{'title':'Ошибка', 'task':'Истек срок сдачи задания'})
     else:
         try:
             TeamsLeaders.objects.get(user_id=request.user.pk)
@@ -58,7 +62,21 @@ def createTask(request):
 
 def manageTasks(request):
     if request.is_ajax and request.method=="POST":
-        pass
+        action=request.POST.get('action')
+        if action=="upload-task" or action==None:
+            form=TaskForm(request.POST, request.FILES)
+            if form.is_valid():
+                company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.pk).company_id_id
+                company=Company.objects.get(pk=company_id)
+                task=form.save()
+                task.company=company
+                task.save()
+                return JsonResponse({"ok":task.title}, status=200)
+            else:
+                return JsonResponse({"error":form.errors}, status=400)
+        else:
+            return JsonResponse({"error":"Не верный запрос"}, status=400)
+
     elif request.is_ajax and request.method=="GET":
         action=request.GET.get('action')
         if action=="get-tasks":
@@ -72,6 +90,8 @@ def manageTasks(request):
                 else:
                     completed.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline, 'company':i.company.name})
             return JsonResponse({'active':active, 'complited':completed})    
+        else:
+            return JsonResponse({"error":""}, status=400)
     else:
         return HttpResponse("Не поддерживаемый запрос")
 
