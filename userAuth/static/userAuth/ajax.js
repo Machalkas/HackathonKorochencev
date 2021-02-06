@@ -3,7 +3,7 @@ var login_result_form = document.getElementById("login_result_form");
 var singup_result_form = document.getElementById("singup_result_form");
 var style="border-color:red;";
 $("#login_submit").click(function () {
-    if (checkForm(document.forms["login_form"])) {
+    if (checkForm(document.forms["login_form"])[0]) {
         $.ajax({
             url: '/auth/ajax',
             method: 'post',
@@ -30,7 +30,7 @@ $("#login_submit").click(function () {
     }
 });
 $("#singup_submit").click(function () {
-    if (checkForm(document.forms["singup_form"])) {
+    if (checkForm(document.forms["singup_form"])[0]) {
         $.ajax({
             url: '/auth/ajax',
             method: 'post',

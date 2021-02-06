@@ -26,8 +26,14 @@ $("#submit").click(function () {
         error: function (data) {
            // console.log(data["error"]);
             try {
-                var x = JSON.parse(data["responseText"]);
-                $('#result_form').html(x["error"]["name"]["0"])
+                data = JSON.parse(data["responseText"]);
+                // console.log(data);
+                let errors = "";
+                for (i in data["error"]) {
+                    console.log(data["error"][i]);
+                    errors += '<p class="lead" style="font-size: 1em;">' + data["error"][i] + '</p>\n';
+                }
+                $('#result_form').html(errors)
             }
             catch {
                 $('#result_form').html("Ошибка подключения к серверу")
