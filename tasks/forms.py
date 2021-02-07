@@ -2,13 +2,15 @@ from django import forms
 from .models import Task, Solution
 from team.models import Teams
 from company.models import Company
+from tempus_dominus.widgets import DateTimePicker
+
 
 class TaskForm(forms.ModelForm):
     title=forms.CharField(max_length=100, widget=forms.TextInput(attrs={'class':'form-control mt-1', 'placeholder':'Заголовок'}))
     task=forms.CharField(widget=forms.Textarea(attrs={'class':'form-control mt-1', 'placeholder':'Задание'}))
     task_file=forms.FileField(required=False, widget=forms.FileInput(attrs={'class':'form-control mt-1', 'placeholder':'Файл задания'}))
     cost=forms.IntegerField(widget=forms.NumberInput(attrs={'class':'form-control mt-1', 'placeholder':'Баллы за задание'}))
-    deadline=forms.DateTimeField(widget=forms.DateTimeInput(attrs={'class':'form-control mt-1','id':'datetimepicker2', 'placeholder':'Дедлайн'}))
+    deadline=forms.DateTimeField(widget=DateTimePicker(attrs={'class':'form-control mt-1', 'placeholder':'Дедлайн'}, options={'minDate': 'now', 'locale':'ru'}),initial=None,)
     company=forms.ModelChoiceField(widget=forms.HiddenInput(), queryset=Company.objects.all(), required=False)
     class Meta:
         model=Task

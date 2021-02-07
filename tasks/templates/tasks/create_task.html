@@ -7,7 +7,6 @@
 {% block head%}
 <link rel="stylesheet" href="{% static 'css/index.css'%}">
 <link rel="stylesheet" href="{% static 'css/join.css'%}">
-<link rel="stylesheet" href="{% static 'tasks/css/bootstrap-datetimepicker.min.css'%}">
 <style>
 .message{
     /* position: absolute; */
@@ -46,9 +45,7 @@
                   {{form.task}}
                   {{form.task_file}}
                   {{form.cost}}
-                  <div style="position: relative;">
-                    {{form.deadline}}
-                  </div>
+                {{form.deadline}}
                   <!-- <button type=" submit" class="btn btn-primary btn-blue mt-3">Загрузка</button> -->
                   <input type="button" value="Загрузка" class="btn btn-primary btn-blue mt-3" id="upload_task">
             </form>
@@ -57,18 +54,11 @@
     </main>
 {% endblock content %}
 {%block scripts%}
+<script src="{% static 'js/moment-with-locales.min.js' %}"></script>
+<!-- <script src="{% static 'js/ru.js' %}"></script> -->
 <!-- <script src="{% static 'get_tasks.js' %}"></script> -->
-<script src="{%static 'tasks/js/moment-with-locales.min.js'%}"></script>
-<script src="{%static 'tasks/js/bootstrap-datetimepicker.min.js'%}"></script>
+{{ form.media }}
 <script src="{%static 'js/check-form.js'%}"></script>
-
-<script type="text/javascript">
-    $(function () {
-      $('#datetimepicker2').datetimepicker({
-	    locale: 'ru'
-	  });
-    });
-  </script>
   <script>
     var form_result = document.getElementById("form_result");
     $("#upload_task").click(function (e) {
