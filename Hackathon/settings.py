@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'tasks',
     'company',
     'django_cleanup',
+    'tempus_dominus ',
 ]
 
 MIDDLEWARE = [
