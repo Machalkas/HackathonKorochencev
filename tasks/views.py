@@ -114,7 +114,7 @@ def manageTasks(request):
                     solutions=Solution.objects.filter(task=i.pk)
                     # s=[]
                     for j in solutions:
-                        solutions_list.append({"pk":j.pk,"team":j.team.name, "task":j.task.title, "file":j.solution_file.name, "score":j.score, "created":j.created})
+                        solutions_list.append({"pk":j.pk,"team":j.team.name, "task":j.task.title, "file":j.solution_file.name, "score":j.score, "max-score":i.cost, "created":j.created})
                     # solutions_list.append({"task":i.title, "solutions":s}) 
                 return JsonResponse({"solutions":solutions_list}, status=200)
             except:

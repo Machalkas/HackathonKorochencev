@@ -9,6 +9,7 @@ function createSolutions(solutions){
     }else{
         document.getElementById("solution-h1").innerHTML="Решения";
         for (let i=0; i<solutions.length; i++){
+            solutions[i]['task']="Задание: "+solutions[i]['task'];
             if(solutions[i]['task'].length>=483){
                 solutions[i]['task']=solutions[i]['task'].slice(0,483)+"..."
             }
@@ -28,7 +29,7 @@ function createSolutions(solutions){
                 m="0"+d.getMinutes();
             }
             let date=d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear()+' '+h+":"+m;
-            cards+='<a class="a-card" href="'+solutions[i]["pk"]+'">\n<div class="card bg-light mb-4">\n<div class="card-header"><h5>'+solutions[i]["team"]+'</h5>'+valuated+'</div>\n<div class="card-body">\n<p>'+solutions[i]['task']+'</p>\n</div>\n<div class="card-footer">\n<p class="card-footer-text card-deadline">загружено<p>\n<p class="card-footer-text card-datetime">'+date+'<p><p class="card-footer-text card-organisation">'+solutions[i]['score']+'</p>\n</div>\n</div>\n</a>\n';
+            cards+='<a class="a-card" href="'+solutions[i]["pk"]+'">\n<div class="card bg-light mb-4">\n<div class="card-header"><h5>'+solutions[i]["team"]+'</h5>'+valuated+'</div>\n<div class="card-body">\n<p>'+solutions[i]['task']+'</p>\n</div>\n<div class="card-footer">\n<p class="card-footer-text card-deadline">загружено<p>\n<p class="card-footer-text card-datetime">'+date+'<p><p class="card-footer-text card-organisation">Балл: '+solutions[i]['score']+' из '+solutions[i]['max-score']+'</p>\n</div>\n</div>\n</a>\n';
         }
         m.innerHTML=cards;
     }    
