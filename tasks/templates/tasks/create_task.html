@@ -63,7 +63,7 @@
     var form_result = document.getElementById("form_result");
     $("#upload_task").click(function (e) {
         e.preventDefault();
-        // $("#form_result").text("").delay(1000);
+        $("#form_result").text("").delay(1000);
         let check_result=checkForm(document.forms["task_form"], 1024);
         if (check_result[0] && check_result[1]) {
             let x=$("#task_form")[0];

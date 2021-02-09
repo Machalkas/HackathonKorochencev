@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load static %}
+<!-- https://bootstrap-4.ru/docs/4.0/components/navs/#javascript-behavior -->
+<!-- https://bootstrap-4.ru/docs/4.0/components/dropdowns/ -->
+<!-- https://bootstrap-4.ru/docs/4.0/components/modal/ -->
+<!-- https://getbootstrap.com/docs/4.0/components/card/ -->
+{% block head%}
+<link rel="stylesheet" href="{% static 'css/index.css'%}">
+<link rel="stylesheet" href="{% static 'css/join.css'%}">
+<link rel="stylesheet" href="{% static 'tasks/card_style.css'%}">
+<style>
+    .valuated{
+        position: absolute;
+        top: 0.95em;
+        right: 1em;
+        color: forestgreen;
+    }
+</style>
+{% endblock head %}
+{% block title %}Хакатон | Решения{% endblock title %}
+{% block content %}
+{% include "header.html" %}
+<div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <h1 class=" display-4" style="padding-bottom: 1em;" id="solution-h1">Решения</h1>
+    <main role="main" id="main" class="inner cover">
+        <!-- список заданий -->
+    </main>
+</div>
+{% endblock content %}
+{%block scripts%}
+<script>var img_empty="{%static 'svg/empty.svg'%}"</script>
+<script src="{% static 'tasks/get_solutions.js' %}"></script>
+{%endblock scripts%}

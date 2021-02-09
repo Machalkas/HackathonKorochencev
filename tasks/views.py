@@ -21,6 +21,9 @@ def viewTasks(request):
             is_specialist=True
     return render(request, "tasks/view_tasks.html",{"is_specialist":is_specialist})
 
+def viewSolutions(request):
+    return render(request, "tasks/view_solutions.html")
+
 def viewTask(request, task_pk):
     months = {0:"января", 1:"февраля", 2:"марта", 3:"апреля", 4:"мая", 5:"июня", 6:"июля", 7:"августа", 8:"сентября", 9:"октября", 10:"ноября", 11:"декабря"}
     if request.method=="POST":
@@ -63,6 +66,9 @@ def viewTask(request, task_pk):
                 is_active=True
             return render(request, "tasks/view_task.html",{'form':form, 'title':task.title, 'task':task.task, 'file':task.task_file, 'company':task.company, "deadline":deadline, 'is_leader':is_leader, "is_active":is_active})
 
+def viewSolution(request, solution_pk):
+    return HttpResponse(solution_pk)
+
 def createTask(request):
     if request.method=="GET":
         form=TaskForm()
@@ -97,10 +103,26 @@ def manageTasks(request):
                     active.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline, 'company':i.company.name})
                 else:
                     completed.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline, 'company':i.company.name})
-            return JsonResponse({'active':active, 'complited':completed})    
+            return JsonResponse({'active':active, 'complited':completed}) 
+        elif action=="get-solutions":
+            try:
+                company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.id).company_id_id
+                company=Company.objects.get(id=company_id)
+                task=Task.objects.filter(company=company)
+                solutions_list=[]
+                for i in task:
+                    solutions=Solution.objects.filter(task=i.pk)
+                    # s=[]
+                    for j in solutions:
+                        solutions_list.append({"pk":j.pk,"team":j.team.name, "task":j.task.title, "file":j.solution_file.name, "score":j.score, "created":j.created})
+                    # solutions_list.append({"task":i.title, "solutions":s}) 
+                return JsonResponse({"solutions":solutions_list}, status=200)
+            except:
+                return JsonResponse({"error":"Нет прав для просмотра решений"}, status=400)
         else:
             return JsonResponse({"error":""}, status=400)
     else:
         return HttpResponse("Не поддерживаемый запрос")
 
 # Create your views here.
+ 

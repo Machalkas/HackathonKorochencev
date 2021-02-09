@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from .forms import SignUpForm, LoginForm
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from .models import User
 
 
@@ -89,4 +89,6 @@ def ajax(request):
                 return JsonResponse({"url":url}, status=200)
             else:
                 return JsonResponse({"error":form.errors}, status=400)
+    else:
+        return HttpResponse("Уйди, разбойник")
                     
