@@ -20,6 +20,7 @@ from django.conf.urls.static import static
 
 
 handler404 = 'main.views.notFound'
+handler500 = 'main.views.serverError'
 
 urlpatterns = [
     path('admin/', admin.site.urls),

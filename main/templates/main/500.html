@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head%}<link rel="stylesheet" href="{% static 'css/index.css'%}">{% endblock head %}
+{% block title %}Хакатон{% endblock title %}
+{% block content %}
+    <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <main role="main">
+            <h1 class="cover-heading display-4">Упс</h1>
+            <img src="{%static 'svg/500.svg'%}" alt="404" style="width: 60%; margin-top: 3%; margin-bottom: 2%;">
+            <p class="lead">Похоже что-то сломалось</p>
+            <p class="lead">Но мы уже работает над этой проблемой</p>
+        </main>
+        <footer class=" mastfoot mt-auto">
+            <!-- <div>
+                <p>Machalka</p>
+            </div> -->
+        </footer>
+
+    </div>
+    {% endblock content %}

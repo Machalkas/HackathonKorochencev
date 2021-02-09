@@ -27,7 +27,7 @@
       <div class="dropdown-menu" aria-labelledby="dropdown">
         <a class="dropdown-item" href="/auth/profile">Профиль</a>
         {% if request.user.is_specialist %}
-        <a class="dropdown-item" href="#">Компания</a>
+        <a class="dropdown-item" href="/company">Компания</a>
         {%else%}
         <a class="dropdown-item" href="/team/{{user.team.name}}">Моя команда</a>
         {% endif %}

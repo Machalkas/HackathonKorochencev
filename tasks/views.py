@@ -27,7 +27,6 @@ def viewSolution(request, solution_pk):
     if request.user.is_specialist:
         try:
             company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.pk).company_id_id
-            # company=Company.objects.get(pk=company_id)
             solution=Solution.objects.get(pk=solution_pk)
         except:
             pass
@@ -36,7 +35,7 @@ def viewSolution(request, solution_pk):
                 is_alow=True
     if not is_alow:
         return render(request, "tasks/access_denied.html")
-    return render(request, "tasks/view_solution.html")
+    return render(request, "tasks/view_solution.html", {"solution":solution})
 
 def viewTasks(request):
     is_specialist=False
