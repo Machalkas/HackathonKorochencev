@@ -11,3 +11,6 @@ def index(request):
     #     return redirect("/team")
     return render(request, "main/index.html")
     
+def notFound(request, exception):
+    # print(exception)
+    return render(request, "main/404.html")

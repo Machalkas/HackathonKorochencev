@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+<!-- https://bootstrap-4.ru/docs/4.0/components/navs/#javascript-behavior -->
+<!-- https://bootstrap-4.ru/docs/4.0/components/dropdowns/ -->
+<!-- https://bootstrap-4.ru/docs/4.0/components/modal/ -->
+<!-- https://getbootstrap.com/docs/4.0/components/card/ -->
+{% block head%}
+<link rel="stylesheet" href="{% static 'css/index.css'%}">
+<link rel="stylesheet" href="{% static 'css/join.css'%}">
+<!-- <link rel="stylesheet" href="{% static 'card_style.css'%}"> -->
+{% endblock head %}
+{% block title %}Хакатон | {% endblock title %}
+{% block content %}
+{% include "header.html" %}
+<div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <main role="main" id="main" class="inner cover">
+        <div><h1 style="padding-bottom: 1em;">{{title}}</h1></div>
+        <div>
+          <p>{{task}}</p>
+        {%if file is not None%}
+        <a href="/media/{{file}}" target="_blank"><p>{{file}}</p></a>
+        {%endif%}
+      </div>
+      {%if deadline is not None%}
+        <div><p>Дедлайн: {{deadline}}</p><p>{{company}}</p></div>
+      {%endif%}
+        {% if is_leader and is_active%}
+        <a class="btn btn-success" data-toggle="collapse" href="#solutionForm" role="button" aria-expanded="false" aria-controls="solutionForm">Загрузить решение</a>
+        <div class="collapse" id="solutionForm">
+          <form method="post" class="form mt-5"  enctype="multipart/form-data">
+            {% csrf_token %}
+            {% for field in form %}
+            {{field.errors}}
+            {{field}}
+            {% endfor %}
+            <button type="submit" class="btn btn-primary btn-blue mt-3">Отправка</button>
+          </form>
+        </div>
+        {% endif %}
+    </main>
+
+    <!-- модальное окно -->
+    <!-- <footer class=" mastfoot mt-auto">
+            <div class="inner">
+                <p>Machalka</p>
+            </div>
+        </footer> -->
+</div>
+{% endblock content %}
+{%block scripts%}
+<!-- <script src="{% static 'get_tasks.js' %}"></script> -->
+<style>
+
+</style>
+{%endblock scripts%}

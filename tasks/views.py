@@ -9,6 +9,34 @@ from .models import Task, Solution
 from .forms import TaskForm, SolutionForm
 from team.models import TeamsLeaders
 from company.models import Company, CompanyRepresentatives
+months = {0:"января", 1:"февраля", 2:"марта", 3:"апреля", 4:"мая", 5:"июня", 6:"июля", 7:"августа", 8:"сентября", 9:"октября", 10:"ноября", 11:"декабря"}
+
+def viewSolutions(request):
+    is_specialist=False
+    if request.user.is_specialist:
+        try:
+            CompanyRepresentatives.objects.get(user_id_id=request.user.pk)
+        except:
+            pass
+        else:
+            is_specialist=True
+    return render(request, "tasks/view_solutions.html")
+
+def viewSolution(request, solution_pk):
+    is_alow=False
+    if request.user.is_specialist:
+        try:
+            company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.pk).company_id_id
+            # company=Company.objects.get(pk=company_id)
+            solution=Solution.objects.get(pk=solution_pk)
+        except:
+            pass
+        else:
+            if solution.task.company.pk==company_id:
+                is_alow=True
+    if not is_alow:
+        return render(request, "tasks/access_denied.html")
+    return render(request, "tasks/view_solution.html")
 
 def viewTasks(request):
     is_specialist=False
@@ -21,11 +49,8 @@ def viewTasks(request):
             is_specialist=True
     return render(request, "tasks/view_tasks.html",{"is_specialist":is_specialist})
 
-def viewSolutions(request):
-    return render(request, "tasks/view_solutions.html")
 
 def viewTask(request, task_pk):
-    months = {0:"января", 1:"февраля", 2:"марта", 3:"апреля", 4:"мая", 5:"июня", 6:"июля", 7:"августа", 8:"сентября", 9:"октября", 10:"ноября", 11:"декабря"}
     if request.method=="POST":
         form=SolutionForm(request.POST, request.FILES)
         if form.is_valid():
@@ -65,9 +90,6 @@ def viewTask(request, task_pk):
             if task.deadline>=now:
                 is_active=True
             return render(request, "tasks/view_task.html",{'form':form, 'title':task.title, 'task':task.task, 'file':task.task_file, 'company':task.company, "deadline":deadline, 'is_leader':is_leader, "is_active":is_active})
-
-def viewSolution(request, solution_pk):
-    return HttpResponse(solution_pk)
 
 def createTask(request):
     if request.method=="GET":
