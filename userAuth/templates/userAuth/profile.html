@@ -15,11 +15,10 @@
 <div class="base-container d-flex w-100 h-100 p-3 pt-md-5 mx-auto flex-column">
     <main role="main" class="inner cover">
        <h1 class="cover-heading display-4" id='name'>Профиль</h1>  <!--  display-4 -->
-        <p class="lead">{{user.first_name}}</p>
-        <p class="lead">{{user.last_name}}</p>
-        <p class="lead">{{user.email}}</p>
+        <p class="lead">{{user.first_name}} {{user.last_name}}</p>
+        <a href="mailto:{{user.email}}"><p class="lead">{{user.email}}</p></a>
         <p class="lead">{{user.specialization}}</p>
-        <p class="lead">{{user.team}}</p>
+        <p class="lead">Команда {{user.team}}</p>
     </main>
     <!-- <footer class=" mastfoot mt-auto">
             <div class="inner">

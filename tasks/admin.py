@@ -11,10 +11,10 @@ class TaskAdmin(admin.ModelAdmin):
 
 class SolutionAdmin(admin.ModelAdmin):
     add_form=SolutionadminForm
-    list_display=('task','team', 'created')
+    list_display=('task','team', 'score', 'created')
     list_filter=('team',)
     search_fields=('team','task')
-    ordering=('task','team', 'created')
+    ordering=('task','team', 'score', 'created')
 
     
 admin.site.register(Task, TaskAdmin)

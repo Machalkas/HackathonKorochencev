@@ -24,5 +24,8 @@ function checkForm(form, max_file_size=null) {
         }
         elem_valid[i] = valid;
     }
+    if (max_file_size==null){
+        return is_valid;
+    }
     return [is_valid, is_file_valid];
 }

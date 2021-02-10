@@ -109,6 +109,14 @@ def manageTasks(request):
                 return JsonResponse({"ok":task.title}, status=200)
             else:
                 return JsonResponse({"error":form.errors}, status=400)
+        elif action=="upload-score":
+            try:
+                s=Solution.objects.get(pk=request.POST.get("solution"))
+                s.score=int(request.POST.get("score"))
+                s.save()
+            except ValueError:
+                return JsonResponse({"error":"Не верное значение"}, status=400)
+            return JsonResponse({"ok":""})
         else:
             return JsonResponse({"error":"Не верный запрос"}, status=400)
 
@@ -124,7 +132,7 @@ def manageTasks(request):
                     active.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline, 'company':i.company.name})
                 else:
                     completed.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline, 'company':i.company.name})
-            return JsonResponse({'active':active, 'complited':completed}) 
+            return JsonResponse({'active':active, 'complited':completed})
         elif action=="get-solutions":
             try:
                 company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.id).company_id_id
@@ -140,6 +148,27 @@ def manageTasks(request):
                 return JsonResponse({"solutions":solutions_list}, status=200)
             except:
                 return JsonResponse({"error":"Нет прав для просмотра решений"}, status=400)
+        elif action=="get-solution":
+            try:
+                solution_id=request.GET.get('solution')
+                s=Solution.objects.get(pk=solution_id)
+                t=Task.objects.get(pk=s.task.pk)
+                return JsonResponse({"task":t.title, "deadline":t.deadline, "task-pk":t.pk, "solution-pk":s.pk, "team":s.team.name, "file":s.solution_file.name, "upload":s.created, "max-score":t.cost, "score":s.score})
+            except:
+                pass
+            company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.id).company_id_id
+            company=Company.objects.get(id=company_id)
+            task=Task.objects.filter(company=company)
+            for t in task:
+                try:
+                    s=Solution.objects.filter(task=t.pk).filter(score=None)
+                    print (len(s))
+                    if len(s)<1:
+                        continue
+                except:
+                    continue
+                return JsonResponse({"task":t.title, "deadline":t.deadline, "task-pk":t.pk, "solution-pk":s[0].pk, "team":s[0].team.name, "file":s[0].solution_file.name, "upload":s[0].created, "max-score":t.cost, "score":None})
+            return JsonResponse({"url":"/tasks/solutions"})
         else:
             return JsonResponse({"error":""}, status=400)
     else:

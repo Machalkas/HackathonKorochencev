@@ -1,0 +1,20 @@
+.message{
+    /* position: absolute; */
+    display: inline-block;
+    /* position: absolute; */
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    border: 2px solid forestgreen;
+    border-radius: 5px;
+    min-height: 3em;
+    /* width: 18.8em; */
+    /* max-width: 40em; */
+    min-width: 18.8em;
+    display: none;
+}
+.message_text{
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0.5em;
+}

@@ -5,10 +5,10 @@ from .models import Teams, TeamsLeaders
 class TeamsAdmin(admin.ModelAdmin):
     add_form=TeamsAdminForm
     model=Teams
-    list_display=('name','score')
-    list_filter=('score',)
+    list_display=('name',)
+    # list_filter=('score',)
     fieldsets=(
-        (None,{'fields':('name','score','link','url')}),
+        (None,{'fields':('name','link','url')}),
     )
     add_fieldsets = (
         (None, {

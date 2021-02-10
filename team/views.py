@@ -7,6 +7,7 @@ from .models import Teams, TeamsLeaders
 from .forms import CreateTeamForm
 from userAuth.models import User
 from .urlGenerator import generate
+from tasks.models import Solution
 
 # from django.contrib.auth.models import User
 
@@ -41,7 +42,14 @@ def viewTeam(request, key=None):
     for i in User.objects.filter(team=team_pk):
         members.append(i)
     form=CreateTeamForm()
-    return render(request, "view_team.html",{'team_pk':team.pk,'team_name':team.name, 'link':team.link , 'url':request.META['HTTP_HOST']+'/team/invite/'+team.url, 'score':team.score, 'lider_id':lider_id, 'members':members, 'form':form}) # 'discription':team.description.replace("\r","[[r]]").replace("\n","[[n]]"),
+    s=Solution.objects.filter(team=team)
+    score=0
+    try:
+        for i in s:
+            score+=i.score
+    except:
+        pass
+    return render(request, "view_team.html",{'team_pk':team.pk,'team_name':team.name, 'link':team.link , 'url':request.META['HTTP_HOST']+'/team/invite/'+team.url, 'score':score, 'lider_id':lider_id, 'members':members, 'form':form}) # 'discription':team.description.replace("\r","[[r]]").replace("\n","[[n]]"),
 
 @login_required(login_url='/auth')
 def sendForm(request):
@@ -170,12 +178,27 @@ def manageTeam(request):
                 if leader.user_id_id==i.pk:
                     is_lider=True
                 m.append({'id':i.pk,'first_name':i.first_name, 'last_name':i.last_name, 'email':i.email, 'specialization':i.specialization, 'is_lider':is_lider})
-            return JsonResponse({'score':team.score,'members':m})
+            s=Solution.objects.filter(team=team)
+            score=0
+            try:
+                for i in s:
+                    score+=i.score
+            except:
+                pass
+                return JsonResponse({'score':score,'members':m})
         elif request.GET.get('action')=="get-teams":
             teams=[]
-            t=Teams.objects.all().order_by("-score")
+            t=Teams.objects.all()#.order_by("-score")
             for i in t:
-                teams.append({"pk":i.pk, "name":i.name, "score":i.score})
+                s=Solution.objects.filter(team=i)
+                score=0
+                try:
+                    for j in s:
+                        score+=j.score
+                except:
+                    pass
+                teams.append({"pk":i.pk, "name":i.name, "score":score})
+            teams=sorted(teams, key=lambda team:team["score"], reverse=True)
             return JsonResponse({'teams':teams}) 
         else:
             return JsonResponse({"error":""},status=400)

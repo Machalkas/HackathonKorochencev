@@ -7,48 +7,40 @@
 {% block head%}
 <link rel="stylesheet" href="{% static 'css/index.css'%}">
 <link rel="stylesheet" href="{% static 'css/join.css'%}">
+<link rel="stylesheet" href="{% static 'tasks/message_style.css'%}">
 <!-- <link rel="stylesheet" href="{% static 'card_style.css'%}"> -->
 {% endblock head %}
-{% block title %}Хакатон | {% endblock title %}
+{% block title %}Хакатон | Просмотр решения{% endblock title %}
 {% block content %}
 {% include "header.html" %}
 <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-    <main role="main" id="main" class="inner cover">
-        <div><h1 style="padding-bottom: 1em;">{{title}}</h1></div>
-        <div>
-          <p>{{task}}</p>
-        {%if file is not None%}
-        <a href="/media/{{file}}" target="_blank"><p>{{file}}</p></a>
-        {%endif%}
-      </div>
-      {%if deadline is not None%}
-        <div><p>Дедлайн: {{deadline}}</p><p>{{company}}</p></div>
-      {%endif%}
-        {% if is_leader and is_active%}
-        <a class="btn btn-success" data-toggle="collapse" href="#solutionForm" role="button" aria-expanded="false" aria-controls="solutionForm">Загрузить решение</a>
-        <div class="collapse" id="solutionForm">
-          <form method="post" class="form mt-5"  enctype="multipart/form-data">
-            {% csrf_token %}
-            {% for field in form %}
-            {{field.errors}}
-            {{field}}
-            {% endfor %}
-            <button type="submit" class="btn btn-primary btn-blue mt-3">Отправка</button>
-          </form>
-        </div>
-        {% endif %}
-    </main>
-
-    <!-- <footer class=" mastfoot mt-auto">
-            <div class="inner">
-                <p>Machalka</p>
-            </div>
-        </footer> -->
+  <main role="main" id="main" class="inner cover">
+    <div>
+      <h1 style="padding-bottom: 1em;" id="task"></h1>
+      <div class="message mt-3" id="message"><p class="message_text" id="message_text">hello</p></div>
+    </div>
+    <div>
+      <p id="team"></p>
+      <a href="" target="_blank" id="file">
+        <p></p>
+      </a>
+    </div>
+    <div>
+      <p id="upload"></p>
+    </div>
+    <div id="solutionForm">
+      <form method="post" class="form mt-5" enctype="multipart/form-data"  id="solution_form">
+        {% csrf_token %}
+        <input type="number" name="score" class="form-control mt-1" placeholder="Баллы за задание" required="" id="id_score">
+        <input type="button" value="Загрузка" class="btn btn-primary btn-blue mt-3" disabled="" id="upload_value">
+      </form>
+      <div id="form_result"></div>
+    </div>
+  </main>
 </div>
 {% endblock content %}
 {%block scripts%}
-<!-- <script src="{% static 'get_tasks.js' %}"></script> -->
-<style>
-
-</style>
+<script>var solution_id={{solution.pk}};</script>
+<script src="{%static 'js/check-form.js'%}"></script>
+<script src="{%static 'tasks/manage_solution.js'%}"></script>
 {%endblock scripts%}
