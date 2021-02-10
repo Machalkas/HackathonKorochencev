@@ -162,7 +162,6 @@ def manageTasks(request):
             for t in task:
                 try:
                     s=Solution.objects.filter(task=t.pk).filter(score=None)
-                    print (len(s))
                     if len(s)<1:
                         continue
                 except:
