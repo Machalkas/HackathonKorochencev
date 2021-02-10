@@ -35,5 +35,6 @@ class Solution(models.Model):
         except:
             return "Не найдено"
     class Meta:
+        unique_together = (('team', 'task'),)
         verbose_name = 'Решение'
         verbose_name_plural = 'Решения'

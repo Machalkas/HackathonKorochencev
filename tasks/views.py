@@ -56,9 +56,13 @@ def viewTask(request, task_pk):
             now = timezone.now()
             task=Task.objects.get(pk=task_pk)
             if task.deadline>=now:
-                solution=form.save()
-                solution.task=task
-                solution.team=request.user.team
+                try:
+                    solution=Solution.objects.get(team=request.user.team, task=task)
+                    solution.solution_file=form.cleaned_data["solution_file"]
+                except:
+                    solution=form.save()
+                    solution.task=task
+                    solution.team=request.user.team
                 solution.save()
                 return redirect("/tasks")
             else:
