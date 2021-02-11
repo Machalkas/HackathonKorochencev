@@ -185,7 +185,7 @@ def manageTeam(request):
                     score+=i.score
             except:
                 pass
-                return JsonResponse({'score':score,'members':m})
+            return JsonResponse({'score':score,'members':m})
         elif request.GET.get('action')=="get-teams":
             teams=[]
             t=Teams.objects.all()#.order_by("-score")

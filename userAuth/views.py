@@ -3,6 +3,7 @@ from django.contrib.auth import login, authenticate, logout
 from .forms import SignUpForm, LoginForm
 from django.http import JsonResponse, HttpResponse
 from .models import User
+from django.core.mail import send_mail
 
 
 # def join(request):
@@ -70,6 +71,7 @@ def ajax(request):
                 if user!=None and user.is_active:
                     login(request, user)
                     url=request.GET.get('next','/')
+                    send_mail('Django mail', 'This e-mail was sent with Django.', 'raspberry.mail@list.ru', ['al1999dk@gmail.com'], fail_silently=False)
                     return JsonResponse({"url":url}, status=200)
                 else:
                     return JsonResponse({"error":"Не правильный логин или пароль"}, status=400)

@@ -28,6 +28,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1',]
 
+EMAIL_HOST='smtp.mail.ru'
+EMAIL_HOST_USER='raspberry.mail@list.ru'
+DEFAULT_FROM_EMAIL='raspberry.mail@list.ru'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST_PASSWORD = 'Raspberri_pass'
+EMAIL_PORT = 465
+EMAIL_USE_TLS = True
 
 # Application definition
 
