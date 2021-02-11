@@ -7,12 +7,36 @@
 <link rel="stylesheet" href="{% static 'css/index.css'%}">
 <link rel="stylesheet" href="{% static 'css/join.css'%}">
 <link rel="stylesheet" href="{% static 'tasks/card_style.css'%}">
+<style>
+    .create-tack-div{
+    border: 2px solid forestgreen;
+    border-radius: 10px;
+    max-width: 70%;
+}
+</style>
 {% endblock head %}
 {% block title %}Хакатон | Команды{% endblock title %}
 {% block content %}
 {% include "header.html" %}
 <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <h1 class="cover-heading mb-3 display-4" id='teams'>Команды</h1>
+    {%if not request.user.is_specialist and request.user.team == None%}
+    <div class="container create-tack-div mb-5" id="create-tack-div">
+        <button id="btn-close" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="mb-3">
+            <h3>Создать команду</h3>
+        </div>
+        <div>
+            <p class="lead" style="margin-bottom: -.2em;">Создайте свою команду</p>
+            <p class="lead">чтобы принять участие в Хаккатоне</p>
+        </div>
+        <div style=" margin-bottom: 0.5em;">
+            <a class="btn btn-green btn-big" href="/team/create">Создать</a>
+        </div>
+    </div>
+    {%endif%}
     <main role="main" class="inner cover" id="main">
     </main>
 </div>
@@ -25,4 +49,10 @@
 <!-- <script>update(team_pk,'score');</script> -->
 <script>var img_empty_street="{%static 'svg/empty_street.svg'%}"</script>
 <script src="{% static 'team/get_teams.js' %}"></script>
+<script>
+$("#btn-close").click(function(){
+    $("#create-tack-div").fadeOut(300);
+    }
+)
+</script>
 {%endblock scripts%}

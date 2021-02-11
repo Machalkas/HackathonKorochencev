@@ -31,7 +31,10 @@ def viewTeams(request):
 # @login_required(login_url='/auth')
 def viewTeam(request, key=None):
     if key!=None:
-        team_pk=Teams.objects.get(name=key).pk
+        try:
+            team_pk=Teams.objects.get(name=key).pk
+        except:
+            return redirect("/team")
     else:
         if(request.user.team==None):
             return render(request, "not_exist.html")
