@@ -71,7 +71,6 @@ def ajax(request):
                 if user!=None and user.is_active:
                     login(request, user)
                     url=request.GET.get('next','/')
-                    send_mail('Django mail', 'This e-mail was sent with Django.', 'raspberry.mail@list.ru', ['al1999dk@gmail.com'], fail_silently=False)
                     return JsonResponse({"url":url}, status=200)
                 else:
                     return JsonResponse({"error":"Не правильный логин или пароль"}, status=400)
@@ -88,6 +87,7 @@ def ajax(request):
                 logout(request)
                 login(request, user)
                 url=request.GET.get('next','/')
+                send_mail('Хакатон Регистрация', 'Вы были зарегистрированны на Хакатон', '', ['al1999dk@gmail.com'], fail_silently=False)
                 return JsonResponse({"url":url}, status=200)
             else:
                 return JsonResponse({"error":form.errors}, status=400)
