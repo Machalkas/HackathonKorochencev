@@ -68,7 +68,7 @@ function getSolution(solution = null) {
             $("#task").text(data["task"]);
             $("#team").text("Команда: " + data["team"]);
             $("#file").text(data["file"]);
-            $("#file").attr("href", "/media/solutions/" + data["file"]);
+            $("#file").attr("href", "/media/" + data["file"]);
             $("#upload").text("Загружено: "+date);
             $("#id_score")[0].value = data["score"];
             max_score = data["max-score"];

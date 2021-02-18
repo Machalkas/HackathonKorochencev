@@ -20,7 +20,7 @@ class Manager(UserManager):
         return user
 
 class User(AbstractUser):
-    specialization = models.CharField(max_length=250, verbose_name="Направление")
+    specialization = models.CharField(max_length=250, blank=True, verbose_name="Направление")
     username = None
     email = models.EmailField('Email', unique=True)
     team=models.ForeignKey(Teams, models.SET_NULL, null=True, blank=True, verbose_name="Команда")
