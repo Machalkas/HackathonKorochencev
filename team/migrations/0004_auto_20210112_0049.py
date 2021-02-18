@@ -13,6 +13,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='teams',
             name='url',
-            field=models.CharField(blank=True, max_length=2048, null=True, unique=True, verbose_name='Ссылка для вступления в команду'),
+            field=models.CharField(blank=True, max_length=100, null=True, unique=True, verbose_name='Ссылка для вступления в команду'),
         ),
     ]

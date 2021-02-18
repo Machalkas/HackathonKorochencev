@@ -13,11 +13,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='teams',
             name='link',
-            field=models.TextField(blank=True, default='', verbose_name='Социальные ссылки'),
+            field=models.CharField(blank=True, default='', max_length=100, verbose_name='Социальные ссылки'),
         ),
         migrations.AlterField(
             model_name='teams',
             name='url',
-            field=models.TextField(blank=True, default='', unique=True, verbose_name='Ссылка для вступления в команду'),
+            field=models.CharField(blank=True, default='', unique=True, max_length=100, verbose_name='Ссылка для вступления в команду'),
         ),
     ]

@@ -13,16 +13,16 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='teams',
             name='link',
-            field=models.CharField(blank=True, default='', max_length=2048, verbose_name='Социальные ссылки'),
+            field=models.CharField(blank=True, default='', max_length=100, verbose_name='Социальные ссылки'),
         ),
-        migrations.AlterField(
-            model_name='teams',
-            name='name',
-            field=models.CharField(max_length=100, unique=True, verbose_name='Название команды'),
-        ),
+        #migrations.AlterField(
+        #    model_name='teams',
+        #    name='name',
+         #   field=models.CharField(max_length=100, unique=True, verbose_name='Название команды'),
+        #),
         migrations.AlterField(
             model_name='teams',
             name='url',
-            field=models.CharField(blank=True, default='', max_length=2048, unique=True, verbose_name='Ссылка для вступления в команду'),
+            field=models.CharField(blank=True, default='', max_length=100, unique=True, verbose_name='Ссылка для вступления в команду'),
         ),
     ]
