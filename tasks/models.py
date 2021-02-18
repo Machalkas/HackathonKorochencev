@@ -10,7 +10,7 @@ from datetime import datetime
 
 class Task(models.Model):
     title=models.CharField(max_length=100, blank=False, unique=True, verbose_name="Заголовок")
-    task=models.TextField(blank=False, verbose_name="Задание")
+    task=models.CharField(max_length=100, blank=False, verbose_name="Задание")
     task_file=models.FileField(blank=True, null=True, upload_to="tasks/", verbose_name="Файл задания")
     cost=models.PositiveIntegerField(blank=False, null=False, default=0, verbose_name="Максимальный балл за задание")
     deadline=models.DateTimeField(blank=False, null=False, default=datetime.now, verbose_name="Дедлайн")
