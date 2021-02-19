@@ -69,6 +69,7 @@ def ajax(request):
                 user_pass=form.cleaned_data.get('password')
                 user = authenticate(email=email, password=user_pass)
                 if user!=None and user.is_active:
+                    logout(request)
                     login(request, user)
                     url=request.GET.get('next','/')
                     return JsonResponse({"url":url}, status=200)
@@ -87,7 +88,7 @@ def ajax(request):
                 logout(request)
                 login(request, user)
                 url=request.GET.get('next','/')
-                send_mail('Хакатон Регистрация', 'Вы были зарегистрированны на Хакатон', '', ['al1999dk@gmail.com'], fail_silently=False)
+                send_mail('Хакатон_| Регистрация', 'Вы были зарегистрированны на Хакатон', '', [email], fail_silently=True)
                 return JsonResponse({"url":url}, status=200)
             else:
                 return JsonResponse({"error":form.errors}, status=400)

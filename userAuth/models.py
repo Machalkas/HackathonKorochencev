@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser, UserManager
 from django.contrib.auth.models import PermissionsMixin
 from team.models import Teams
+from django.core.mail import send_mail
 
 class Manager(UserManager):
     def create_user(self, email, password=None):
@@ -29,10 +30,13 @@ class User(AbstractUser):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
     objects=Manager()
-
-    # def __str__(self):
-    #     return self.team.name
-
     class Meta:
         verbose_name = 'Пользователь'
         verbose_name_plural = 'Пользователи'
+    def save(self,*args,**kwargs):
+        try:
+            if User.objects.get(email=self.email).is_specialist==False and self.is_specialist==True:
+                send_mail('Хакатон | Изменение прав пользователя', 'Ваши права пользователя были изменены, теперь вы являетесь кейсодателем. Вы можете зарегестрировать свою компанию и публековать кейсы от лица этой компании', '', [self.email], fail_silently=True)
+        except:
+            pass
+        super().save(*args,**kwargs)
