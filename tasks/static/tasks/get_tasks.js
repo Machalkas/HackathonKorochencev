@@ -5,6 +5,7 @@ function createTasks(active, complited){
     console.log(active);
     console.log(complited);
     let cards = "";
+    let status='';
     if(active.length==0 && complited.length==0){
         document.getElementById("tasks").innerHTML="Пусто...";
         m.innerHTML='<img src="'+img_empty+'" alt="пусто..." style="width: 60%; margin-top: 3%; margin-bottom: 2%;">\n<p class="lead">Сейчас нет никаких заданий</p>\n<p class="lead">Заходи позже</p>';
@@ -24,7 +25,16 @@ function createTasks(active, complited){
                 m="0"+d.getMinutes();
             }
             let date=d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear()+' '+h+":"+m;
-            cards+='<a class="a-card" href="view/'+active[i]["pk"]+'">\n<div class="card bg-light mb-4">\n<div class="card-header"><h5>'+active[i]["title"]+'</h5></div>\n<div class="card-body">\n<p>'+active[i]['task']+'</p>\n</div>\n<div class="card-footer">\n<p class="card-footer-text card-deadline">дедлайн<p>\n<p class="card-footer-text card-datetime">'+date+'<p><p class="card-footer-text card-organisation">'+active[i]['company']+'</p>\n</div>\n</div>\n</a>\n';
+            if(active[i]["task-status"]=="checked"){
+                status='<h6 class="complited text-success">проверено</h6>';
+            }
+            else if(active[i]["task-status"]=="uploaded"){
+                status='<h6 class="complited text-primary">загружено</h6>';
+            }
+            else{
+                status='';
+            }
+            cards+='<a class="a-card" href="view/'+active[i]["pk"]+'">\n<div class="card bg-light mb-4">\n<div class="card-header"><h5>'+active[i]["title"]+'</h5>'+status+'</div>\n<div class="card-body">\n<p>'+active[i]['task']+'</p>\n</div>\n<div class="card-footer">\n<p class="card-footer-text card-deadline">дедлайн<p>\n<p class="card-footer-text card-datetime">'+date+'<p><p class="card-footer-text card-organisation">'+active[i]['company']+'</p>\n</div>\n</div>\n</a>\n';
         }
         for (let i=0; i<complited.length; i++){
             if(complited[i]['task'].length>=483){

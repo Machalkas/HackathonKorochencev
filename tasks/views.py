@@ -132,10 +132,20 @@ def manageTasks(request):
             completed=[]
             tasks=Task.objects.all()
             for i in tasks:
-                if i.deadline>=now:
-                    active.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline, 'company':i.company.name})
+                task_status=None
+                try:
+                    s=Solution.objects.get(task=i.pk)
+                except:
+                    pass
                 else:
-                    completed.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline, 'company':i.company.name})
+                    if s.score!=None:
+                        task_status='checked'
+                    else:
+                        task_status='uploaded'
+                if i.deadline>=now:
+                    active.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline, 'company':i.company.name, 'task-status':task_status})
+                else:
+                    completed.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline, 'company':i.company.name, 'task-status':task_status})
             return JsonResponse({'active':active, 'complited':completed})
         elif action=="get-solutions":
             try:
