@@ -201,7 +201,7 @@ def manageTeam(request):
                 except:
                     pass
                 teams.append({"pk":i.pk, "name":i.name, "score":score})
-            teams=sorted(teams, key=lambda team:team["score"], reverse=True)
+            # teams=sorted(teams, key=lambda team:team["score"], reverse=True)
             return JsonResponse({'teams':teams}) 
         else:
             return JsonResponse({"error":""},status=400)

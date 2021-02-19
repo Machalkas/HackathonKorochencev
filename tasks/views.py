@@ -94,7 +94,7 @@ def viewTask(request, task_pk):
                 is_active=True
             task_status=None
             try:
-                s=Solution.objects.get(task=task.pk)
+                 s=Solution.objects.get(task=task.pk, team=request.user.team)
             except:
                 pass
             else:
@@ -144,7 +144,7 @@ def manageTasks(request):
             for i in tasks:
                 task_status=None
                 try:
-                    s=Solution.objects.get(task=i.pk)
+                    s=Solution.objects.get(task=i.pk, team=request.user.team)
                 except:
                     pass
                 else:
