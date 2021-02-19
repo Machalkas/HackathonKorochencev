@@ -92,7 +92,17 @@ def viewTask(request, task_pk):
             is_active=False
             if task.deadline>=now:
                 is_active=True
-            return render(request, "tasks/view_task.html",{'form':form, 'title':task.title, 'task':task.task, 'file':task.task_file, 'company':task.company, "deadline":deadline, 'is_leader':is_leader, "is_active":is_active})
+            task_status=None
+            try:
+                s=Solution.objects.get(task=task.pk)
+            except:
+                pass
+            else:
+                if s.score==None:
+                    task_status="uploaded"
+                else:
+                    task_status="checked"
+            return render(request, "tasks/view_task.html",{'form':form, 'title':task.title, 'task':task.task, 'file':task.task_file, 'company':task.company, "deadline":deadline, 'is_leader':is_leader, "is_active":is_active, "task_status":task_status})
 
 def createTask(request):
     if request.method=="GET":

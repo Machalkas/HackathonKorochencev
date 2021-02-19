@@ -8,6 +8,13 @@
 <link rel="stylesheet" href="{% static 'css/index.css'%}">
 <link rel="stylesheet" href="{% static 'css/join.css'%}">
 <!-- <link rel="stylesheet" href="{% static 'card_style.css'%}"> -->
+<style>
+  .create-tack-div{
+  border: 2px solid forestgreen;
+  border-radius: 10px;
+  max-width: 70%;
+}
+</style>
 {% endblock head %}
 {% block title %}Хакатон | {{title}}{% endblock title %}
 {% block content %}
@@ -15,6 +22,24 @@
 <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <main role="main" id="main" class="inner cover">
         <div><h1 style="padding-bottom: 1em;">{{title}}</h1></div>
+        {%if task_status is not None%}
+        <div class="container create-tack-div mb-5" id="create-tack-div">
+          <button id="btn-close" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+          <div class="mb-3">
+            <h3>{%if task_status == "uploaded"%}Уже загружено{% elif task_status == "checked" %}Уже оценено{%endif%}</h3>
+          </div>
+          <div>
+            {%if task_status == "uploaded"%}
+            <p class="lead">Вы уже загрузили решение этого задания</p>
+            {% elif task_status == "checked" %}
+              <p class="lead" style="margin-bottom: -.2em;">Вы уже получили баллы за это задание.</p>
+              <p class="lead">При поворной загрузке баллы за задания будут сброшены</p>
+            {%endif%}
+          </div>
+        </div>
+        {%endif%}
         <div>
           <p>{{task}}</p>
         {%if file is not None%}
@@ -48,7 +73,10 @@
 {% endblock content %}
 {%block scripts%}
 <!-- <script src="{% static 'get_tasks.js' %}"></script> -->
-<style>
-
-</style>
+<script>
+  $("#btn-close").click(function(){
+      $("#create-tack-div").fadeOut(300);
+      }
+  )
+  </script>
 {%endblock scripts%}
