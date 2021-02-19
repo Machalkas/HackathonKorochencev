@@ -12,7 +12,13 @@ $("#login_submit").click(function () {
             success: function (data) {
                 test = data;
                 data = JSON.parse(data);
+                let next=$.urlParam('next');
+                if (next){
+                    location=next
+                }
+                else{
                 location = data["url"];
+                }
             },
             error: function (data) {
                 data = JSON.parse(data["responseText"]);
@@ -39,7 +45,13 @@ $("#singup_submit").click(function () {
             success: function (data) {
                 test = data;
                 data = JSON.parse(data);
+                let next=$.urlParam('next');
+                if (next){
+                    location=next
+                }
+                else{
                 location = data["url"];
+                }
             },
             error: function (data) {
                 data = JSON.parse(data["responseText"]);
@@ -69,6 +81,16 @@ $("#singup_submit").click(function () {
         singup_result_form.style=style;
     }
 });
+
+$.urlParam = function(name){
+    try{
+	var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+	return results[1] || 0;
+    }
+    catch (TypeError){
+        return null;
+    }
+}
 // function checkForm(form) {
 //     let is_valid = true;
 //     let elem_valid = [];
