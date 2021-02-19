@@ -20,7 +20,7 @@ class SignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=254, widget=forms.TextInput(attrs={'class':'form-control mt-1', 'placeholder':'Email'}))
     first_name = forms.CharField(label="Имя", max_length=30, widget=forms.TextInput(attrs={'class':'form-control mt-1', 'placeholder':'Имя'}))
     last_name = forms.CharField(label="Фамилия", max_length=30, widget=forms.TextInput(attrs={'class':'form-control mt-1', 'placeholder':'Фамилия'}))
-    specialization = forms.CharField(max_length=250, widget=forms.TextInput(attrs={'class':'form-control mt-1',  'placeholder':'Специализация'}))
+    specialization = forms.CharField(max_length=250, required=False, widget=forms.TextInput(attrs={'class':'form-control mt-1',  'placeholder':'Специализация'}))
 
     class Meta:
         model=User
