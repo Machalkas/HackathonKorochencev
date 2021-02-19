@@ -7,3 +7,8 @@ class Settings(models.Model):
     class Meta:
         verbose_name = 'Параметры'
         verbose_name_plural = 'Параметры'
+    def save(self,*args,**kwargs):
+        total_records = Settings.objects.count()
+        if total_records >= 1:
+            Settings.objects.all().delete()
+        super().save(*args,**kwargs)
