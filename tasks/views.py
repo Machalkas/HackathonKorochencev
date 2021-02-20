@@ -59,6 +59,7 @@ def viewTask(request, task_pk):
                 try:
                     solution=Solution.objects.get(team=request.user.team, task=task)
                     solution.solution_file=form.cleaned_data["solution_file"]
+                    solution.score=None
                 except:
                     solution=form.save()
                     solution.task=task
@@ -93,6 +94,7 @@ def viewTask(request, task_pk):
             if task.deadline>=now:
                 is_active=True
             task_status=None
+            solution_score=0
             try:
                  s=Solution.objects.get(task=task.pk, team=request.user.team)
             except:
@@ -101,8 +103,9 @@ def viewTask(request, task_pk):
                 if s.score==None:
                     task_status="uploaded"
                 else:
+                    solution_score=s.score
                     task_status="checked"
-            return render(request, "tasks/view_task.html",{'form':form, 'title':task.title, 'task':task.task, 'file':task.task_file, 'company':task.company, "deadline":deadline, 'is_leader':is_leader, "is_active":is_active, "task_status":task_status})
+            return render(request, "tasks/view_task.html",{'form':form, 'title':task.title, 'task':task.task, 'file':task.task_file, 'company':task.company, "deadline":deadline, 'is_leader':is_leader, "is_active":is_active, "task_status":task_status, "cost":task.cost, "score":solution_score})
 
 def createTask(request):
     if request.method=="GET":
@@ -143,19 +146,20 @@ def manageTasks(request):
             tasks=Task.objects.all()
             for i in tasks:
                 task_status=None
+                solution_score=0
                 try:
                     s=Solution.objects.get(task=i.pk, team=request.user.team)
-                except:
-                    pass
-                else:
                     if s.score!=None:
+                        solution_score=s.score
                         task_status='checked'
                     else:
                         task_status='uploaded'
+                except:
+                    pass
                 if i.deadline>=now:
-                    active.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline, 'company':i.company.name, 'task-status':task_status})
+                    active.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'deadline':i.deadline, 'company':i.company.name, 'task-status':task_status, 'score':solution_score, 'cost':i.cost})
                 else:
-                    completed.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'cost':i.cost, 'deadline':i.deadline, 'company':i.company.name, 'task-status':task_status})
+                    completed.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'deadline':i.deadline, 'company':i.company.name, 'task-status':task_status, 'score':solution_score, 'cost':i.cost})
             return JsonResponse({'active':active, 'complited':completed})
         elif action=="get-solutions":
             try:

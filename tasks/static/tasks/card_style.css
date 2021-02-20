@@ -43,3 +43,9 @@
     top: -4.2em;
     font-size: 0.95em;
 }
+
+.card-score{
+    position: absolute;
+    bottom: 0.4em;
+    right: 16.4em;
+};
