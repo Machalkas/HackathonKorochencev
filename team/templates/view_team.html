@@ -153,7 +153,7 @@
 {% endblock content %}
 {%block scripts%}
 <script>var token = '{{csrf_token}}'; var team_pk = {{ team_pk }}; var user_pk = {{ request.user.pk }};</script>
-<script src="{% static 'team/number increase.js' %}"></script>
+<script src="{% static 'js/number increase.js' %}"></script>
 <!-- <script src="{% static 'data update.js' %}"></script> -->
 <script src="{% static 'team/ajax.js' %}"></script>
 <!-- <script>update(team_pk,'score');</script> -->

@@ -1,0 +1,14 @@
+.span-date{
+    background-color: gainsboro;
+    border: 1px solid gainsboro;
+    border-radius: 10px;
+    padding: 0.2em;
+    font-weight: initial;
+    font-size: 0.9em;
+}
+
+.big-number{
+    font-size: 8em;
+    font-family: -webkit-pictograph;
+    text-shadow: 5px 5px grey;
+}

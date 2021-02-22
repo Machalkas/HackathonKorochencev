@@ -1,5 +1,8 @@
 from django.shortcuts import render, redirect
+from django.http import JsonResponse
 from userAuth.models import User
+from team.models import Teams
+from .models import Settings
 #from django.http import HttpResponse
 
 
@@ -17,3 +20,26 @@ def notFound(request, exception):
 def serverError(request):
     # print(exception)
     return render(request, "main/500.html")
+
+
+def manageMain(request):
+    if request.is_ajax and request.method == "GET":
+        action=request.GET.get('action')
+        if action=="get-data":
+            start_date,end_date=None,None
+            users,teams=0,0
+            try:
+                s=Settings.objects.all()
+                start_date=s[0].start_date
+                end_date=s[0].end_date
+            except:
+                pass
+            try:
+                users=User.objects.filter(is_specialist=False).filter(is_superuser=False).count()
+            except:
+                pass
+            try:
+                teams=Teams.objects.all().count()
+            except:
+                pass
+            return JsonResponse({'start-date':start_date, 'end-date':end_date, 'users-count':users, 'teams-count':teams}, status=200)
