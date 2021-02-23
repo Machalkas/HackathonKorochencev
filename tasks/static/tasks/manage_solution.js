@@ -1,4 +1,4 @@
-let months = {0:"января", 1:"февраля", 2:"марта", 3:"апреля", 4:"мая", 5:"июня", 6:"июля", 7:"августа", 8:"сентября", 9:"октября", 10:"ноября", 11:"декабря"};
+// let months = {0:"января", 1:"февраля", 2:"марта", 3:"апреля", 4:"мая", 5:"июня", 6:"июля", 7:"августа", 8:"сентября", 9:"октября", 10:"ноября", 11:"декабря"};
 var max_score = null, task = null, team = null;
 $("#id_score").change(function () {
     if ($("#id_score")[0].value > max_score) {
@@ -55,16 +55,17 @@ function getSolution(solution = null) {
             if (data["url"] != null) {
                 location = data["url"];
             }
-            let d=new Date(data["upload"]);
-            let h=d.getHours();
-            let m=d.getMinutes();
-            if(d.getHours()<10){
-                h="0"+d.getHours();
-            }
-            if(d.getMinutes()<10){
-                m="0"+d.getMinutes();
-            }
-            let date=d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear()+' '+h+":"+m;
+            // let d=new Date(data["upload"]);
+            // let h=d.getHours();
+            // let m=d.getMinutes();
+            // if(d.getHours()<10){
+            //     h="0"+d.getHours();
+            // }
+            // if(d.getMinutes()<10){
+            //     m="0"+d.getMinutes();
+            // }
+            // let date=d.getDate()+' '+months[d.getMonth()]+' '+d.getFullYear()+' '+h+":"+m;
+            let date=formDateTime(data["upload"]);
             $("#task").text(data["task"]);
             $("#team").text("Команда: " + data["team"]);
             $("#file").text(data["file"]);

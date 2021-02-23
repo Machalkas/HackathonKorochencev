@@ -41,6 +41,7 @@
 {% endblock content %}
 {%block scripts%}
 <script>var solution_id={{solution.pk}};</script>
+<script src="{% static 'js/form_datetime.js' %}"></script>
 <script src="{%static 'js/check-form.js'%}"></script>
 <script src="{%static 'tasks/manage_solution.js'%}"></script>
 {%endblock scripts%}
