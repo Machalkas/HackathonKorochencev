@@ -67,21 +67,34 @@
         </div>
         </a>
 
-        <div class="container mt-5">
-            <h1 class="cover-heading display-4 mb-3">Когда??</h1>
-            <p class="lead" id="start" class="font-size: xx-large">Начало <span class="span-date" id="start"></span></p>
-            <p class="lead">Окончание <span class="span-date" id="end"></span></p>
+        <div class="container mt-5" id="date-time-info" disabled="disabled">
+            <h1 class="cover-heading display-4 mb-3" id="timer-title">До конца</h1>
+            <p class="lead big-number" id="timer-time" style="font-size: 4em;">2 дня<br>23:57:39</p>
+            <p class="lead">Начало <span class="span-date" id="start">23 февраля 2021 23:18</span></p>
+            <p class="lead">Конец <span class="span-date" id="end">26 февраля 2021 23:16</span></p>
         </div>
-        <style>
-            .span-date{
-                background-color: gainsboro;
-                border: 1px solid grey;
-                border-radius: 2px;
-                padding: 0.2em;
-                font-weight: initial;
-            }
-        </style>
+        <div class="container mt-5">
+            <h1 class="cover-heading display-4 mb-1">Участников</h1>
+            <p class="lead big-number" id="users">2</p>
+        </div>
     </main>
+    <style>
+        .span-date{
+    background-color: gainsboro;
+    border: 1px solid gainsboro;
+    border-radius: 10px;
+    padding: 0.2em;
+    font-weight: initial;
+    font-size: 0.9em;
+}
+.big-number{
+    font-size: 8em;
+    font-weight: 500;
+    /* font-family: -webkit-pictograph; */
+    text-shadow: 0.05em 0.05em grey;
+}
+
+    </style>
 </div>
 
 
