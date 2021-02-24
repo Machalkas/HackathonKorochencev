@@ -10,6 +10,8 @@ from .forms import TaskForm, SolutionForm
 from team.models import TeamsLeaders
 from company.models import Company, CompanyRepresentatives
 from main.models import Settings
+
+from .checkPermissions import isAlow
 months = {1:"января", 2:"февраля", 3:"марта", 4:"апреля", 5:"мая", 6:"июня", 7:"июля", 8:"августа", 9:"сентября", 10:"октября", 11:"ноября", 12:"декабря"}
 
 def parseDateTime(dt):
@@ -49,23 +51,24 @@ def viewSolution(request, solution_pk):
     return render(request, "tasks/view_solution.html", {"solution":solution})
 
 def viewTasks(request):
-    try:
-        s=Settings.objects.all()
-        now=timezone.now()
-        if s[0].start_date!=None and s[0].start_date>now:
-            date="Начало "+parseDateTime(s[0].start_date)
-            title="Не спеши!"
-            text="Хакатон еще не начался"
-            return render(request, "tasks/not_in_time.html", {"title":title, "text":text, "date":date,"dt":s[0].start_date.strftime("%Y-%m-%dT%H:%M:%S")})
-        elif s[0].end_date!=None and s[0].end_date<now:
-            # date="Конец "+parseDateTime(s[0].start_date)
-            title="Опоздал!"
-            text="Хакатон закончился "+parseDateTime(s[0].end_date)
-            return render(request, "tasks/not_in_time.html", {"title":title, "text":text})
-    except:
-        pass
+    if not isAlow(request):
+        try:
+            s=Settings.objects.all()
+            now=timezone.now()
+            if s[0].start_date!=None and s[0].start_date>now:
+                date="Начало "+parseDateTime(s[0].start_date)
+                title="Не спеши!"
+                text="Хакатон еще не начался"
+                return render(request, "tasks/not_in_time.html", {"title":title, "text":text, "date":date,"dt":s[0].start_date.strftime("%Y-%m-%dT%H:%M:%S")})
+            elif s[0].end_date!=None and s[0].end_date<now:
+                # date="Конец "+parseDateTime(s[0].start_date)
+                title="Опоздал!"
+                text="Хакатон закончился "+parseDateTime(s[0].end_date)
+                return render(request, "tasks/not_in_time.html", {"title":title, "text":text})
+        except:
+            pass
     is_specialist=False
-    if request.user.is_specialist:
+    if not request.user.is_anonymous and request.user.is_specialist:
         try:
             CompanyRepresentatives.objects.get(user_id_id=request.user.pk)
         except:
@@ -76,6 +79,8 @@ def viewTasks(request):
 
 
 def viewTask(request, task_pk):
+    if not isAlow(request):
+        return render(request, "tasks/access_denied.html")
     if request.method=="POST":
         form=SolutionForm(request.POST, request.FILES)
         if form.is_valid():
