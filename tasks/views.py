@@ -2,13 +2,14 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from django import forms
 # from django.contrib.auth.decorators import login_required
-from datetime import datetime
+# from datetime import datetime
 from django.utils import timezone
 
 from .models import Task, Solution
 from .forms import TaskForm, SolutionForm
 from team.models import TeamsLeaders
 from company.models import Company, CompanyRepresentatives
+from main.models import Settings
 months = {0:"января", 1:"февраля", 2:"марта", 3:"апреля", 4:"мая", 5:"июня", 6:"июля", 7:"августа", 8:"сентября", 9:"октября", 10:"ноября", 11:"декабря"}
 
 def viewSolutions(request):
@@ -38,6 +39,23 @@ def viewSolution(request, solution_pk):
     return render(request, "tasks/view_solution.html", {"solution":solution})
 
 def viewTasks(request):
+    try:
+        s=Settings.objects.all()
+        now=timezone.now()
+        if s[0].start_date!=None and s[0].start_date>now:
+            t=s[0].start_date.timetuple()
+            h=str(t[3])
+            m=str(t[4])
+            if(t[3]<10):
+                h="0"+h
+            if(t[4]<10):
+                m="0"+m
+            date=str(t[2])+" "+months[t[1]]+" "+str(t[0])+" "+h+":"+m
+            title="Не спеши!"
+            text="Хакатон еще не начался"
+            return render(request, "tasks/not_in_time.html", {"title":title, "text":text, "date":date})
+    except:
+        pass
     is_specialist=False
     if request.user.is_specialist:
         try:
