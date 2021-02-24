@@ -2,7 +2,7 @@ from main.models import Settings
 from django.utils import timezone
 
 def isAlow(request):
-    if request.user.is_anonymous or not request.user.is_specialist or not request.user.is_superuser:
+    if request.user.is_anonymous==True or (request.user.is_specialist==False and request.user.is_superuser==False):
         try:
             s=Settings.objects.all()
             now=timezone.now()

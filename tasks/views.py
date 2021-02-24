@@ -26,29 +26,35 @@ def parseDateTime(dt):
 
 def viewSolutions(request):
     is_specialist=False
-    if request.user.is_specialist:
+    if not request.user.is_anonymous and request.user.is_specialist:
         try:
             CompanyRepresentatives.objects.get(user_id_id=request.user.pk)
         except:
             pass
         else:
             is_specialist=True
-    return render(request, "tasks/view_solutions.html")
+        return render(request, "tasks/view_solutions.html")
+    elif not request.user.is_anonymous and request.user.is_superuser:
+        is_specialist=False
+        return render(request, "tasks/view_solutions.html")
+    return render(request, "tasks/access_denied.html")
 
 def viewSolution(request, solution_pk):
     is_alow=False
-    if request.user.is_specialist:
+    is_specialist=False
+    if not request.user.is_anonymous and (request.user.is_specialist or request.user.is_superuser):
+        is_alow=True
         try:
-            company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.pk).company_id_id
             solution=Solution.objects.get(pk=solution_pk)
+            company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.pk).company_id_id
         except:
             pass
         else:
             if solution.task.company.pk==company_id:
-                is_alow=True
+                is_specialist=True
     if not is_alow:
         return render(request, "tasks/access_denied.html")
-    return render(request, "tasks/view_solution.html", {"solution":solution})
+    return render(request, "tasks/view_solution.html", {"solution":solution, "is_specialist":is_specialist})
 
 def viewTasks(request):
     if not isAlow(request):
@@ -187,9 +193,12 @@ def manageTasks(request):
             return JsonResponse({'active':active, 'complited':completed})
         elif action=="get-solutions":
             try:
-                company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.id).company_id_id
-                company=Company.objects.get(id=company_id)
-                task=Task.objects.filter(company=company)
+                if not request.user.is_anonymous and request.user.is_superuser:
+                    task=Task.objects.all()
+                else:
+                    company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.id).company_id_id
+                    company=Company.objects.get(id=company_id)
+                    task=Task.objects.filter(company=company)
                 solutions_list=[]
                 for i in task:
                     solutions=Solution.objects.filter(task=i.pk)

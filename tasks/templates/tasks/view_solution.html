@@ -28,6 +28,7 @@
     <div>
       <p id="upload"></p>
     </div>
+    {%if is_specialist%}
     <div id="solutionForm">
       <form method="post" class="form mt-5" enctype="multipart/form-data"  id="solution_form">
         {% csrf_token %}
@@ -36,6 +37,7 @@
       </form>
       <div id="form_result"></div>
     </div>
+    {%endif%}
   </main>
 </div>
 {% endblock content %}
