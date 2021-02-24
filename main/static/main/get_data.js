@@ -30,12 +30,22 @@ function timer() {
     let day = 'дней';
     if (start != null || end != null) {
         if (start != null && new Date(start) - now > 0) {
+            $("#timer-time").fadeIn(0);
             s = parseInt((new Date(start) - now) / 1000);
             $("#timer-title").text("До начала");
         }
         else if (end != null && new Date(end)-now > 0) {
+            $("#timer-time").fadeIn(0);
             s = parseInt((new Date(end)-now) / 1000);
             $("#timer-title").text("До конца");
+        }
+        else if(end != null && new Date(end)-now < 0){
+            $("#timer-time").fadeOut();
+            $("#timer-title").text("Хаккатон уже закончился");
+        }
+        else if (end==null && new Date(start) - now < 0){
+            $("#timer-time").fadeOut();
+            $("#timer-title").text("ПО КОНЯМ!");
         }
         if (s >= 60) {
             m = parseInt(s / 60);
@@ -72,5 +82,5 @@ function timer() {
     // setTimeout(timer, 1000);
 }
 setInterval(getData, 60000);
-setInterval(timer, 1000);
+setInterval(timer, 500);
 getData();

@@ -10,7 +10,17 @@ from .forms import TaskForm, SolutionForm
 from team.models import TeamsLeaders
 from company.models import Company, CompanyRepresentatives
 from main.models import Settings
-months = {0:"января", 1:"февраля", 2:"марта", 3:"апреля", 4:"мая", 5:"июня", 6:"июля", 7:"августа", 8:"сентября", 9:"октября", 10:"ноября", 11:"декабря"}
+months = {1:"января", 2:"февраля", 3:"марта", 4:"апреля", 5:"мая", 6:"июня", 7:"июля", 8:"августа", 9:"сентября", 10:"октября", 11:"ноября", 12:"декабря"}
+
+def parseDateTime(dt):
+    t=dt.timetuple()
+    h=str(t[3])
+    m=str(t[4])
+    if(t[3]<10):
+        h="0"+h
+    if(t[4]<10):
+        m="0"+m
+    return str(t[2])+" "+months[t[1]]+" "+str(t[0])+" "+h+":"+m
 
 def viewSolutions(request):
     is_specialist=False
@@ -43,17 +53,15 @@ def viewTasks(request):
         s=Settings.objects.all()
         now=timezone.now()
         if s[0].start_date!=None and s[0].start_date>now:
-            t=s[0].start_date.timetuple()
-            h=str(t[3])
-            m=str(t[4])
-            if(t[3]<10):
-                h="0"+h
-            if(t[4]<10):
-                m="0"+m
-            date=str(t[2])+" "+months[t[1]]+" "+str(t[0])+" "+h+":"+m
+            date="Начало "+parseDateTime(s[0].start_date)
             title="Не спеши!"
             text="Хакатон еще не начался"
-            return render(request, "tasks/not_in_time.html", {"title":title, "text":text, "date":date})
+            return render(request, "tasks/not_in_time.html", {"title":title, "text":text, "date":date,"dt":s[0].start_date.strftime("%Y-%m-%dT%H:%M:%S")})
+        elif s[0].end_date!=None and s[0].end_date<now:
+            # date="Конец "+parseDateTime(s[0].start_date)
+            title="Опоздал!"
+            text="Хакатон закончился "+parseDateTime(s[0].end_date)
+            return render(request, "tasks/not_in_time.html", {"title":title, "text":text})
     except:
         pass
     is_specialist=False
@@ -95,14 +103,7 @@ def viewTask(request, task_pk):
             is_leader=True
         try:
             task=Task.objects.get(pk=task_pk)
-            t=task.deadline.timetuple()
-            h=str(t[3])
-            m=str(t[4])
-            if(t[3]<10):
-                h="0"+h
-            if(t[4]<10):
-                m="0"+m
-            deadline=str(t[2])+" "+months[t[1]]+" "+str(t[0])+" "+h+":"+m
+            deadline=parseDateTime(task.deadline)
         except:
             return render(request, "tasks/view_task.html",{'title':'Ошибка', 'task':'Задание не найдено'})
         else:

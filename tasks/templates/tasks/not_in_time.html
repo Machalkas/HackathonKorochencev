@@ -19,4 +19,15 @@
         </footer>
 
     </div>
+    <script>
+        function checkDate(date){
+            if (new Date(date)-new Date()<=0){
+                document.location.reload();
+            }
+            if (date!=""){
+                setTimeout(checkDate,1000,date);
+            }
+        }
+        checkDate("{{dt}}");
+    </script>
     {% endblock content %}
