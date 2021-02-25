@@ -35,19 +35,25 @@ def viewCompany(request, key=None):
 
 @login_required(login_url='/auth')
 def createCompany(request):
-    if request.method=="POST":
-        form=CompanyForm(request.POST)
-        if form.is_valid():
-            user=User.objects.get(pk=request.user.pk)
-            company=form.save()
-            cr=CompanyRepresentatives(user_id=user, company_id=company)
-            cr.save()
-            company.save()
-            return redirect("/company/view")
-    else:
-        form=CompanyForm()
-    return render(request, "create_company.html", {"form":form})
-
+    if request.user.is_specialist:
+        try:
+            cr=CompanyRepresentatives.objects.get(user_id=request.user.pk).company_id
+            return redirect("/company/"+str(Company.objects.get(pk=cr).pk))
+        except:
+            pass
+        if request.method=="POST":
+            form=CompanyForm(request.POST)
+            if form.is_valid():
+                user=User.objects.get(pk=request.user.pk)
+                company=form.save()
+                cr=CompanyRepresentatives(user_id=user, company_id=company)
+                cr.save()
+                company.save()
+                return redirect("/company/view")
+        else:
+            form=CompanyForm()
+        return render(request, "company/create_company.html", {"form":form})
+    return render(request, "pages/access_denied.html")
 def manageCompany(request):
     if request.is_ajax and request.method=="GET":
         action=request.GET.get('action')

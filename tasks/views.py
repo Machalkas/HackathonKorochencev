@@ -38,7 +38,7 @@ def viewSolutions(request):
     elif not request.user.is_anonymous and request.user.is_superuser:
         is_specialist=False
         return render(request, "tasks/view_solutions.html")
-    return render(request, "tasks/access_denied.html")
+    return render(request, "pages/access_denied.html")
 
 @login_required(login_url='/auth')
 def viewSolution(request, solution_pk):
@@ -55,7 +55,7 @@ def viewSolution(request, solution_pk):
             if solution.task.company.pk==company_id:
                 is_specialist=True
     if not is_alow:
-        return render(request, "tasks/access_denied.html")
+        return render(request, "pages/access_denied.html")
     return render(request, "tasks/view_solution.html", {"solution":solution, "is_specialist":is_specialist})
 
 def viewTasks(request):
@@ -87,7 +87,7 @@ def viewTasks(request):
 
 def viewTask(request, task_pk):
     if not isAlow(request):
-        return render(request, "tasks/access_denied.html")
+        return render(request, "pages/access_denied.html")
     if request.method=="POST":
         form=SolutionForm(request.POST, request.FILES)
         if form.is_valid():
