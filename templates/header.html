@@ -17,7 +17,7 @@
     <nav class="my-2 my-md-0 mr-md-3">
       <a class="p-2 text-dark" href="/">Главная</a>
       <a class="p-2 text-dark" href="/tasks">Задания</a>
-      {% if request.user.is_specialist %}
+      {% if request.user.is_specialist or request.user.is_superuser %}
       <a class="p-2 text-dark" href="/tasks/solutions">Решения</a>
       {% endif %}
       <a class="p-2 text-dark" href="/team/all">Команды</a>
@@ -28,7 +28,11 @@
         <a class="dropdown-item" href="/auth/profile">Профиль</a>
         {% if request.user.is_specialist %}
         <a class="dropdown-item" href="/company">Компания</a>
-        {%else%}
+        {%endif%}
+        {%if request.user.is_superuser%}
+        <a class="dropdown-item" href="/admin">Админ панель</a>
+        {% endif %}
+        {%if request.user.team%}
         <a class="dropdown-item" href="/team/{{user.team.name}}">Моя команда</a>
         {% endif %}
       </div>
