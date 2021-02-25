@@ -8,6 +8,7 @@ from .forms import CreateTeamForm
 from userAuth.models import User
 from .urlGenerator import generate
 from tasks.models import Solution
+from main.models import Settings
 
 # from django.contrib.auth.models import User
 
@@ -24,7 +25,26 @@ def generateValidator():
             t=Teams.objects.get(url=s)
         except:
             return s
-            
+def isFullOfTeams():
+    try:
+        s=Settings.objects.all()[0].max_teams
+        t=Teams.objects.all().count()
+        if s!=None and t>=s:
+            return True
+    except:
+        pass
+    return False
+def isFullOfMembers(team_url):
+    try:
+        t=Teams.objects.get(url=team_url).pk
+        s=Settings.objects.all()[0].max_members
+        m=User.objects.filter(team=t).count()
+        if s!=None and m>=s:
+            return True
+    except:
+        pass
+    return False
+
 def viewTeams(request):
     return render(request, "view_teams.html")
 
@@ -56,6 +76,8 @@ def viewTeam(request, key=None):
 
 @login_required(login_url='/auth')
 def sendForm(request):
+    if isFullOfTeams():
+        return render(request, "full.html", {"full_text":"Лимит количества команд превышен"})
     if request.user.team==None:
         if request.method=="GET":
             form=CreateTeamForm()
@@ -64,16 +86,18 @@ def sendForm(request):
 
 @login_required(login_url='/auth')
 def addMember(request,key):
-        if request.method=='POST':
-            team_id=request.POST.get('team_id')
-            team_id=Teams.objects.get(name=team_id)
-            user=User.objects.get(pk=request.user.pk)
-            user.team=team_id
-            user.save()
-            return redirect("/team")
-        else:
-            team=Teams.objects.get(url=key)
-            return render(request,"invite.html",{'team':team.name})
+    if isFullOfMembers(key):
+        return render(request, "full.html", {"full_text":"Лимит количества участников в одной команде превышен"})
+    if request.method=='POST':
+        team_id=request.POST.get('team_id')
+        team_id=Teams.objects.get(name=team_id)
+        user=User.objects.get(pk=request.user.pk)
+        user.team=team_id
+        user.save()
+        return redirect("/team")
+    else:
+        team=Teams.objects.get(url=key)
+        return render(request,"invite.html",{'team':team.name})
 
 def manageTeam(request):
     if request.is_ajax and request.method == "POST":
@@ -96,6 +120,8 @@ def manageTeam(request):
                 return JsonResponse({"error":errors}, status=400)
             return JsonResponse({"ok":""}, status=200)
         elif action=="create-team":
+            if isFullOfTeams():
+                return JsonResponse({"error":"Лимит количества команд превышен"}, status=400)
             form = CreateTeamForm(request.POST)
             if form.is_valid():
                 team=form.save()
