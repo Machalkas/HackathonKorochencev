@@ -1,0 +1,19 @@
+<!-- <header class="mb-auto">
+    <div class="">
+        <h3 class="header-title">Хакатон</h3>
+        {% if request.user.is_authenticated %}
+        <p>{{ request.user.first_name }}</p> <a href="../auth/logout"
+            class="btn btn-secondary btn-sm btn-red header-logout">Выйти</a>
+        {% else %}
+        <a href="//auth" class="btn btn-secondary btn-sm btn-blue header-login">Войти</a>
+        <a href="//auth" class="btn btn-secondary btn-sm btn-green header-join mr-1">Регистрация</a>
+        {% endif %}
+    </div>
+</header> -->
+<style>.box-shadow {box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);}</style>
+<div class="d-flex flex-column flex-md-row align-items-center p-3 px-md-4 mb-3 bg-white border-bottom box-shadow">
+    <!-- <h5 class="my-0 mr-md-auto font-weight-normal">Company name</h5> -->
+    <a href="/" class="header-title my-0 mr-md-auto" style="color: black;"><h3 class="">Хакатон</h3></a>
+    <!-- <a href="//auth" class="btn btn-secondary btn-sm btn-green header-join mr-1">Регистрация</a> -->
+    <!-- <a class="btn btn-outline-primary" href="#">Sign up</a> -->
+  </div>
