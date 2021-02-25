@@ -147,9 +147,12 @@ def manageTasks(request):
         action=request.POST.get('action')
         if action=="upload-task":
             form=TaskForm(request.POST, request.FILES)
-            if form.is_valid():
-                company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.pk).company_id_id
-                company=Company.objects.get(pk=company_id)
+            if form.is_valid() and(not request.user.is_anonymous and request.user.is_specialist):
+                try:
+                    company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.pk).company_id_id
+                    company=Company.objects.get(pk=company_id)
+                except:
+                    return JsonResponse({"error":"Компании не существует"}, status=400)
                 task=form.save()
                 task.company=company
                 task.save()
@@ -157,19 +160,23 @@ def manageTasks(request):
             else:
                 return JsonResponse({"error":form.errors}, status=400)
         elif action=="upload-score":
-            try:
-                s=Solution.objects.get(pk=request.POST.get("solution"))
-                s.score=int(request.POST.get("score"))
-                s.save()
-            except ValueError:
-                return JsonResponse({"error":"Не верное значение"}, status=400)
-            return JsonResponse({"ok":""})
-        else:
-            return JsonResponse({"error":"Не верный запрос"}, status=400)
+            if not request.user.is_anonymous and request.user.is_specialist:
+                try:
+                    s=Solution.objects.get(pk=request.POST.get("solution"))
+                    s.score=int(request.POST.get("score"))
+                    s.save()
+                except ValueError:
+                    return JsonResponse({"error":"Не верное значение"}, status=400)
+                return JsonResponse({"ok":""})
+            else:
+                return JsonResponse({"error":"Не верный запрос"}, status=400)
+            return JsonResponse({"error":"Не достаточно прав"}, status=400)
 
     elif request.is_ajax and request.method=="GET":
         action=request.GET.get('action')
         if action=="get-tasks":
+            if not isAlow(request):
+                return JsonResponse({"error":"Не достаточно прав"}, status=400)
             now = timezone.now()
             active=[]
             completed=[]
