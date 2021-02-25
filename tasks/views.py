@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse, HttpResponse
 from django import forms
-# from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required
 # from datetime import datetime
 from django.utils import timezone
 
@@ -24,6 +24,7 @@ def parseDateTime(dt):
         m="0"+m
     return str(t[2])+" "+months[t[1]]+" "+str(t[0])+" "+h+":"+m
 
+@login_required(login_url='/auth')
 def viewSolutions(request):
     is_specialist=False
     if not request.user.is_anonymous and request.user.is_specialist:
@@ -39,6 +40,7 @@ def viewSolutions(request):
         return render(request, "tasks/view_solutions.html")
     return render(request, "tasks/access_denied.html")
 
+@login_required(login_url='/auth')
 def viewSolution(request, solution_pk):
     is_alow=False
     is_specialist=False
@@ -82,7 +84,6 @@ def viewTasks(request):
         else:
             is_specialist=True
     return render(request, "tasks/view_tasks.html",{"is_specialist":is_specialist})
-
 
 def viewTask(request, task_pk):
     if not isAlow(request):
@@ -137,6 +138,7 @@ def viewTask(request, task_pk):
                     task_status="checked"
             return render(request, "tasks/view_task.html",{'form':form, 'title':task.title, 'task':task.task, 'file':task.task_file, 'company':task.company, "deadline":deadline, 'is_leader':is_leader, "is_active":is_active, "task_status":task_status, "cost":task.cost, "score":solution_score})
 
+@login_required(login_url='/auth')
 def createTask(request):
     if request.method=="GET":
         form=TaskForm()
