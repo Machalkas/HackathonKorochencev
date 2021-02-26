@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
-
 {% block head%}<link rel="stylesheet" href="{% static 'css/join.css'%}">{% endblock head %}
 {% block title %}Хакатон | Создание компании{% endblock title %}
 {% block content %}
+{% include "empty_header.html" %}
 <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
 <form method="post" class="form mt-5">
   {% csrf_token %}

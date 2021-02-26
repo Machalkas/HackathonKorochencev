@@ -8,12 +8,36 @@
 <link rel="stylesheet" href="{% static 'css/index.css'%}">
 <link rel="stylesheet" href="{% static 'css/join.css'%}">
 <link rel="stylesheet" href="{% static 'tasks/card_style.css'%}">
+<style>
+    .create-tack-div{
+    border: 2px solid forestgreen;
+    border-radius: 10px;
+    max-width: 70%;
+}
+</style>
 {% endblock head %}
 {% block title %}Хакатон | Партнеры{% endblock title %}
 {% block content %}
 {% include "header.html" %}
 <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <h1 class=" display-4" style="padding-bottom: 1em;" id="tasks">Партнеры</h1>
+    {%if request.user.is_specialist and not is_represent%}
+    <div class="container create-tack-div mb-5" id="create-tack-div">
+        <button id="btn-close" type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        <div class="mb-3">
+            <h3>Создать компанию</h3>
+        </div>
+        <div>
+            <p class="lead" style="margin-bottom: -.2em;">Создайте компанию</p>
+            <p class="lead">чтобы публиковать задания на Хакатоне</p>
+        </div>
+        <div style=" margin-bottom: 0.5em;">
+            <a class="btn btn-green btn-big" href="/company/create">Создать</a>
+        </div>
+    </div>
+    {%endif%}
     <main role="main" id="main" class="inner cover">
     </main>
 </div>

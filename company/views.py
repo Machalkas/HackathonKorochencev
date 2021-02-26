@@ -9,7 +9,12 @@ from django.http import HttpResponse, JsonResponse
 
 # @login_required(login_url='/auth')
 def viewCompanies(request):
-    return render(request,"company/view_companies.html")
+    is_represent=True
+    try:
+        CompanyRepresentatives.objects.get(user_id=request.user.pk)
+    except:
+        is_represent=False
+    return render(request,"company/view_companies.html", {"is_represent":is_represent})
 
 def viewCompany(request, key=None):
     if key==None:

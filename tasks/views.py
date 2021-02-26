@@ -90,6 +90,14 @@ def viewTask(request, task_pk):
         return render(request, "pages/access_denied.html")
     if request.method=="POST":
         form=SolutionForm(request.POST, request.FILES)
+        #возможно излишне
+        # if request.user.team==None: 
+        #     return render(request, "tasks/view_task.html",{'title':'Ошибка', 'task':'Создайте команду для загрузки решения'})
+        # else:
+        #     try:
+        #         tl=TeamsLeaders.objects.get(user_id_id=request.user.pk)
+        #     except:
+        #         return render(request, "tasks/view_task.html",{'title':'Ошибка', 'task':'Загружать решения может только лидер команды'})
         if form.is_valid():
             now = timezone.now()
             task=Task.objects.get(pk=task_pk)
@@ -106,6 +114,8 @@ def viewTask(request, task_pk):
                 return redirect("/tasks")
             else:
                 return render(request, "tasks/view_task.html",{'title':'Ошибка', 'task':'Истек срок сдачи задания'})
+        else:
+            return render(request, "tasks/view_task.html",{'title':'Ошибка', 'task':form.errors})
     else:
         try:
             TeamsLeaders.objects.get(user_id=request.user.pk)
@@ -195,6 +205,7 @@ def manageTasks(request):
                         task_status='uploaded'
                 except:
                     pass
+                # print(str(i.deadline)+"|||"+str(now))
                 if i.deadline>=now:
                     active.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'deadline':i.deadline, 'company':i.company.name, 'task-status':task_status, 'score':solution_score, 'cost':i.cost})
                 else:
