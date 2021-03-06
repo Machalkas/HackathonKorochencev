@@ -25,8 +25,8 @@ class TeamsLeaders(models.Model):
         verbose_name_plural = 'Лидеры'
 
 class Checked(models.Model):
-    checkpoint_id=models.ForeignKey(Checkpoint, on_delete=models.CASCADE, blank=False, null=True, verbose_name="Чекпоинт")
-    team_id=models.ForeignKey(Teams, on_delete=models.CASCADE, blank=False, null=False, verbose_name="Команда")
+    checkpoint=models.ForeignKey(Checkpoint, on_delete=models.CASCADE, blank=False, null=True, verbose_name="Чекпоинт")
+    team=models.ForeignKey(Teams, on_delete=models.CASCADE, blank=False, null=False, verbose_name="Команда")
     score=models.PositiveIntegerField(blank=True, null=True, default=None, verbose_name="Баллы")
     is_came=models.BooleanField(blank=True, null=True, default=None, verbose_name="Команда пришла")
     class Meta:

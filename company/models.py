@@ -12,7 +12,7 @@ class Company(models.Model):
 
 class CompanyRepresentatives(models.Model):
     user_id=models.OneToOneField(settings.AUTH_USER_MODEL, primary_key=True, on_delete=models.CASCADE, verbose_name="Представитель компании")
-    company_id=models.ForeignKey(Company, on_delete=models.CASCADE, verbose_name="Компания")
+    company=models.ForeignKey(Company, on_delete=models.CASCADE, verbose_name="Компания")
     class Meta:
         # unique_together = (('user_id', 'company_id'),)
         verbose_name = 'Представитель'
