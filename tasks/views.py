@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from .models import Task, Solution
 from .forms import TaskForm, SolutionForm
-from team.models import TeamsLeaders
+from team.models import TeamsLeaders, Teams
 from company.models import Company, CompanyRepresentatives
 from main.models import Settings
 
@@ -189,30 +189,37 @@ def manageTasks(request):
     elif request.is_ajax and request.method=="GET":
         action=request.GET.get('action')
         if action=="get-tasks":
-            if not isAlow(request):
-                return JsonResponse({"error":"Не достаточно прав"}, status=400)
-            now = timezone.now()
-            active=[]
-            completed=[]
-            tasks=Task.objects.all()
-            for i in tasks:
-                task_status=None
-                solution_score=0
-                try:
-                    s=Solution.objects.get(task=i.pk, team=request.user.team)
-                    if s.score!=None:
-                        solution_score=s.score
-                        task_status='checked'
-                    else:
-                        task_status='uploaded'
-                except:
-                    pass
-                # print(str(i.deadline)+"|||"+str(now))
-                if i.deadline>=now:
-                    active.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'deadline':i.deadline, 'company':i.company.name, 'task-status':task_status, 'score':solution_score, 'cost':i.cost})
-                else:
-                    completed.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'deadline':i.deadline, 'company':i.company.name, 'task-status':task_status, 'score':solution_score, 'cost':i.cost})
-            return JsonResponse({'active':active, 'complited':completed})
+            # if not isAlow(request):
+            #     return JsonResponse({"error":"Не достаточно прав"}, status=400)
+            # now = timezone.now()
+            # active=[]
+            # completed=[]
+            # tasks=Task.objects.all()
+            # for i in tasks:
+            #     task_status=None
+            #     solution_score=0
+            #     try:
+            #         s=Solution.objects.get(task=i.pk, team=request.user.team)
+            #         if s.score!=None:
+            #             solution_score=s.score
+            #             task_status='checked'
+            #         else:
+            #             task_status='uploaded'
+            #     except:
+            #         pass
+            #     # print(str(i.deadline)+"|||"+str(now))
+            #     if i.deadline>=now:
+            #         active.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'deadline':i.deadline, 'company':i.company.name, 'task-status':task_status, 'score':solution_score, 'cost':i.cost})
+            #     else:
+            #         completed.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'deadline':i.deadline, 'company':i.company.name, 'task-status':task_status, 'score':solution_score, 'cost':i.cost})
+            # return JsonResponse({'active':active, 'complited':completed})
+            t=Task.objects.all()
+            tasks=[]
+            for i in t:
+                teams=Teams.objects.filter(task=i.pk).count()
+                tasks.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'company':i.company.name, "teams":teams})
+            return JsonResponse({"tasks":tasks})
+            
         elif action=="get-solutions":
             try:
                 if not request.user.is_anonymous and request.user.is_superuser:
