@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
-from tasks.models import Task
-from main.models import Checkpoint
+from tasks.models import Task, Checkpoint
 
 class Teams(models.Model):
     name=models.CharField(max_length=100, null=False, unique=True, verbose_name="Название команды")

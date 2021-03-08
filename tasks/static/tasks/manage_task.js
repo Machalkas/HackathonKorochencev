@@ -30,8 +30,9 @@ $("#upload_task").click(function (e) {
                     let errors = "";
                     for (i in data["error"]) {
                         console.log(data["error"][i]);
-                        errors += '<p class="lead" style="font-size: 1em;">' + data["error"][i] + '</p>\n';
+                        // errors += '<p class="lead" style="font-size: 1em;">' + data["error"][i] + '</p>\n';
                     }
+                    errors += '<p class="lead" style="font-size: 1em;">' + data["error"] + '</p>\n';
                     form_result.innerHTML = errors;
                 }
                 catch {

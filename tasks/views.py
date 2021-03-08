@@ -158,10 +158,12 @@ def manageTasks(request):
     if request.is_ajax and request.method=="POST":
         action=request.POST.get('action')
         if action=="upload-task":
+            if request.user.is_anonymous or not request.user.is_specialist:
+                return JsonResponse({"error":"Не достаточно прав"}, status=400)
             form=TaskForm(request.POST, request.FILES)
-            if form.is_valid() and(not request.user.is_anonymous and request.user.is_specialist):
+            if form.is_valid():
                 try:
-                    company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.pk).company_id_id
+                    company_id=CompanyRepresentatives.objects.get(user_id=request.user.pk).company_id
                     company=Company.objects.get(pk=company_id)
                 except:
                     return JsonResponse({"error":"Компании не существует"}, status=400)
