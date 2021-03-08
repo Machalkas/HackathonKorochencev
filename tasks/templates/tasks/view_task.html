@@ -22,34 +22,14 @@
 <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <main role="main" id="main" class="inner cover">
         <div><h1 style="padding-bottom: 1em;">{{title}}</h1></div>
-        {%if task_status is not None and is_leader and is_active%}
-        <div class="container create-tack-div mb-5" id="create-tack-div">
-          <button id="btn-close" type="button" class="close" data-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">×</span>
-          </button>
-          <div class="mb-3">
-            <h3>{%if task_status == "uploaded"%}Уже загружено{% elif task_status == "checked" %}Уже оценено{%endif%}</h3>
-          </div>
-          <div>
-            {%if task_status == "uploaded"%}
-            <p class="lead">Вы уже загрузили решение этого задания</p>
-            {% elif task_status == "checked" %}
-              <p class="lead" style="margin-bottom: -.2em;">Вы уже получили баллы за это задание.</p>
-              <p class="lead">При поворной загрузке баллы за задания будут сброшены</p>
-            {%endif%}
-          </div>
-        </div>
-        {%endif%}
         <div>
           <p>{{task}}</p>
         {%if file is not None%}
         <a href="/media/{{file}}" target="_blank"><p>{{file}}</p></a>
         {%endif%}
       </div>
-      {%if deadline is not None%}
-        <div><p>Дедлайн: {{deadline}}</p><p>{{company}}</p></div>
-      {%endif%}
-        {% if is_leader and is_active%}
+        <div><p>{{company}}</p></div>
+        {% if is_leader and request.user.team.task.pk == pk%}
         <a class="btn btn-success" data-toggle="collapse" href="#solutionForm" role="button" aria-expanded="false" aria-controls="solutionForm">Загрузить решение</a>
         <div class="collapse" id="solutionForm">
           <form method="post" class="form mt-5"  enctype="multipart/form-data">
@@ -61,8 +41,21 @@
             <button type="submit" class="btn btn-primary btn-blue mt-3">Отправка</button>
           </form>
         </div>
+        <div class="mt-5">
+          <a class="text-dark" data-toggle="collapse" href="#solutionHistory" role="button" aria-expanded="false" aria-controls="solutionHistory"><h3 class="dropdown-toggle">История решений</h3></a>
+          <div class="collapse container" id="solutionHistory">
+            <div class="row mb-1" style="font-weight: bold;">
+              <div class="col-sm"><p>Файл</p></div> <div class="col-sm"><p>Ссылка</p></div> <div class="col-sm"><p>Загружено</p></div>
+            </div>
+            {%for i in solutions%}
+            <div class="row">
+              <div class="col-sm"><a href="/media/{{i.solution_file}}" target="_blank">{{i.solution_file}}</a></div> <div class="col-sm"><a href="{{i.solution_link}}">{{i.solution_link}}</a></div> <div class="col-sm"><p>{{i.created}}</p></div>
+            </div>
+            <hr>
+            {%endfor%}
+          </div>
+        </div>
         {% endif %}
-        <div><p class="mt-3">Балл: {{score}} из {{cost}}</p></div>
     </main>
 
     <!-- <footer class=" mastfoot mt-auto">
@@ -73,10 +66,4 @@
 </div>
 {% endblock content %}
 {%block scripts%}
-<script>
-  $("#btn-close").click(function(){
-      $("#create-tack-div").fadeOut(300);
-      }
-  )
-  </script>
 {%endblock scripts%}

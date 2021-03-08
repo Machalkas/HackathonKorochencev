@@ -26,8 +26,8 @@ class Solution(models.Model):
     team=models.ForeignKey("team.Teams", on_delete=models.CASCADE, null=True, blank=True, verbose_name="Команда")
     # task=models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Задача")
     # solution=models.TextField(blank=False,verbose_name="Решение")
-    solution_file=models.FileField(blank=True, null=True, upload_to="solution/", verbose_name="Файл решения")
-    solution_link=models.CharField(max_length=255, blank=True, null=True, verbose_name="Ссылка на решение")
+    solution_file=models.FileField(blank=True, null=False, default="", upload_to="solution/", verbose_name="Файл решения")
+    solution_link=models.CharField(max_length=255, blank=True, null=False, default="", verbose_name="Ссылка на решение")
     # score=models.PositiveIntegerField(blank=True, null=True, verbose_name="Баллы за задание")
     created=models.DateTimeField(blank=False, null=False, auto_now_add=True, verbose_name="Создано")
     def __str__(self):

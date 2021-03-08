@@ -86,8 +86,8 @@ def viewTasks(request):
     return render(request, "tasks/view_tasks.html",{"is_specialist":is_specialist})
 
 def viewTask(request, task_pk):
-    if not isAlow(request):
-        return render(request, "pages/access_denied.html")
+    # if not isAlow(request):
+    #     return render(request, "pages/access_denied.html")
     if request.method=="POST":
         form=SolutionForm(request.POST, request.FILES)
         #возможно излишне
@@ -99,17 +99,10 @@ def viewTask(request, task_pk):
         #     except:
         #         return render(request, "tasks/view_task.html",{'title':'Ошибка', 'task':'Загружать решения может только лидер команды'})
         if form.is_valid():
-            now = timezone.now()
             task=Task.objects.get(pk=task_pk)
-            if task.deadline>=now:
-                try:
-                    solution=Solution.objects.get(team=request.user.team, task=task)
-                    solution.solution_file=form.cleaned_data["solution_file"]
-                    solution.score=None
-                except:
-                    solution=form.save()
-                    solution.task=task
-                    solution.team=request.user.team
+            if task==request.user.team.task:
+                solution=form.save()
+                solution.team=request.user.team
                 solution.save()
                 return redirect("/tasks")
             else:
@@ -125,28 +118,12 @@ def viewTask(request, task_pk):
             is_leader=True
         try:
             task=Task.objects.get(pk=task_pk)
-            deadline=parseDateTime(task.deadline)
         except:
             return render(request, "tasks/view_task.html",{'title':'Ошибка', 'task':'Задание не найдено'})
         else:
             form=SolutionForm()#initial={"team":request.user.team, "task":task}
-            now = timezone.now()
-            is_active=False
-            if task.deadline>=now:
-                is_active=True
-            task_status=None
-            solution_score=0
-            try:
-                 s=Solution.objects.get(task=task.pk, team=request.user.team)
-            except:
-                pass
-            else:
-                if s.score==None:
-                    task_status="uploaded"
-                else:
-                    solution_score=s.score
-                    task_status="checked"
-            return render(request, "tasks/view_task.html",{'form':form, 'title':task.title, 'task':task.task, 'file':task.task_file, 'company':task.company, "deadline":deadline, 'is_leader':is_leader, "is_active":is_active, "task_status":task_status, "cost":task.cost, "score":solution_score})
+            solution=Solution.objects.filter(team=request.user.team).order_by("-created")
+            return render(request, "tasks/view_task.html",{'form':form, 'pk':task.pk, 'title':task.title, 'task':task.task, 'file':task.task_file, 'company':task.company, 'is_leader':is_leader, 'solutions':solution})
 
 @login_required(login_url='/auth')
 def createTask(request):
@@ -189,30 +166,6 @@ def manageTasks(request):
     elif request.is_ajax and request.method=="GET":
         action=request.GET.get('action')
         if action=="get-tasks":
-            # if not isAlow(request):
-            #     return JsonResponse({"error":"Не достаточно прав"}, status=400)
-            # now = timezone.now()
-            # active=[]
-            # completed=[]
-            # tasks=Task.objects.all()
-            # for i in tasks:
-            #     task_status=None
-            #     solution_score=0
-            #     try:
-            #         s=Solution.objects.get(task=i.pk, team=request.user.team)
-            #         if s.score!=None:
-            #             solution_score=s.score
-            #             task_status='checked'
-            #         else:
-            #             task_status='uploaded'
-            #     except:
-            #         pass
-            #     # print(str(i.deadline)+"|||"+str(now))
-            #     if i.deadline>=now:
-            #         active.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'deadline':i.deadline, 'company':i.company.name, 'task-status':task_status, 'score':solution_score, 'cost':i.cost})
-            #     else:
-            #         completed.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'deadline':i.deadline, 'company':i.company.name, 'task-status':task_status, 'score':solution_score, 'cost':i.cost})
-            # return JsonResponse({'active':active, 'complited':completed})
             t=Task.objects.all()
             tasks=[]
             for i in t:

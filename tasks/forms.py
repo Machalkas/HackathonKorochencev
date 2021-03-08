@@ -25,7 +25,7 @@ class TaskAdminForm(forms.ModelForm):
 class SolutionForm(forms.ModelForm):
     # solution=forms.CharField(widget=forms.Textarea(attrs={'class':'form-control mt-1', 'placeholder':'Решение'}))
     solution_file=forms.FileField(required=True, label="Файл решения")
-    solution_link=forms.CharField(max_length=255, widget=forms.TextInput(attrs={'class':'form-control mt-1', 'placeholder':'Ссылка на решение'}))
+    solution_link=forms.CharField(max_length=255, required=False, widget=forms.TextInput(attrs={'class':'form-control mt-1', 'placeholder':'Ссылка на решение'}))
     # task=forms.ModelChoiceField(widget=forms.HiddenInput(), queryset = Task.objects.all(), required = False)
     team=forms.ModelChoiceField(widget=forms.HiddenInput(), queryset = Teams.objects.all(), required = False)
     class Meta:
