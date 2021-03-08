@@ -55,6 +55,9 @@
             {%endfor%}
           </div>
         </div>
+        {%elif is_leader and request.user.team.task == None%}
+        {% csrf_token %}
+        <a class="btn btn-primary" onclick="takeTask({{pk}})">Выбрать это задание</a>
         {% endif %}
     </main>
 
@@ -66,4 +69,21 @@
 </div>
 {% endblock content %}
 {%block scripts%}
+<script>
+function takeTask(task){
+  $.ajax({
+    url: '/tasks/managetasks',
+    method: 'post',
+    dataType: 'json',
+    headers: { 'X-CSRFToken': document.getElementsByName("csrfmiddlewaretoken")[0].value },
+    data: {"action":"take-task", "task":task},
+    success: function (data) {
+      window.location.reload();
+    },
+    error: function (data) {
+      console.log(data["error"]);
+    }
+  })
+}
+</script>
 {%endblock scripts%}

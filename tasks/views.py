@@ -162,6 +162,23 @@ def manageTasks(request):
             else:
                 return JsonResponse({"error":"Не верный запрос"}, status=400)
             return JsonResponse({"error":"Не достаточно прав"}, status=400)
+        elif action=="take-task":
+
+            if request.user.team!=None and request.user.team.task==None:
+                try:
+                    TeamsLeaders.objects.get(user_id=request.user.pk, team_id=request.user.team.pk)
+                except:
+                    return JsonResponse({"error":"Выбирать задание может только лидер команды"}, status=400)
+                try:
+                    t=Teams.objects.get(pk=request.user.team.pk)
+                    t.task=Task.objects.get(pk=int(request.POST.get("task")))
+                    t.save()
+                except:
+                    return JsonResponse({"error":"Ошибка записи"}, status=400)
+                return JsonResponse({"ok":""})
+            else:
+                JsonResponse({"error":"Вы уже взяли задание"}, status=400)
+
 
     elif request.is_ajax and request.method=="GET":
         action=request.GET.get('action')
