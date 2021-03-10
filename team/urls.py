@@ -8,5 +8,6 @@ urlpatterns = [
     path('create', views.sendForm, name="create-team"),
     path('invite/<key>/',views.addMember, name="invite"),
     path('score',views.getScore, name="getScore"),
+    path('checkpoints', views.checkPoints, name="checkPoints"),
     path('ajax',views.manageTeam, name="manageTeam"),
 ]

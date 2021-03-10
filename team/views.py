@@ -8,7 +8,7 @@ from .forms import CreateTeamForm
 from userAuth.models import User
 from .urlGenerator import generate
 from tasks.models import Solution
-from main.models import Settings
+from main.models import Settings, Checkpoint
 
 # from django.contrib.auth.models import User
 
@@ -46,7 +46,7 @@ def isFullOfMembers(team_url):
     return False
 
 def viewTeams(request):
-    return render(request, "view_teams.html")
+    return render(request, "team/view_teams.html")
 
 # @login_required(login_url='/auth')
 def viewTeam(request, key=None):
@@ -57,7 +57,7 @@ def viewTeam(request, key=None):
             return redirect("/team")
     else:
         if(request.user.team==None):
-            return render(request, "not_exist.html")
+            return render(request, "team/not_exist.html")
         team_pk=request.user.team.id
     team=Teams.objects.get(id=team_pk)
     lider_id=TeamsLeaders.objects.get(team_id=team_pk).user_id_id
@@ -72,22 +72,22 @@ def viewTeam(request, key=None):
             score+=i.score
     except:
         pass
-    return render(request, "view_team.html",{'team_pk':team.pk,'team_name':team.name, 'link':team.link , 'url':request.META['HTTP_HOST']+'/team/invite/'+team.url, 'score':score, 'lider_id':lider_id, 'members':members, 'form':form}) # 'discription':team.description.replace("\r","[[r]]").replace("\n","[[n]]"),
+    return render(request, "team/view_team.html",{'team_pk':team.pk,'team_name':team.name, 'link':team.link , 'url':request.META['HTTP_HOST']+'/team/invite/'+team.url, 'score':score, 'lider_id':lider_id, 'members':members, 'form':form}) # 'discription':team.description.replace("\r","[[r]]").replace("\n","[[n]]"),
 
 @login_required(login_url='/auth')
 def sendForm(request):
     if isFullOfTeams():
-        return render(request, "full.html", {"full_text":"Лимит количества команд превышен"})
+        return render(request, "team/full.html", {"full_text":"Лимит количества команд превышен"})
     if request.user.team==None:
         if request.method=="GET":
             form=CreateTeamForm()
-            return render(request, "create_team.html", {'form':form})
+            return render(request, "team/create_team.html", {'form':form})
     return redirect("/team")
 
 @login_required(login_url='/auth')
 def addMember(request,key):
     if isFullOfMembers(key):
-        return render(request, "full.html", {"full_text":"Лимит количества участников в одной команде превышен"})
+        return render(request, "team/full.html", {"full_text":"Лимит количества участников в одной команде превышен"})
     if request.method=='POST':
         team_id=request.POST.get('team_id')
         team_id=Teams.objects.get(name=team_id)
@@ -97,7 +97,13 @@ def addMember(request,key):
         return redirect("/team")
     else:
         team=Teams.objects.get(url=key)
-        return render(request,"invite.html",{'team':team.name})
+        return render(request,"team/invite.html",{'team':team.name})
+
+def checkPoints(request):
+    if not request.user.is_auditor and not request.user.is_specialist and not request.user.is_superuser:
+        return render(request, "pages/access_denied.html")
+    else:
+        return render(request, "team/checkpoints.html")
 
 def manageTeam(request):
     if request.is_ajax and request.method == "POST":

@@ -40,13 +40,3 @@ class Solution(models.Model):
         # unique_together = (('team', 'task'),)
         verbose_name = 'Решение'
         verbose_name_plural = 'Решения'
-
-class Checkpoint(models.Model):
-    title=models.CharField(max_length=50, primary_key=True, blank=False, null=False, verbose_name="Заголовок")
-    start_date=models.DateTimeField(null=False, blank=False, unique=True, verbose_name="Дата начала")
-    end_date=models.DateTimeField(null=False, blank=False, unique=True, verbose_name="Дата окончания")
-    def __str__(self):
-        return self.title
-    class Meta:
-        verbose_name = 'Чекпоинт'
-        verbose_name_plural = 'Чекпоинты'

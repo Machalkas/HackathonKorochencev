@@ -1,6 +1,6 @@
 from django.db import models
 from django.conf import settings
-from tasks.models import Task, Checkpoint
+from tasks.models import Task
 
 class Teams(models.Model):
     name=models.CharField(max_length=100, null=False, unique=True, verbose_name="Название команды")
@@ -24,7 +24,7 @@ class TeamsLeaders(models.Model):
         verbose_name_plural = 'Лидеры'
 
 class Checked(models.Model):
-    checkpoint=models.ForeignKey(Checkpoint, on_delete=models.CASCADE, blank=False, null=True, verbose_name="Чекпоинт")
+    checkpoint=models.ForeignKey("main.Checkpoint", on_delete=models.CASCADE, blank=False, null=True, verbose_name="Чекпоинт")
     team=models.ForeignKey(Teams, on_delete=models.CASCADE, blank=False, null=False, verbose_name="Команда")
     score=models.PositiveIntegerField(blank=True, null=True, default=None, verbose_name="Баллы")
     is_came=models.BooleanField(blank=True, null=True, default=None, verbose_name="Команда пришла")
