@@ -103,6 +103,7 @@ def viewTask(request, task_pk):
             if task==request.user.team.task:
                 solution=form.save()
                 solution.team=request.user.team
+                solution.task=request.user.team.task
                 solution.save()
                 return redirect("/tasks")
             else:
