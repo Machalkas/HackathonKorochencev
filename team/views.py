@@ -2,12 +2,14 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
+from django.forms.models import model_to_dict
 
-from .models import Teams, TeamsLeaders
+from .models import Teams, TeamsLeaders, Checked
 from .forms import CreateTeamForm
 from userAuth.models import User
 from .urlGenerator import generate
-from tasks.models import Solution
+from tasks.models import Solution, Task
+from company.models import CompanyRepresentatives
 from main.models import Settings, Checkpoint
 
 # from django.contrib.auth.models import User
@@ -103,7 +105,7 @@ def checkPoints(request):
     if not request.user.is_auditor and not request.user.is_specialist and not request.user.is_superuser:
         return render(request, "pages/access_denied.html")
     else:
-        return render(request, "team/checkpoints.html")
+        return render(request, "team/checkpoints.html", {"checkpoints":Checkpoint.objects.all()})
 
 def manageTeam(request):
     if request.is_ajax and request.method == "POST":
@@ -198,6 +200,35 @@ def manageTeam(request):
             else:
                 status[0]["delete-members"]={"ok":""}
             return JsonResponse(status[0],status=status[1])
+
+
+        elif action=="checkpoint-get-teams":
+            teams=[]
+            checked=[]
+            solutions=[]
+            if request.user.is_superuser or request.user.is_auditor:
+                t=Teams.objects.all()
+                for i in t:
+                    # teams.append({"id":t.pk, ""})
+                    teams.append(model_to_dict(i))
+                s=Solution.objects.all()
+                for i in s:
+                    x=model_to_dict(i, exclude=["solution_file",])
+                    x["solution_file"]=i.solution_file.name
+                    solutions.append(x)
+                c=Checked.objects.all()
+                for i in c:
+                    checked.append(model_to_dict(i))
+                return JsonResponse({"teams":teams, "checked":checked, "solutions":solutions})
+            elif request.user.is_specialist:
+                try:
+                    ts=Task.objects.filter(company=CompanyRepresentatives.objects.get(user_id=request.user))
+                    for i in ts:
+                        t=Teams.objects.filter(task=i)
+                except:
+                    return JsonResponse({"error":"Вы не публиковали задания"+action},status=400)
+
+
         else:
             return JsonResponse({"error":"Новозможно обработать запрос "+action},status=400)
     elif request.is_ajax and request.method=='GET':#GET

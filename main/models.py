@@ -36,7 +36,7 @@ class Rating(models.Model):
         verbose_name_plural = 'Критерии оценки'
 
 class Checkpoint(models.Model):
-    title=models.CharField(max_length=50, primary_key=True, blank=False, null=False, verbose_name="Заголовок")
+    title=models.CharField(max_length=50, unique=True, blank=False, null=False, verbose_name="Заголовок")
     start_date=models.DateTimeField(null=False, blank=False, unique=True, verbose_name="Дата начала")
     end_date=models.DateTimeField(null=False, blank=False, unique=True, verbose_name="Дата окончания")
     def __str__(self):

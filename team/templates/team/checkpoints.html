@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head%}<link rel="stylesheet" href="{% static 'css/index.css'%}">{% endblock head %}
+{% block title %}Хакатон | Команда{% endblock title %}
+{% block content %}
+{% include "header.html" %}
+    <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <main role="main">
+            {%for i in checkpoints%}
+            <div class="mt-5">
+                <a class="text-dark collapsed" data-toggle="collapse" href="#checkpoint{{i.pk}}" role="button" aria-expanded="false" aria-controls="checkpoint{{i.pk}}"><h3 class="dropdown-toggle">{{i.title}}</h3></a>
+                <div class="container collapse" id="checkpoint{{i.pk}}">
+                  <div class="row mb-1" style="font-weight: bold;">
+                    <div class="col-sm"><p>Файл</p></div> <div class="col-sm"><p>Ссылка</p></div> <div class="col-sm"><p>Загружено</p></div>
+                  </div>
+                </div>
+              </div>
+            {%endfor%}
+        </main>
+        <!-- <footer class=" mastfoot mt-auto">
+            <div>
+                <p>Machalka</p>
+            </div>
+        </footer> -->
+
+    </div>
+    {% endblock content %}
+    {%block scripts %}
+    <script>
+      var token = '{{csrf_token}}';
+      function checkpointTeams(){
+        $.ajax({
+        headers: { "X-CSRFToken": token },
+        url: '/team/ajax',
+        method: 'post',
+        dataType: 'json',
+        data: {"action":"checkpoint-get-teams"},
+        success: function (data) {
+            console.log(data);
+        },
+        error: function (data) {
+           console.log(data.responseJSON["error"]);
+        },
+    });
+      }
+    </script>
+    {%endblock scripts %}
