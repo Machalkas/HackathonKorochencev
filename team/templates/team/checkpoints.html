@@ -11,9 +11,6 @@
             <div class="mt-5">
                 <a class="text-dark collapsed" data-toggle="collapse" href="#checkpoint{{i.pk}}" role="button" aria-expanded="false" aria-controls="checkpoint{{i.pk}}"><h3 class="dropdown-toggle">{{i.title}}</h3></a>
                 <div class="container collapse" id="checkpoint{{i.pk}}">
-                  <div class="row mb-1" style="font-weight: bold;">
-                    <div class="col-sm"><p>Файл</p></div> <div class="col-sm"><p>Ссылка</p></div> <div class="col-sm"><p>Загружено</p></div>
-                  </div>
                 </div>
               </div>
             {%endfor%}
@@ -28,21 +25,41 @@
     {% endblock content %}
     {%block scripts %}
     <script>
-      var token = '{{csrf_token}}';
-      function checkpointTeams(){
-        $.ajax({
-        headers: { "X-CSRFToken": token },
-        url: '/team/ajax',
-        method: 'post',
-        dataType: 'json',
-        data: {"action":"checkpoint-get-teams"},
-        success: function (data) {
-            console.log(data);
-        },
-        error: function (data) {
-           console.log(data.responseJSON["error"]);
-        },
-    });
-      }
+        var token = '{{csrf_token}}';
+        var row = '<div class="row mb-1" style="font-weight: bold;">';
+        var col = '<div class="col-sm">'
+        var end_div = '</div>';
+        function getCheckpoints() {
+          $.ajax({
+            headers: { "X-CSRFToken": token },
+            url: '/team/ajax',
+            method: 'post',
+            dataType: 'json',
+            data: { "action": "checkpoint-get-teams" },
+            success: function (data) {
+              console.log(data);
+              displayCheckpoints(data);
+            },
+            error: function (data) {
+              console.log(data["error"]);
+            },
+          });
+          setTimeout(getCheckpoints, 1000);
+        };
+        function displayCheckpoints(data) {
+          let checkp = data["checkpoints"];
+          let teams = data["teams"];
+          for (i in checkp) {
+            let t = "";
+            for (j in teams) {
+              t += row;
+              t += col;
+              t += '<a href="/team/' + teams[j]["name"] + '">' + teams[j]["name"] + '</a>';
+              t += end_div + end_div;
+            }
+            $("#checkpoint" + checkp[i]).html(t);
+          }
+        }
+      getCheckpoints();
     </script>
     {%endblock scripts %}

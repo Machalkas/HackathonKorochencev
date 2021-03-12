@@ -102,7 +102,7 @@ def addMember(request,key):
         return render(request,"team/invite.html",{'team':team.name})
 
 def checkPoints(request):
-    if not request.user.is_auditor and not request.user.is_specialist and not request.user.is_superuser:
+    if request.user.is_anonymous or(not request.user.is_auditor and not request.user.is_specialist and not request.user.is_superuser):
         return render(request, "pages/access_denied.html")
     else:
         return render(request, "team/checkpoints.html", {"checkpoints":Checkpoint.objects.all()})
@@ -110,7 +110,7 @@ def checkPoints(request):
 def manageTeam(request):
     if request.is_ajax and request.method == "POST":
         action=request.POST.get('action')
-        print(checkPermissions(request))
+        # print(checkPermissions(request))
         if action=='delete-member':
             if checkPermissions(request)[0]!=True and checkPermissions(request)[1]!=True:
                 return JsonResponse({"error":"Недостаточно прав для выполнения запроса"}, status=400)
@@ -206,6 +206,9 @@ def manageTeam(request):
             teams=[]
             checked=[]
             solutions=[]
+            checkpoints=[]
+            if Checkpoint.objects.all().count()==0:
+                return JsonResponse({"error":"Нет чекпоинтов"}, status=400)
             if request.user.is_superuser or request.user.is_auditor:
                 t=Teams.objects.all()
                 for i in t:
@@ -219,14 +222,26 @@ def manageTeam(request):
                 c=Checked.objects.all()
                 for i in c:
                     checked.append(model_to_dict(i))
-                return JsonResponse({"teams":teams, "checked":checked, "solutions":solutions})
             elif request.user.is_specialist:
                 try:
                     ts=Task.objects.filter(company=CompanyRepresentatives.objects.get(user_id=request.user))
                     for i in ts:
                         t=Teams.objects.filter(task=i)
+                        for j in t:
+                            teams.append(model_to_dict(j))
+                            s=Solution.objects.filter(team=j)
+                            for l in s:
+                                x=model_to_dict(l, exclude=["solution_file",])
+                                x["solution_file"]=l.solution_file.name
+                                solutions.append(x)
+                            c=Checked.objects.filter(team=t)
+                            for l in c:
+                                checked.append(model_to_dict(l))
                 except:
                     return JsonResponse({"error":"Вы не публиковали задания"+action},status=400)
+            for i in Checkpoint.objects.all():
+                checkpoints.append(i.pk)
+            return JsonResponse({"teams":teams, "checked":checked, "solutions":solutions, "checkpoints":checkpoints})
 
 
         else:
