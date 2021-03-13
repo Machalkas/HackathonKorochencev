@@ -29,6 +29,7 @@
         var row = '<div class="row mb-1" style="font-weight: bold;">';
         var col = '<div class="col-sm">'
         var end_div = '</div>';
+        var x=null;
         function getCheckpoints() {
           $.ajax({
             headers: { "X-CSRFToken": token },
@@ -38,13 +39,14 @@
             data: { "action": "checkpoint-get-teams" },
             success: function (data) {
               console.log(data);
+              x=data;
               displayCheckpoints(data);
             },
             error: function (data) {
               console.log(data["error"]);
             },
           });
-          setTimeout(getCheckpoints, 1000);
+          // setTimeout(getCheckpoints, 1000);
         };
         function displayCheckpoints(data) {
           let checkp = data["checkpoints"];

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .forms import TeamsAdminForm
-from .models import Teams, TeamsLeaders
+from .models import Teams, TeamsLeaders, Checked
 
 class TeamsAdmin(admin.ModelAdmin):
     add_form=TeamsAdminForm
@@ -24,6 +24,12 @@ class TeamsLeadersAdmin(admin.ModelAdmin):
     list_display=('team_id', 'user_id')
     search_fields=('team_id','user_id')
 
+# class CheckedAdmin(admin.ModelAdmin):
+#     model=Checked
+#     list_display=('team_id', 'user_id')
+#     search_fields=('team_id','user_id')
+
 admin.site.register(Teams, TeamsAdmin)
 admin.site.register(TeamsLeaders, TeamsLeadersAdmin)
+admin.site.register(Checked)
 # Register your models here.
