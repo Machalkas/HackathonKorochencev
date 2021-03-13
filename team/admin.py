@@ -5,11 +5,11 @@ from .models import Teams, TeamsLeaders, Checked
 class TeamsAdmin(admin.ModelAdmin):
     add_form=TeamsAdminForm
     model=Teams
-    list_display=('name',)
+    list_display=('name','task')
     # list_filter=('score',)
-    fieldsets=(
-        (None,{'fields':('name','link','url')}),
-    )
+    # fieldsets=(
+    #     (None,{'fields':('name','link','url')}),
+    # )
     add_fieldsets = (
         (None, {
             'classes': ('wide',),
@@ -17,7 +17,7 @@ class TeamsAdmin(admin.ModelAdmin):
         ),
     )
     search_fields=('name',)
-    ordering=('name','link')
+    ordering=('name','task')
 
 class TeamsLeadersAdmin(admin.ModelAdmin):
     model=TeamsLeaders
