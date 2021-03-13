@@ -21,7 +21,7 @@ class CustomUserAdmin(UserAdmin):
             'fields': ('email', 'first_name', 'last_name', 'specialization', 'password1', 'password2', 'is_staff', 'is_active')}
         ),
     )
-    search_fields = ('email', 'first_name', 'last_name', 'team')
+    search_fields = ('email', 'first_name', 'last_name')
     ordering = ('email','team') 
     # def delete_model(self, request, queryset):
     #     for obj in queryset:

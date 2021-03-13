@@ -16,7 +16,7 @@ class TeamsAdmin(admin.ModelAdmin):
             'fields':('name','link')}
         ),
     )
-    search_fields=('name',)
+    search_fields=('name','task')
     ordering=('name','task')
 
 class TeamsLeadersAdmin(admin.ModelAdmin):

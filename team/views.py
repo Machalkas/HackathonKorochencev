@@ -144,8 +144,8 @@ def manageTeam(request):
                 return JsonResponse({"url":"/team/"}, status=200)
             else:
                 return JsonResponse({"error":form.errors}, status=400)
-        elif checkPermissions(request)[0]!=True:#повышение прав доступа
-                return JsonResponse({"error":"Недостаточно прав для выполнения запроса "+action}, status=400)
+        # elif checkPermissions(request)[0]!=True:#повышение прав доступа
+        #         return JsonResponse({"error":"Недостаточно прав для выполнения запроса "+action}, status=400)
         elif action=='update':
             team=Teams.objects.get(id=request.user.team.id)
             form=CreateTeamForm(request.POST, instance=team)
@@ -210,7 +210,7 @@ def manageTeam(request):
             if Checkpoint.objects.all().count()==0:
                 return JsonResponse({"error":"Нет чекпоинтов"}, status=400)
             if request.user.is_superuser or request.user.is_auditor:
-                t=Teams.objects.all()
+                t=Teams.objects.all().exclude(task=None)
                 for i in t:
                     # teams.append({"id":t.pk, ""})
                     teams.append(model_to_dict(i))
@@ -218,6 +218,7 @@ def manageTeam(request):
                 for i in s:
                     x=model_to_dict(i, exclude=["solution_file",])
                     x["solution_file"]=i.solution_file.name
+                    x["created"]=i.created
                     solutions.append(x)
                 c=Checked.objects.all()
                 for i in c:
@@ -226,7 +227,7 @@ def manageTeam(request):
                 try:
                     ts=Task.objects.filter(company=CompanyRepresentatives.objects.get(user_id=request.user))
                     for i in ts:
-                        t=Teams.objects.filter(task=i)
+                        t=Teams.objects.filter(task=i).exclude(task=None)
                         for j in t:
                             teams.append(model_to_dict(j))
                             s=Solution.objects.filter(team=j)

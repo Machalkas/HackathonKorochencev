@@ -24,7 +24,7 @@ class Task(models.Model):
 
 class Solution(models.Model):
     team=models.ForeignKey("team.Teams", on_delete=models.CASCADE, null=True, blank=True, verbose_name="Команда")
-    task=models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, default=None, verbose_name="Задание")
+    # task=models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, default=None, verbose_name="Задание")
     # task=models.ForeignKey(Task, on_delete=models.SET_NULL, null=True, blank=True, verbose_name="Задача")
     # solution=models.TextField(blank=False,verbose_name="Решение")
     solution_file=models.FileField(blank=True, null=False, default="", upload_to="solution/", verbose_name="Файл решения")

@@ -1,7 +1,9 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block head%}<link rel="stylesheet" href="{% static 'css/index.css'%}">{% endblock head %}
+{% block head%}
+<link rel="stylesheet" href="{% static 'css/index.css'%}">
+{% endblock head %}
 {% block title %}Хакатон | Команда{% endblock title %}
 {% block content %}
 {% include "header.html" %}
@@ -51,17 +53,69 @@
         function displayCheckpoints(data) {
           let checkp = data["checkpoints"];
           let teams = data["teams"];
+          let solutions = data["solutions"];
+          let checked = data["checked"];
+          let sol_list="";
           for (i in checkp) {
             let t = "";
             for (j in teams) {
               t += row;
               t += col;
-              t += '<a href="/team/' + teams[j]["name"] + '">' + teams[j]["name"] + '</a>';
-              t += end_div + end_div;
+              t += '<a href="/team/' + teams[j].name + '" target="_blank">' + teams[j].name + '</a>';
+              if(solutions.find(item=>item.team==teams[j].id)==undefined){
+                t+=""+end_div;
+              }
+              else{
+                t+='<a class="text-dark collapsed" data-toggle="collapse" href="#team-solutions-'+teams[j].id+'_'+checkp[i]+'" role="button" aria-expanded="false" aria-controls="team-solutions-'+teams[j].id+'_'+checkp[i]+'"> Решения</a>'+end_div;
+                sol_list+='<div class="container collapse mt-3 mb-3" id="team-solutions-'+teams[j].id+'_'+checkp[i]+'" style="background: gainsboro;">';
+                  for(l in solutions){
+                    sol_list+=row;
+                    if(solutions[l].solution_file!=""){
+                      sol_list+=col+'<a href="/media/'+solutions[l].solution_file+'" target="_blank">'+solutions[l].solution_file.split("/")[1]+'</a>'+end_div;
+                    }
+                    else{
+                      sol_list+=col+'-'+end_div
+                    }
+                    if(solutions[l].solution_link!=""){
+                      sol_list+=col+'<a href="'+solutions[l].solution_link+'" target="_blank">Ссылка</a>'+end_div;
+                    }
+                    else{
+                      sol_list+=col+'-'+end_div;
+                    }
+                    sol_list+=col+parceTime(solutions[l]["created"])+end_div;
+                    sol_list+=end_div;
+                  }
+                  sol_list+=end_div;
+              }
+              t+=col+'<a href="'+teams[j].link+'" class="btn btn-sm btn-blue">Подключится</a>'+ end_div;
+              let chk=checked.find(index=>index.team==teams[j].id); //в chk записывается только 1 чекпоинт, а нужно считывать все
+              console.log(chk);
+              console.log(chk+'|'+checkp[i]);
+              if(chk!=undefined && chk.checkpoint==checkp[i]){
+                t+=col+'счет:'+chk.score+end_div;
+                if(chk.is_came==true){
+                  t+=col+'явились!'+end_div;
+                }
+                else if(chk.is_came==false){
+                  t+=col+'не явились'+end_div;
+                }
+              }
+              else{
+                t+=col+''+end_div;
+              }
+              t += end_div;
+              t+=sol_list+"<hr>";
+              sol_list="";
             }
             $("#checkpoint" + checkp[i]).html(t);
           }
         }
+
+      function parceTime(time){
+        let x=time.split("T")[0].split("-")
+        return x[2]+"."+x[1]+"."+x[0]+" "+time.split("T")[1].split(".")[0];
+      }
       getCheckpoints();
+
     </script>
     {%endblock scripts %}
