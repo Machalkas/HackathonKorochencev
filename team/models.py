@@ -28,6 +28,8 @@ class Checked(models.Model):
     team=models.ForeignKey(Teams, on_delete=models.CASCADE, blank=False, null=False, verbose_name="Команда")
     score=models.PositiveIntegerField(blank=True, null=True, default=None, verbose_name="Баллы")
     is_came=models.BooleanField(blank=True, null=True, default=None, verbose_name="Команда пришла")
+    def __str__(self):
+        return self.checkpoint.title
     class Meta:
         unique_together = (('checkpoint_id', 'team_id'),)
         verbose_name = 'Чекпоинт'
