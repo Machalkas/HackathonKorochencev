@@ -10,7 +10,7 @@
     <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
         <main role="main">
             {%for i in checkpoints%}
-            <div class="mt-5">
+            <div class="mt-5" id="div-checkpoint{{i.pk}}">
                 <a class="text-dark collapsed" data-toggle="collapse" href="#checkpoint{{i.pk}}" role="button" aria-expanded="false" aria-controls="checkpoint{{i.pk}}"><h3 class="dropdown-toggle">{{i.title}}</h3></a>
                 <div class="container collapse" id="checkpoint{{i.pk}}">
                 </div>
@@ -31,6 +31,7 @@
         var row = '<div class="row mb-1" style="font-weight: bold;">';
         var col = '<div class="col-sm">'
         var end_div = '</div>';
+        var active_checkpoint=null;
         var x=null;
         function getCheckpoints() {
           $.ajax({
@@ -48,7 +49,7 @@
               console.log(data["error"]);
             },
           });
-          // setTimeout(getCheckpoints, 1000);
+          setTimeout(getCheckpoints, 6000);
         };
         function displayCheckpoints(data) {
           let checkp = data["checkpoints"];
@@ -66,8 +67,8 @@
                 t+=""+end_div;
               }
               else{
-                t+='<a class="text-dark collapsed" data-toggle="collapse" href="#team-solutions-'+teams[j].id+'_'+checkp[i]+'" role="button" aria-expanded="false" aria-controls="team-solutions-'+teams[j].id+'_'+checkp[i]+'"> Решения</a>'+end_div;
-                sol_list+='<div class="container collapse mt-3 mb-3" id="team-solutions-'+teams[j].id+'_'+checkp[i]+'" style="background: gainsboro;">';
+                t+='<a class="text-dark collapsed" data-toggle="collapse" href="#team-solutions-'+teams[j].id+'_'+checkp[i].id+'" role="button" aria-expanded="false" aria-controls="team-solutions-'+teams[j].id+'_'+checkp[i].id+'"> Решения</a>'+end_div;
+                sol_list+='<div class="container collapse mt-3 mb-3" id="team-solutions-'+teams[j].id+'_'+checkp[i].id+'" style="background: gainsboro;">';
                   for(l in solutions){
                     sol_list+=row;
                     if(solutions[l].solution_file!=""){
@@ -88,10 +89,10 @@
                   sol_list+=end_div;
               }
               t+=col+'<a href="'+teams[j].link+'" target="_blank" class="btn btn-sm btn-blue">Подключится</a>'+ end_div;
-              let chk=checked.find(index=>index.team==teams[j].id && index.checkpoint==checkp[i]);
+              let chk=checked.find(index=>index.team==teams[j].id && index.checkpoint==checkp[i].id);
               // console.log(chk);
-              // console.log(chk+'|'+checkp[i]);
-              if(chk!=undefined && chk.checkpoint==checkp[i]){
+              // console.log(chk+'|'+checkp[i].id);
+              if(chk!=undefined && chk.checkpoint==checkp[i].id){
                 if(chk.score!=null){
                   t+=col+'счет:'+chk.score+end_div;
               }
@@ -115,7 +116,13 @@
               t+=sol_list+"<hr>";
               sol_list="";
             }
-            $("#checkpoint" + checkp[i]).html(t);
+            $("#checkpoint" + checkp[i].id).html(t);
+            if(isActive(checkp[i])){
+              $("#div-checkpoint" + checkp[i].id).css({"border":"solid forestgreen","border-width":"2px", "border-radius":"10px"})
+            }
+            else{
+              $("#div-checkpoint" + checkp[i].id).css({"border":"solid grey","border-width":"2px", "border-radius":"10px"})
+            }
           }
         }
 
@@ -123,6 +130,28 @@
         let x=time.split("T")[0].split("-")
         return x[2]+"."+x[1]+"."+x[0]+" "+time.split("T")[1].split(".")[0];
       }
+      function isActive(cp){
+        let now=new Date();
+        let s=new Date(cp.start_date);
+        let e=new Date(cp.end_date);
+
+        if(now-s>=0 && now-e<=0){
+          active_checkpoint=cp.id;
+          return true;
+        }
+        else{
+          return false;
+        }
+      }
+      function wait(){
+        if(active_checkpoint==null){
+         setTimeout(wait,10); 
+        }
+        else{
+          $("#checkpoint" + active_checkpoint).attr("class","container collapse show");
+        }
+      }
+      wait();
       getCheckpoints();
 
     </script>

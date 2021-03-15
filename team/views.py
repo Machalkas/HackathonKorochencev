@@ -241,7 +241,7 @@ def manageTeam(request):
                 except:
                     return JsonResponse({"error":"Вы не публиковали задания"+action},status=400)
             for i in Checkpoint.objects.all():
-                checkpoints.append(i.pk)
+                checkpoints.append(model_to_dict(i))
             return JsonResponse({"teams":teams, "checked":checked, "solutions":solutions, "checkpoints":checkpoints})
 
 
