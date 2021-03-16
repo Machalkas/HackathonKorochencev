@@ -10,7 +10,7 @@ from userAuth.models import User
 from .urlGenerator import generate
 from tasks.models import Solution, Task
 from company.models import CompanyRepresentatives
-from main.models import Settings, Checkpoint
+from main.models import Settings, Checkpoint, Rating
 
 # from django.contrib.auth.models import User
 
@@ -100,7 +100,7 @@ def addMember(request,key):
     else:
         team=Teams.objects.get(url=key)
         return render(request,"team/invite.html",{'team':team.name})
-
+@login_required(login_url='/auth')
 def checkPoints(request):
     if request.user.is_anonymous or(not request.user.is_auditor and not request.user.is_specialist and not request.user.is_superuser):
         return render(request, "pages/access_denied.html")
@@ -207,6 +207,7 @@ def manageTeam(request):
             checked=[]
             solutions=[]
             checkpoints=[]
+            rating=[]
             if Checkpoint.objects.all().count()==0:
                 return JsonResponse({"error":"Нет чекпоинтов"}, status=400)
             if request.user.is_superuser or request.user.is_auditor:
@@ -242,7 +243,9 @@ def manageTeam(request):
                     return JsonResponse({"error":"Вы не публиковали задания"+action},status=400)
             for i in Checkpoint.objects.all():
                 checkpoints.append(model_to_dict(i))
-            return JsonResponse({"teams":teams, "checked":checked, "solutions":solutions, "checkpoints":checkpoints})
+            for i in Rating.objects.all():
+                rating.append(model_to_dict(i))
+            return JsonResponse({"teams":teams, "checked":checked, "solutions":solutions, "checkpoints":checkpoints, "rating":rating})
 
 
         else:

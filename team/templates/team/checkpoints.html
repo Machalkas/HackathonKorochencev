@@ -7,7 +7,7 @@
 {% block title %}Хакатон | Команда{% endblock title %}
 {% block content %}
 {% include "header.html" %}
-    <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+    <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column" style="max-width: 1000px;">
         <main role="main">
             {%for i in checkpoints%}
             <div class="mt-5" id="div-checkpoint{{i.pk}}">
@@ -49,13 +49,14 @@
               console.log(data["error"]);
             },
           });
-          setTimeout(getCheckpoints, 6000);
+          // setTimeout(getCheckpoints, 6000);
         };
         function displayCheckpoints(data) {
           let checkp = data["checkpoints"];
           let teams = data["teams"];
           let solutions = data["solutions"];
           let checked = data["checked"];
+          let rating = data["rating"];
           let sol_list="";
           for (i in checkp) {
             let t = "";
@@ -112,7 +113,21 @@
               else{
                 t+=col+'-'+end_div+col+'-'+end_div;
               }
+              evaluate_list='';
+              if (isActive(checkp[i])){
+                t+=col+'<a class="collapsed btn btn-sm btn-primary" data-toggle="collapse" href="#team-evaluate-'+teams[j].id+'_'+checkp[i].id+'" role="button" aria-expanded="false" aria-controls="team-evaluate-'+teams[j].id+'_'+checkp[i].id+'">Оценить</a>'+end_div;
+                t+=col+'<a class="btn btn-sm btn-green">Команда пришла</a>'+end_div;
+                evaluate_list+='<div class="container collapse mt-3 mb-3" id="team-evaluate-'+teams[j].id+'_'+checkp[i].id+'" style="background: thistle;"><form method="post" class="form mt-3" id="evaluate-form-'+teams[j].id+'_'+checkp[i].id+'">';
+                for(r in rating){
+                  evaluate_list+='<label>'+rating[r].name+'</label><input type="number" class="form-control mt-1" style="max-width: 4em;margin-left: auto;margin-right: auto;" id="input-'+rating[r].id+'">'
+                }
+                evaluate_list+='<input type="button" value="Сохранить" class="btn btn-primary btn-blue mt-3 mb-3" required id="login_submit"></form>'+end_div;
+              }
+              else{
+                t+=col+end_div;
+              }
               t += end_div;
+              t+=evaluate_list;
               t+=sol_list+"<hr>";
               sol_list="";
             }
