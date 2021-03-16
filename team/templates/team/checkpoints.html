@@ -57,6 +57,17 @@
           let solutions = data["solutions"];
           let checked = data["checked"];
           let rating = data["rating"];
+          solutions.sort(function(a,b){
+            a=new Date(a.created)
+            b=new Date(b.created)
+            if ((a-b)>0){
+              return -1
+            }
+            if ((a-b)<0){
+              return 1
+            }
+            return 0
+          });
           let sol_list="";
           for (i in checkp) {
             let t = "";
