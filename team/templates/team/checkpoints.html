@@ -3,6 +3,22 @@
 
 {% block head%}
 <link rel="stylesheet" href="{% static 'css/index.css'%}">
+<style>
+  .info {
+    background-color: lightgoldenrodyellow;
+    border: solid khaki;
+    border-radius: 10em;
+    border-width: 1px;
+    max-width: 1.7em;
+    max-height: 1.7em;
+    font-size: 13px;
+    font-weight: bold;
+    position: relative;
+    left: 38em;
+    bottom: 7.6em;
+    user-select: none;
+  }
+</style>
 {% endblock head %}
 {% block title %}Хакатон | Команда{% endblock title %}
 {% block content %}
@@ -16,6 +32,15 @@
                 </div>
               </div>
             {%endfor%}
+            <div id="div-info" style="display: none; position: fixed; background-color: lightgoldenrodyellow; border:solid khaki; border-radius: 1em; border-width: 2px; padding: 1em; top: 20%; left: 41em;">
+              <button type="button" class="close" onclick="$(this).parent().fadeOut()">
+                <span aria-hidden="true">×</span>
+              </button>
+              <p style="font-size: 2em;" class="mb-1">Почему общий счет такой странный?</p>
+              <p>У критериев оценки команды есть свои веса,<br>которые определяют "ценность" каждого критерия</p>
+              <p>Расчет ведется по формуле:</p>
+              <p style="font-weight:500;">балл+(балл*вес)</p>
+            </div>
         </main>
         <!-- <footer class=" mastfoot mt-auto">
             <div>
@@ -27,6 +52,12 @@
     {% endblock content %}
     {%block scripts %}
     <script>
+        let checkp;
+        let teams;
+        let solutions;
+        let checked;
+        let rating;
+
         var token = '{{csrf_token}}';
         var row = '<div class="row mb-1" style="font-weight: bold;">';
         var col = '<div class="col-sm">'
@@ -52,11 +83,11 @@
           // setTimeout(getCheckpoints, 6000);
         };
         function displayCheckpoints(data) {
-          let checkp = data["checkpoints"];
-          let teams = data["teams"];
-          let solutions = data["solutions"];
-          let checked = data["checked"];
-          let rating = data["rating"];
+          checkp = data["checkpoints"];
+          teams = data["teams"];
+          solutions = data["solutions"];
+          checked = data["checked"];
+          rating = data["rating"];
           solutions.sort(function(a,b){
             a=new Date(a.created)
             b=new Date(b.created)
@@ -128,11 +159,12 @@
               if (isActive(checkp[i])){
                 t+=col+'<a class="collapsed btn btn-sm btn-primary" data-toggle="collapse" href="#team-evaluate-'+teams[j].id+'_'+checkp[i].id+'" role="button" aria-expanded="false" aria-controls="team-evaluate-'+teams[j].id+'_'+checkp[i].id+'">Оценить</a>'+end_div;
                 t+=col+'<a class="btn btn-sm btn-green">Команда пришла</a>'+end_div;
-                evaluate_list+='<div class="container collapse mt-3 mb-3" id="team-evaluate-'+teams[j].id+'_'+checkp[i].id+'" style="background: thistle;"><form method="post" class="form mt-3" id="evaluate-form-'+teams[j].id+'_'+checkp[i].id+'">';
+                evaluate_list+='<div class="container collapse mt-3 mb-3" id="team-evaluate-'+teams[j].id+'_'+checkp[i].id+'" style="background: thistle;"><form method="post" class="form mt-3" id="evaluate-form-'+teams[j].id+'_'+checkp[i].id+'" onchange="checkForm('+teams[j].id+','+checkp[i].id+')">';
                 for(r in rating){
-                  evaluate_list+='<label>'+rating[r].name+'</label><input type="number" class="form-control mt-1" style="max-width: 4em;margin-left: auto;margin-right: auto;" id="input-'+rating[r].id+'">'
+                  evaluate_list+='<label>'+rating[r].name+'</label><input type="number" class="form-control mt-1" style="max-width: 4em;margin-left: auto;margin-right: auto;" name="'+rating[r].id+'_'+teams[j].id+'_'+checkp[i].id+'"><p style="color: dimgray; font-size: small;">max '+rating[r].max+'</p>';
                 }
-                evaluate_list+='<input type="button" value="Сохранить" class="btn btn-primary btn-blue mt-3 mb-3" required id="login_submit"></form>'+end_div;
+                evaluate_list+='<p style="font-size:1.5em; color:red;">Итого</p><p style="font-size:1.8em; color:red;" id="total'+teams[j].id+'_'+checkp[i].id+'">0</p><div class="info" onclick="getInfo()">?</div>';
+                evaluate_list+='<input type="button" value="Сохранить" class="btn btn-primary btn-blue mt-3 mb-3" required onclick="submitEvaluate('+teams[j].id+','+checkp[i].id+')"></form>'+end_div;
               }
               else{
                 t+=col+end_div;
@@ -177,8 +209,30 @@
           $("#checkpoint" + active_checkpoint).attr("class","container collapse show");
         }
       }
+      function submitEvaluate(t,c){
+        console.log("pushed");
+      }
+      function checkForm(t,c){
+        let form=$("#evaluate-form-"+t+"_"+c);
+        let count=0;
+        for(let i in rating){
+          let inpt=form.find("input[name="+rating[i].id+"_"+t+"_"+c+"]")
+          if(inpt.val()!=null){
+          if (inpt.val()>rating[i].max){
+            inpt.val(rating[i].max);
+          }
+          else if (inpt.val()<0){
+            inpt.val(0);
+          }
+          count+=Number(inpt.val())+(Number(inpt.val())*rating[i].cof);
+        }
+        }
+        $("#total"+t+"_"+c).text(count);
+      }
+      function getInfo(){
+        $("#div-info").fadeIn(100);
+      }
       wait();
       getCheckpoints();
-
     </script>
     {%endblock scripts %}
