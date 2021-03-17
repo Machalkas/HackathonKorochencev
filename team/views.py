@@ -12,6 +12,7 @@ from tasks.models import Solution, Task
 from company.models import CompanyRepresentatives
 from main.models import Settings, Checkpoint, Rating
 
+
 # from django.contrib.auth.models import User
 
 def generateValidator():
@@ -246,7 +247,37 @@ def manageTeam(request):
             for i in Rating.objects.all():
                 rating.append(model_to_dict(i))
             return JsonResponse({"teams":teams, "checked":checked, "solutions":solutions, "checkpoints":checkpoints, "rating":rating})
-
+        
+        elif action=="isCame":
+            if not request.user.is_specialist:
+                return JsonResponse({"error":"Недостаточно прав для совершения операции"}, status=400)
+            try:
+                is_came=request.POST.get("is_came")
+                t=request.POST.get("team")
+                c=request.POST.get("checkpoint")
+            except:
+                return JsonResponse({"error":"Не верный запрос"}, status=400)
+            try:
+                t=Teams.objects.get(pk=t)
+            except:
+                return JsonResponse({"error":"Команда не найдена"}, status=400)
+            try:
+                c=Checkpoint.objects.get(pk=c)
+            except:
+                return JsonResponse({"error":"Чекпоинт не найден"}, status=400)
+            cd=Checked.objects.filter(checkpoint=c).filter(team=t)
+            if cd.count()==0:
+                cd=Checked.objects.create(checkpoint=c, team=t)
+            else:
+                cd=cd[0]
+            if is_came=="true":
+                cd.is_came=True
+                cd.save()
+                return JsonResponse({"is_came":True})
+            elif is_came=="false":
+                cd.is_came=False
+                cd.save()
+                return JsonResponse({"is_came":False})
 
         else:
             return JsonResponse({"error":"Новозможно обработать запрос "+action},status=400)
