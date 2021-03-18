@@ -88,11 +88,11 @@
           // setTimeout(getCheckpoints, 6000);
         };
         function displayCheckpoints(data) {
-          checkp = data["checkpoints"];
-          teams = data["teams"];
-          solutions = data["solutions"];
-          checked = data["checked"];
-          rating = data["rating"];
+          let checkp = data["checkpoints"];
+          let teams = data["teams"];
+          let solutions = data["solutions"];
+          let checked = data["checked"];
+          let rating = data["rating"];
           solutions.sort(function(a,b){//Сортируем список решений по дате(сначала новые)
             a=new Date(a.created)
             b=new Date(b.created)
@@ -115,7 +115,7 @@
               if(solutions.find(item=>item.team==teams[j].id)==undefined){//проверяем есть ли у команды загруженные решения
                 sol_list+='<div class="container collapse mt-3 mb-3" id="team-solutions-'+teams[j].id+'_'+checkp[i].id+'" style="background: gainsboro;">'+col+"<p>Пусто</p>"+end_div+end_div;
               }
-              else{//если есть, то добавляем кнопку "решения" и в sol_list генерируем список решений
+              else{
                 sol_list+='<div class="container collapse mt-3 mb-3" id="team-solutions-'+teams[j].id+'_'+checkp[i].id+'" style="background: gainsboro;">';
                   let sl=solutions.filter(item=>item.team==teams[j].id);
                   for(l in sl){
@@ -141,31 +141,31 @@
               let chk=checked.find(index=>index.team==teams[j].id && index.checkpoint==checkp[i].id);//в checked смотрим проходила ли данная команда данный чекпоинт и записывем результат в chk
               if(chk!=undefined && chk.checkpoint==checkp[i].id){//если проходила то выводим счет и прочую инфу за чекпоинт 
                 if(chk.score!=null){
-                  t+=col+'счет:'+chk.score+end_div;
-              }
-              else{
-                t+=col+'-'+end_div;
-              }
-                if(chk.is_came==true){
-                  t+=col+'явились!'+end_div;
-                }
-                else if(chk.is_came==false){
-                  t+=col+'не явились'+end_div;
+                  t+=col+'<p id="score-'+teams[j].id+'_'+checkp[i].id+'">счет:'+chk.score+'</p>'+end_div;
                 }
                 else{
-                  t+=col+'-'+end_div;
+                t+=col+'<p id="score-'+teams[j].id+'_'+checkp[i].id+'">-</p>'+end_div;
+                }
+                if(chk.is_came==true){
+                  t+=col+'<p id="is-came-'+teams[j].id+'_'+checkp[i].id+'">Пришла</p>'+end_div;
+                }
+                else if(chk.is_came==false && chk.is_came!=undefined){
+                  t+=col+'<p id="is-came-'+teams[j].id+'_'+checkp[i].id+'">Не пришла</p>'+end_div;
+                }
+                else{
+                  t+=col+'<p id="is-came-'+teams[j].id+'_'+checkp[i].id+'">-</p>'+end_div;
                 }
               }
               else{
-                t+=col+'-'+end_div+col+'-'+end_div;
+                t+=col+'<p id="score-'+teams[j].id+'_'+checkp[i].id+'">-</p>'+end_div+col+'<p id="is-came-'+teams[j].id+'_'+checkp[i].id+'">-</p>'+end_div;
               }
               evaluate_list='';//далее в переменную evaluate_list генерируем формы выставления баллов для команды
               if (isActive(checkp[i])){//но сначала проверим что чекпоинт активен
                 t+=col+'<a class="collapsed btn btn-sm btn-primary" data-toggle="collapse" href="#team-evaluate-'+teams[j].id+'_'+checkp[i].id+'" role="button" aria-expanded="false" aria-controls="team-evaluate-'+teams[j].id+'_'+checkp[i].id+'">Оценить</a>'+end_div;
                 if(checked.find(index=>index.team==teams[j].id && index.checkpoint==checkp[i].id)==undefined || checked.find(index=>index.team==teams[j].id && index.checkpoint==checkp[i].id).is_came==false){//проверяем пришла команда на чекпоинт или нет
-                t+=col+'<a class="btn btn-sm btn-success" onclick="changeIsCame('+teams[j].id+','+checkp[i].id+')" id="btn-is-came'+teams[j].id+'_'+checkp[i].id+'">Команда пришла</a>'+end_div;
+                t+=col+'<a class="btn btn-sm btn-success" onclick="changeIsCame('+teams[j].id+','+checkp[i].id+')" id="btn-is-came-'+teams[j].id+'_'+checkp[i].id+'">Команда пришла</a>'+end_div;
                 }else{
-                  t+=col+'<a class="btn btn-sm btn-danger" onclick="changeIsCame('+teams[j].id+','+checkp[i].id+')" id="btn-is-came'+teams[j].id+'_'+checkp[i].id+'">Команда не пришла</a>'+end_div;
+                  t+=col+'<a class="btn btn-sm btn-danger" onclick="changeIsCame('+teams[j].id+','+checkp[i].id+')" id="btn-is-came-'+teams[j].id+'_'+checkp[i].id+'">Команда не пришла</a>'+end_div;
                 }
                 evaluate_list+='<div class="container collapse mt-3 mb-3" id="team-evaluate-'+teams[j].id+'_'+checkp[i].id+'" style="background: thistle;"><form method="post" class="form mt-3" id="evaluate-form-'+teams[j].id+'_'+checkp[i].id+'" onchange="checkForm('+teams[j].id+','+checkp[i].id+')">';
                 for(r in rating){
@@ -237,11 +237,13 @@
         }
         $("#total"+t+"_"+c).text(count);
       }
+
       function getInfo(){
         $("#div-info").fadeIn(100);
       }
+
       function changeIsCame(t,c){
-        let btn=$("#btn-is-came"+t+"_"+c);
+        let btn=$("#btn-is-came-"+t+"_"+c);
         let send={action:"isCame", team:t, checkpoint:c}
         if(btn.hasClass("btn-success")){
           send.is_came=true;
@@ -256,7 +258,7 @@
           return ;
         }
         btn.toggleClass("btn-warning");
-        btn.text("Загрузка")
+        btn.text("Загрузка");
         $.ajax({
             headers: { "X-CSRFToken": token },
             url: '/team/ajax',
@@ -276,25 +278,96 @@
                 btn.toggleClass("btn-success");
                 btn.text("Команда пришла");
               }
+              getCheckpoints(true);
             },
             error: function (data) {
               btn.text("Ошибка")
               console.log(data.responseJSON.error);
+              getCheckpoints(true);
             },
           });
       }
       function updateCheckpoints(data){
-        checkp = data["checkpoints"];
-        teams = data["teams"];
-        solutions = data["solutions"];
-        checked = data["checked"];
-        rating = data["rating"];
+        console.log("update")
+        let checkp = data["checkpoints"];
+        let teams = data["teams"];
+        let solutions = data["solutions"];
+        let checked = data["checked"];
+        let rating = data["rating"];
+        let sol_list="";
         for (i in checkp) {
             for (j in teams) {
+              //обновляем решения
+              if(solutions.find(item=>item.team==teams[j].id)==undefined){
+                sol_list=col+"<p>Пусто</p>"+end_div;
+              }
+              else{
+                  sol_list="";
+                  let sl=solutions.filter(item=>item.team==teams[j].id);
+                  for(l in sl){
+                    sol_list+=row;
+                    if(sl[l].solution_file!=""){
+                      sol_list+=col+'<a href="/media/'+sl[l].solution_file+'" target="_blank">'+sl[l].solution_file.split("/")[1]+'</a>'+end_div;
+                    }
+                    else{
+                      sol_list+=col+'-'+end_div
+                    }
+                    if(sl[l].solution_link!=""){
+                      sol_list+=col+'<a href="'+sl[l].solution_link+'" target="_blank">Ссылка</a>'+end_div;
+                    }
+                    else{
+                      sol_list+=col+'-'+end_div;
+                    }
+                    sol_list+=col+parceTime(sl[l]["created"])+end_div;
+                    sol_list+=end_div;
+                  }
+                  sol_list+=end_div;
+              }
+              $("#team-solutions-"+teams[j].id+"_"+checkp[i].id).html(sol_list);
+              
+              //обновляем счет, статус и кнопку 
+              let score=$("#score-"+teams[j].id+"_"+checkp[i].id);
+              let is_came=$("#is-came-"+teams[j].id+"_"+checkp[i].id);
+              let btn=$("#btn-is-came-"+teams[j].id+"_"+checkp[i].id);
+              let chk=checked.find(index=>index.team==teams[j].id && index.checkpoint==checkp[i].id);//в checked смотрим проходила ли данная команда данный чекпоинт и записывем результат в chk
+              if(chk!=undefined && chk.checkpoint==checkp[i].id){//если проходила то выводим счет и прочую инфу за чекпоинт 
+                if(chk.score!=null){
+                  score.text('счет:'+chk.score);
+                }
+                else{
+                  score.text('-');
+                }
+                if(chk.is_came==true){
+                  is_came.text("Пришла");
+                  btn.removeClass("btn-success");
+                  btn.addClass("btn-danger");
+                  btn.text("Команда не пришла");
+                }
+                else if(chk.is_came==false && chk.is_came!=undefined){
+                  is_came.text("Не пришла");
+                  btn.removeClass("btn-danger");  
+                  btn.addClass("btn-success");
+                  btn.text("Команда пришла");             
+                }
+                else{
+                  is_came.text("-");
+                  btn.removeClass("btn-danger"); 
+                  btn.addClass("btn-success");
+                  btn.text("Команда пришла");
+                }
+              }
+              else{
+                is_came.text("-");
+                score.text('-');
+                btn.removeClass("btn-danger"); 
+                btn.addClass("btn-success");
+                btn.text("Команда пришла");
+              }
             }
           }
       }
       wait();
       getCheckpoints();
+      setInterval(getCheckpoints, 60000, true);
     </script>
     {%endblock scripts %}
