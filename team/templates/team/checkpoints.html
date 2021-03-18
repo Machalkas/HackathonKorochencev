@@ -64,7 +64,7 @@
         var end_div = '</div>';
         var active_checkpoint=null;
         var x=null;
-        function getCheckpoints() {
+        function getCheckpoints(is_update=false) {
           $.ajax({
             headers: { "X-CSRFToken": token },
             url: '/team/ajax',
@@ -74,10 +74,15 @@
             success: function (data) {
               console.log(data);
               x=data;
+              if(is_update){
+                updateCheckpoints(data);
+              }
+              else{
               displayCheckpoints(data);
+              }
             },
             error: function (data) {
-              console.log(data["error"]);
+              console.log(data.responseJSON.error);
             },
           });
           // setTimeout(getCheckpoints, 6000);
@@ -106,27 +111,28 @@
               t += row;
               t += col;
               t += '<a href="/team/' + teams[j].name + '" target="_blank">' + teams[j].name + '</a>';
+              t+='<br><a class="text-dark collapsed" data-toggle="collapse" href="#team-solutions-'+teams[j].id+'_'+checkp[i].id+'" role="button" aria-expanded="false" aria-controls="team-solutions-'+teams[j].id+'_'+checkp[i].id+'"> Решения</a>'+end_div;
               if(solutions.find(item=>item.team==teams[j].id)==undefined){//проверяем есть ли у команды загруженные решения
-                t+=""+end_div;
+                sol_list+='<div class="container collapse mt-3 mb-3" id="team-solutions-'+teams[j].id+'_'+checkp[i].id+'" style="background: gainsboro;">'+col+"<p>Пусто</p>"+end_div+end_div;
               }
               else{//если есть, то добавляем кнопку "решения" и в sol_list генерируем список решений
-                t+='<a class="text-dark collapsed" data-toggle="collapse" href="#team-solutions-'+teams[j].id+'_'+checkp[i].id+'" role="button" aria-expanded="false" aria-controls="team-solutions-'+teams[j].id+'_'+checkp[i].id+'"> Решения</a>'+end_div;
                 sol_list+='<div class="container collapse mt-3 mb-3" id="team-solutions-'+teams[j].id+'_'+checkp[i].id+'" style="background: gainsboro;">';
-                  for(l in solutions){
+                  let sl=solutions.filter(item=>item.team==teams[j].id);
+                  for(l in sl){
                     sol_list+=row;
-                    if(solutions[l].solution_file!=""){
-                      sol_list+=col+'<a href="/media/'+solutions[l].solution_file+'" target="_blank">'+solutions[l].solution_file.split("/")[1]+'</a>'+end_div;
+                    if(sl[l].solution_file!=""){
+                      sol_list+=col+'<a href="/media/'+sl[l].solution_file+'" target="_blank">'+sl[l].solution_file.split("/")[1]+'</a>'+end_div;
                     }
                     else{
                       sol_list+=col+'-'+end_div
                     }
-                    if(solutions[l].solution_link!=""){
-                      sol_list+=col+'<a href="'+solutions[l].solution_link+'" target="_blank">Ссылка</a>'+end_div;
+                    if(sl[l].solution_link!=""){
+                      sol_list+=col+'<a href="'+sl[l].solution_link+'" target="_blank">Ссылка</a>'+end_div;
                     }
                     else{
                       sol_list+=col+'-'+end_div;
                     }
-                    sol_list+=col+parceTime(solutions[l]["created"])+end_div;
+                    sol_list+=col+parceTime(sl[l]["created"])+end_div;
                     sol_list+=end_div;
                   }
                   sol_list+=end_div;
@@ -156,7 +162,11 @@
               evaluate_list='';//далее в переменную evaluate_list генерируем формы выставления баллов для команды
               if (isActive(checkp[i])){//но сначала проверим что чекпоинт активен
                 t+=col+'<a class="collapsed btn btn-sm btn-primary" data-toggle="collapse" href="#team-evaluate-'+teams[j].id+'_'+checkp[i].id+'" role="button" aria-expanded="false" aria-controls="team-evaluate-'+teams[j].id+'_'+checkp[i].id+'">Оценить</a>'+end_div;
+                if(checked.find(index=>index.team==teams[j].id && index.checkpoint==checkp[i].id)==undefined || checked.find(index=>index.team==teams[j].id && index.checkpoint==checkp[i].id).is_came==false){//проверяем пришла команда на чекпоинт или нет
                 t+=col+'<a class="btn btn-sm btn-success" onclick="changeIsCame('+teams[j].id+','+checkp[i].id+')" id="btn-is-came'+teams[j].id+'_'+checkp[i].id+'">Команда пришла</a>'+end_div;
+                }else{
+                  t+=col+'<a class="btn btn-sm btn-danger" onclick="changeIsCame('+teams[j].id+','+checkp[i].id+')" id="btn-is-came'+teams[j].id+'_'+checkp[i].id+'">Команда не пришла</a>'+end_div;
+                }
                 evaluate_list+='<div class="container collapse mt-3 mb-3" id="team-evaluate-'+teams[j].id+'_'+checkp[i].id+'" style="background: thistle;"><form method="post" class="form mt-3" id="evaluate-form-'+teams[j].id+'_'+checkp[i].id+'" onchange="checkForm('+teams[j].id+','+checkp[i].id+')">';
                 for(r in rating){
                   evaluate_list+='<label>'+rating[r].name+'</label><input type="number" class="form-control mt-1" style="max-width: 4em;margin-left: auto;margin-right: auto;" name="'+rating[r].id+'_'+teams[j].id+'_'+checkp[i].id+'"><p style="color: dimgray; font-size: small;">max '+rating[r].max+'</p>';
@@ -272,6 +282,17 @@
               console.log(data.responseJSON.error);
             },
           });
+      }
+      function updateCheckpoints(data){
+        checkp = data["checkpoints"];
+        teams = data["teams"];
+        solutions = data["solutions"];
+        checked = data["checked"];
+        rating = data["rating"];
+        for (i in checkp) {
+            for (j in teams) {
+            }
+          }
       }
       wait();
       getCheckpoints();
