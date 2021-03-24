@@ -3,3 +3,6 @@ env
 *.sqlite3
 media
 __pycache__
+company/__pycache__/
+team/__pycache__/
+main/__pycache__/
