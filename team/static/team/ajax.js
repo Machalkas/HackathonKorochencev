@@ -246,15 +246,8 @@ function submitMembers() {
             // alert(data.responseJSON["error"]);
         },
     });
-
 }
 
-function showModal(title, body, footer=btn_its_clear){
-    document.getElementById("modal-title").innerHTML=title;
-    document.getElementById("modal-body").innerHTML=body;
-    document.getElementById("modal-footer").innerHTML=footer;
-    $("#Modal").modal();
-}
 
 var create_team_result_form = document.getElementById("create_team_result_form");
 $("#create_team_submit").click(function () {

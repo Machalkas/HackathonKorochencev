@@ -203,7 +203,7 @@ def manageTeam(request):
             return JsonResponse(status[0],status=status[1])
 
 
-        elif action=="checkpoint-get-teams":
+        elif action=="checkpoint-get-teams":#данные о чекпоинте
             teams=[]
             checked=[]
             solutions=[]
@@ -248,7 +248,7 @@ def manageTeam(request):
                 rating.append(model_to_dict(i))
             return JsonResponse({"teams":teams, "checked":checked, "solutions":solutions, "checkpoints":checkpoints, "rating":rating})
         
-        elif action=="isCame":
+        elif action=="isCame": #изменяем статус команды
             if not request.user.is_specialist:
                 return JsonResponse({"error":"Недостаточно прав для совершения операции"}, status=400)
             try:
@@ -278,7 +278,32 @@ def manageTeam(request):
                 cd.is_came=False
                 cd.save()
                 return JsonResponse({"is_came":False})
-
+            
+        elif action=="checkpoint-send-form": #загружаем баллы команды
+            if not request.user.is_specialist:
+                return JsonResponse({"error":"Недостаточно прав для совершения операции"}, status=400)
+            try:
+                score=float(request.POST.get("score"))
+                t=request.POST.get("team")
+                c=request.POST.get("checkpoint")
+            except:
+                return JsonResponse({"error":"Не верный запрос"}, status=400)
+            try:
+                t=Teams.objects.get(pk=t)
+            except:
+                return JsonResponse({"error":"Команда не найдена"}, status=400)
+            try:
+                c=Checkpoint.objects.get(pk=c)
+            except:
+                return JsonResponse({"error":"Чекпоинт не найден"}, status=400)
+            cd=Checked.objects.filter(checkpoint=c).filter(team=t)
+            if cd.count()==0:
+                cd=Checked.objects.create(checkpoint=c, team=t)
+            else:
+                cd=cd[0]
+            cd.score=score
+            cd.save()
+            return JsonResponse({"score":score})
         else:
             return JsonResponse({"error":"Новозможно обработать запрос "+action},status=400)
     elif request.is_ajax and request.method=='GET':#GET
