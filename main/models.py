@@ -15,7 +15,7 @@ class Settings(models.Model):
         super().save(*args,**kwargs)
 
 class News(models.Model):
-    title=models.CharField(max_length=255, primary_key=True, null=False, blank=False, verbose_name="Заголовок")
+    title=models.CharField(max_length=255, null=False, blank=False, verbose_name="Заголовок")
     text=models.TextField(null=False, blank=False, verbose_name="Текст")
     image=models.ImageField(upload_to="news_image", verbose_name="Изображение")
     created=models.DateTimeField(blank=False, null=False, auto_now_add=True, verbose_name="Создано")

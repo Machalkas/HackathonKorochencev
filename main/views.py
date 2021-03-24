@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from userAuth.models import User
 from team.models import Teams
-from .models import Settings
+from .models import Settings, News
 #from django.http import HttpResponse
 
 
@@ -43,3 +43,7 @@ def manageMain(request):
             except:
                 pass
             return JsonResponse({'start-date':start_date, 'end-date':end_date, 'users-count':users, 'teams-count':teams}, status=200)
+
+def listNews(request):
+    n=News.objects.all()
+    return render(request, "main/news.html", {"news":n})

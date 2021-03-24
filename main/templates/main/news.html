@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head%}<link rel="stylesheet" href="{% static 'css/index.css'%}">
+<link rel="stylesheet" href="{% static 'tasks/card_style.css'%}">{% endblock head %}
+{% block title %}Хакатон{% endblock title %}
+{% block content %}
+{% include "header.html" %}
+    <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
+        <main role="main">
+            {%if news%}
+            <h1 class="cover-heading display-4">Новости</h1>
+                {%for i in news%}
+                <a class="a-card" href="news/{{i.id}}">
+                    <div class="card bg-light mb-4">
+                    <div class="card-header"><h5>{{i.title}}</h5></div>
+                    <div class="card-body">
+                    <p></p>
+                    </div>
+                    <div class="card-footer">
+                        <p>{{i.created}}</p>
+                    </div>
+                    </div>
+                    </a>
+                {%endfor%}
+            {%else%}
+            <h1 class="cover-heading display-4">Пусто</h1>
+            <img src="{%static 'svg/empty.svg'%}" alt="Пусто..." style="width: 60%; margin-top: 3%; margin-bottom: 2%;">
+            <p class="lead">Нет контента для просмотра</p>
+            {%endif%}
+        </main>
+
+    </div>
+    {% endblock content %}
+    {%block scripts%}
+    <!-- <script src="{% static 'js/form_datetime.js' %}"></script> -->
+    <!-- <script src="{% static 'js/number increase.js' %}"></script> -->
+    <!-- <script src="{% static 'main/get_data.js' %}"></script> -->
+    {%endblock%}

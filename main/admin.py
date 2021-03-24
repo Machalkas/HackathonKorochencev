@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Settings, Checkpoint, Rating
+from .models import Settings, Checkpoint, Rating, News
 
 class SettingsAdmin(admin.ModelAdmin):
     model=Settings
@@ -19,4 +19,5 @@ class SettingsAdmin(admin.ModelAdmin):
 admin.site.register(Settings, SettingsAdmin)
 admin.site.register(Checkpoint)
 admin.site.register(Rating)
+admin.site.register(News)
 # Register your models here.

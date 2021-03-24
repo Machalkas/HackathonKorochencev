@@ -3,5 +3,6 @@ from . import views
 
 urlpatterns = [
     path('', views.index, name="index"),
+    path('news', views.listNews, name="index"),
     path('ajax', views.manageMain, name="ajax")
 ]
