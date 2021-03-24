@@ -202,51 +202,6 @@ def manageTeam(request):
                 status[0]["delete-members"]={"ok":""}
             return JsonResponse(status[0],status=status[1])
 
-
-        elif action=="checkpoint-get-teams":#данные о чекпоинте
-            teams=[]
-            checked=[]
-            solutions=[]
-            checkpoints=[]
-            rating=[]
-            if Checkpoint.objects.all().count()==0:
-                return JsonResponse({"error":"Нет чекпоинтов"}, status=400)
-            if request.user.is_superuser or request.user.is_auditor:
-                t=Teams.objects.all().exclude(task=None)
-                for i in t:
-                    # teams.append({"id":t.pk, ""})
-                    teams.append(model_to_dict(i))
-                s=Solution.objects.all()
-                for i in s:
-                    x=model_to_dict(i, exclude=["solution_file",])
-                    x["solution_file"]=i.solution_file.name
-                    x["created"]=i.created
-                    solutions.append(x)
-                c=Checked.objects.all()
-                for i in c:
-                    checked.append(model_to_dict(i))
-            elif request.user.is_specialist:
-                try:
-                    ts=Task.objects.filter(company=CompanyRepresentatives.objects.get(user_id=request.user))
-                    for i in ts:
-                        t=Teams.objects.filter(task=i).exclude(task=None)
-                        for j in t:
-                            teams.append(model_to_dict(j))
-                            s=Solution.objects.filter(team=j)
-                            for l in s:
-                                x=model_to_dict(l, exclude=["solution_file",])
-                                x["solution_file"]=l.solution_file.name
-                                solutions.append(x)
-                            c=Checked.objects.filter(team=t)
-                            for l in c:
-                                checked.append(model_to_dict(l))
-                except:
-                    return JsonResponse({"error":"Вы не публиковали задания"+action},status=400)
-            for i in Checkpoint.objects.all():
-                checkpoints.append(model_to_dict(i))
-            for i in Rating.objects.all():
-                rating.append(model_to_dict(i))
-            return JsonResponse({"teams":teams, "checked":checked, "solutions":solutions, "checkpoints":checkpoints, "rating":rating})
         
         elif action=="isCame": #изменяем статус команды
             if not request.user.is_specialist:
@@ -302,12 +257,16 @@ def manageTeam(request):
             else:
                 cd=cd[0]
             cd.score=score
+            cd.is_came=True
             cd.save()
             return JsonResponse({"score":score})
         else:
             return JsonResponse({"error":"Новозможно обработать запрос "+action},status=400)
+
+
     elif request.is_ajax and request.method=='GET':#GET
-        if request.GET.get('action')=='request':
+        action=request.GET.get('action')
+        if action=='request':
             team=request.GET.get('team')
             team=Teams.objects.get(pk=team)
             members=User.objects.filter(team=team)
@@ -327,7 +286,7 @@ def manageTeam(request):
             except:
                 pass
             return JsonResponse({'score':score,'members':m})
-        elif request.GET.get('action')=="get-teams":
+        elif action=="get-teams":
             teams=[]
             t=Teams.objects.all()#.order_by("-score")
             for i in t:
@@ -340,9 +299,54 @@ def manageTeam(request):
                     pass
                 teams.append({"pk":i.pk, "name":i.name, "score":score})
             # teams=sorted(teams, key=lambda team:team["score"], reverse=True)
-            return JsonResponse({'teams':teams}) 
+            return JsonResponse({'teams':teams})
+        elif action=="checkpoint-get-teams":#данные о чекпоинте
+            teams=[]
+            checked=[]
+            solutions=[]
+            checkpoints=[]
+            rating=[]
+            if Checkpoint.objects.all().count()==0:
+                return JsonResponse({"error":"Нет чекпоинтов"}, status=400)
+            if request.user.is_superuser or request.user.is_auditor:
+                t=Teams.objects.all().exclude(task=None)
+                for i in t:
+                    # teams.append({"id":t.pk, ""})
+                    teams.append(model_to_dict(i))
+                s=Solution.objects.all()
+                for i in s:
+                    x=model_to_dict(i, exclude=["solution_file",])
+                    x["solution_file"]=i.solution_file.name
+                    x["created"]=i.created
+                    solutions.append(x)
+                c=Checked.objects.all()
+                for i in c:
+                    checked.append(model_to_dict(i))
+            elif request.user.is_specialist:
+                try:
+                    ts=Task.objects.filter(company=CompanyRepresentatives.objects.get(user_id=request.user))
+                    for i in ts:
+                        t=Teams.objects.filter(task=i).exclude(task=None)
+                        for j in t:
+                            teams.append(model_to_dict(j))
+                            s=Solution.objects.filter(team=j)
+                            for l in s:
+                                x=model_to_dict(l, exclude=["solution_file",])
+                                x["solution_file"]=l.solution_file.name
+                                solutions.append(x)
+                            c=Checked.objects.filter(team=t)
+                            for l in c:
+                                checked.append(model_to_dict(l))
+                except:
+                    return JsonResponse({"error":"Вы не публиковали задания"+action},status=400)
+            for i in Checkpoint.objects.all():
+                checkpoints.append(model_to_dict(i))
+            for i in Rating.objects.all():
+                rating.append(model_to_dict(i))
+            return JsonResponse({"teams":teams, "checked":checked, "solutions":solutions, "checkpoints":checkpoints, "rating":rating})
         else:
             return JsonResponse({"error":""},status=400)
+
     return HttpResponse(request, 'only for AJAX')
 
 def checkPermissions(request):

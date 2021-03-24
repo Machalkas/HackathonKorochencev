@@ -69,9 +69,9 @@
         var x=null;
         function getCheckpoints(is_update=false) {
           $.ajax({
-            headers: { "X-CSRFToken": token },
+            // headers: {"X-CSRFToken": getCookie("csrftoken")},
             url: '/team/ajax',
-            method: 'post',
+            method: 'get',
             dataType: 'json',
             data: { "action": "checkpoint-get-teams" },
             success: function (data) {
@@ -175,7 +175,7 @@
                   evaluate_list+='<label>'+rating[r].name+'</label><input type="number" class="form-control mt-1" style="max-width: 4em;margin-left: auto;margin-right: auto;" name="'+rating[r].id+'_'+teams[j].id+'_'+checkp[i].id+'"><p style="color: dimgray; font-size: small;">max '+rating[r].max+'</p>';
                 }
                 evaluate_list+='<p style="font-size:1.5em; color:red;">Итого</p><p style="font-size:1.8em; color:red;" id="total'+teams[j].id+'_'+checkp[i].id+'">0</p><div class="info" onclick="getInfo()">?</div>';
-                evaluate_list+='<input type="button" value="Сохранить" class="btn btn-primary btn-blue mt-3 mb-3" required onclick="submitForm('+teams[j].id+','+checkp[i].id+')"></form>'+end_div;
+                evaluate_list+='<input type="button" value="Сохранить" class="btn btn-primary btn-blue mt-3 mb-3" required onclick="submitForm('+j+','+i+')"></form>'+end_div;
               }
               else{
                 t+=col+end_div;
@@ -239,11 +239,13 @@
         return count;
       }
       function submitForm(t,c){
-        let count=checkForm(t,c);
+        let count=checkForm(teams[t].id,checkp[c].id);
+        console.log(teams[t].name);
+        console.log(checkp[c].title);
         showModal("Загрузка решения","Вы уверены, что хотите отправить "+count+" баллов команде "+teams[t].name+" за чекпоинт "+checkp[c].title+"?", '<button type="button" class="btn btn-secondary btn-green header-join" data-dismiss="modal" id="modal-cancel" onclick="sendForm('+t+','+c+')">Подтвердить</button><button type="button" class="btn btn-primary btn-red header-logout"  data-dismiss="modal" id="modal-submit" onclick="">Отмена</button>');
       }
       function sendForm(t,c){
-        let send={"action":"checkpoint-send-form", "team":t, "checkpoint":c, "score":checkForm(t,c)};
+        let send={"action":"checkpoint-send-form", "team":teams[t].id, "checkpoint":checkp[c].id, "score":checkForm(teams[t].id,checkp[c].id)};
         $.ajax({
             headers: {"X-CSRFToken": getCookie("csrftoken")},
             url: '/team/ajax',
@@ -281,7 +283,7 @@
         btn.toggleClass("btn-warning");
         btn.text("Загрузка");
         $.ajax({
-            headers: { "X-CSRFToken": token },
+            headers: {"X-CSRFToken": getCookie("csrftoken")},
             url: '/team/ajax',
             method: 'post',
             dataType: 'json',
