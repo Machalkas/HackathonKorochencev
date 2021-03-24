@@ -279,11 +279,12 @@ def manageTeam(request):
                 if leader.user_id_id==i.pk:
                     is_lider=True
                 m.append({'id':i.pk,'first_name':i.first_name, 'last_name':i.last_name, 'email':i.email, 'specialization':i.specialization, 'is_lider':is_lider})
-            s=Solution.objects.filter(team=team)
+            s=Checked.objects.filter(team=team)
             score=0
             try:
                 for i in s:
-                    score+=i.score
+                    if i.score!=None:
+                        score+=i.score
             except:
                 pass
             return JsonResponse({'score':score,'members':m})
@@ -291,11 +292,12 @@ def manageTeam(request):
             teams=[]
             t=Teams.objects.all()#.order_by("-score")
             for i in t:
-                s=Solution.objects.filter(team=i)
+                c=Checked.objects.filter(team=i)
                 score=0
                 try:
-                    for j in s:
-                        score+=j.score
+                    for j in c:
+                        if j.score!=None:
+                            score+=j.score
                 except:
                     pass
                 teams.append({"pk":i.pk, "name":i.name, "score":score})
