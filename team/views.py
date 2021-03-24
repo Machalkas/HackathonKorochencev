@@ -109,6 +109,7 @@ def checkPoints(request):
         return render(request, "team/checkpoints.html", {"checkpoints":Checkpoint.objects.all()})
 
 def manageTeam(request):
+    # return JsonResponse({"error":"Пишев нахуй"}, status=400)
     if request.is_ajax and request.method == "POST":
         action=request.POST.get('action')
         # print(checkPermissions(request))

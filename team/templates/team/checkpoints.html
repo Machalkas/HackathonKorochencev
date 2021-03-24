@@ -54,6 +54,7 @@
     {%block scripts %}
     <script src="{% static 'js/Modal.js' %}"></script>
     <script src="{% static 'js/cookie.js' %}"></script>
+    <script src="{% static 'js/notification.js' %}"></script>
     <script>
         let checkp;
         let teams;
@@ -75,6 +76,7 @@
             dataType: 'json',
             data: { "action": "checkpoint-get-teams" },
             success: function (data) {
+              // notification("Успешно!");
               console.log(data);
               x=data;
               if(is_update){
@@ -85,6 +87,12 @@
               }
             },
             error: function (data) {
+              if(data.status==0){
+                notification("Ошибка подключения к серверу", "red");
+              }
+              // else{
+              //   notification(data.responseJSON.error, "red");
+              // }
               console.log(data.responseJSON.error);
             },
           });
@@ -253,11 +261,18 @@
             dataType: 'json',
             data: send,
             success: function (data) {
+              notification("Успешно!");
               console.log(data);
               x=data;
               getCheckpoints(true);
             },
             error: function (data) {
+              if(data.status==0){
+                notification("Ошибка подключения к серверу", "red");
+              }
+              else{
+                notification(data.responseJSON.error, "red");
+              }
               console.log(data.responseJSON.error);
             },
           });
@@ -289,6 +304,7 @@
             dataType: 'json',
             data: send,
             success: function (data) {
+              notification("Успешно!");
               console.log(data);
               x=data;
               btn.toggleClass("btn-warning");
@@ -304,6 +320,12 @@
               getCheckpoints(true);
             },
             error: function (data) {
+              if(data.status==0){
+                notification("Ошибка подключения к серверу", "red");
+              }
+              else{
+                notification(data.responseJSON.error, "red");
+              }
               btn.text("Ошибка")
               console.log(data.responseJSON.error);
               getCheckpoints(true);
