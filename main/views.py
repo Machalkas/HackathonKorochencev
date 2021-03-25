@@ -46,4 +46,14 @@ def manageMain(request):
 
 def listNews(request):
     n=News.objects.all()
+    for i in n:
+        if len(i.text)>=100:
+            i.text=i.text[:97]+"..."
     return render(request, "main/news.html", {"news":n})
+
+def viewNews(request, key):
+    try:
+        n=News.objects.get(id=key)
+    except:
+        return render(request, "main/news_view.html", {"news":None})
+    return render(request, "main/news_view.html", {"news":n})

@@ -14,6 +14,7 @@
 {% include "header.html" %}
 <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
   <main role="main" class="inner cover">
+    {% include "back_button.html" %}
     <h1 class="cover-heading display-4" id='name'>{{team_name}}</h1>
     {% if request.user.team.name == team_name %}
     <a style="margin-top: 1em;"
