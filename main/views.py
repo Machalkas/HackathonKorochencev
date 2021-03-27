@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import JsonResponse
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from userAuth.models import User
 from team.models import Teams
 from .models import Settings, News
@@ -21,6 +22,27 @@ def serverError(request):
     # print(exception)
     return render(request, "main/500.html")
 
+def listNews(request):
+    n=News.objects.all()
+    p=Paginator(n, 3)
+    page=request.GET.get("page")
+    try:
+        post=p.page(page)
+    except PageNotAnInteger:
+        post=p.page(1)
+    except EmptyPage:
+        post=p.page(p.num_pages)
+    for i in post:
+        if len(i.text)>=100:
+            i.text=i.text[:97]+"..."
+    return render(request, "main/news.html", {"news":post})
+
+def viewNews(request, key):
+    try:
+        n=News.objects.get(id=key)
+    except:
+        return render(request, "main/news_view.html", {"news":None})
+    return render(request, "main/news_view.html", {"news":n})
 
 def manageMain(request):
     if request.is_ajax and request.method == "GET":
@@ -43,17 +65,3 @@ def manageMain(request):
             except:
                 pass
             return JsonResponse({'start-date':start_date, 'end-date':end_date, 'users-count':users, 'teams-count':teams}, status=200)
-
-def listNews(request):
-    n=News.objects.all()
-    for i in n:
-        if len(i.text)>=100:
-            i.text=i.text[:97]+"..."
-    return render(request, "main/news.html", {"news":n})
-
-def viewNews(request, key):
-    try:
-        n=News.objects.get(id=key)
-    except:
-        return render(request, "main/news_view.html", {"news":None})
-    return render(request, "main/news_view.html", {"news":n})

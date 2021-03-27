@@ -11,7 +11,7 @@
             {%if news%}
             <h1 class="cover-heading display-4">Новости</h1>
                 {%for i in news%}
-                <a class="a-card" href="news/{{i.id}}">
+                <a class="a-card" href="{{i.id}}">
                     <div class="card bg-light mb-4">
                     <div class="card-header"><h5>{{i.title}}</h5></div>
                     <div class="card-body">
