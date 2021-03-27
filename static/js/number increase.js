@@ -16,10 +16,11 @@ function Increase(n,id,change_size=true,real=0){
     else if(Math.abs(n-real)>=100){
         var step=21;
         // console.log(step);
-    }else{
+    }else if(Math.abs(n-real)>=1){
         var step=1;
         // console.log(step);
     }
+    else if(Math.abs(n-real)<1) real=n;
     if (real<n)real+=step;
     else if(real>n)real-=step;
     el=document.getElementById(id);

@@ -24,7 +24,7 @@ def serverError(request):
 
 def listNews(request):
     n=News.objects.all()
-    p=Paginator(n, 3)
+    p=Paginator(n, 10)
     page=request.GET.get("page")
     try:
         post=p.page(page)
@@ -35,7 +35,7 @@ def listNews(request):
     for i in post:
         if len(i.text)>=100:
             i.text=i.text[:97]+"..."
-    return render(request, "main/news.html", {"news":post})
+    return render(request, "main/news.html", {"news":post,"max_pages":p.num_pages})
 
 def viewNews(request, key):
     try:

@@ -26,7 +26,7 @@ SECRET_KEY = 'f!50w668(n)i*q@i_15b(#1z8i+aqpu0mc$c852yt97#$mprc@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1',]
+ALLOWED_HOSTS = ['127.0.0.1','192.168.119.174']
 
 EMAIL_HOST='smtp.mail.ru'
 EMAIL_HOST_USER='raspberry.mail@list.ru'
