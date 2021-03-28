@@ -1,10 +1,9 @@
-let checkp;
-let teams;
-let solutions;
-let checked;
-let rating;
+var checkp;
+var teams;
+var solutions;
+var checked;
+var rating;
 
-var token = '{{csrf_token}}';
 var row = '<div class="row mb-1" style="font-weight: bold;">';
 var col = '<div class="col-sm">'
 var end_div = '</div>';
@@ -353,6 +352,17 @@ for (i in checkp) {
     }
   }
 }
+
+function update(){
+  // console.log(checkp.find(item=>item.id==active_checkpoint));
+  if(checkp!=undefined && isActive(checkp.find(item=>item.id==active_checkpoint))==false){
+    window.location.reload();
+  }
+  console.log("not now");
+}
+
 wait();
 getCheckpoints();
 setInterval(getCheckpoints, 60000, true);
+update();
+setInterval(update, 1000);
