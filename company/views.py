@@ -30,7 +30,7 @@ def viewCompany(request, key=None):
     else:
         try:
             company=Company.objects.get(pk=key)
-            representatives_id=CompanyRepresentatives.objects.filter(company_id_id=company.pk)
+            representatives_id=CompanyRepresentatives.objects.filter(company_id=company.pk)
             representatives=[]
             for i in representatives_id:
                 representatives.append(User.objects.get(pk=i.user_id_id))
