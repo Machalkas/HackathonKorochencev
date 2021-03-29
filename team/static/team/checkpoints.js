@@ -215,6 +215,7 @@ $.ajax({
         notification(data.responseJSON.error, "red");
       }
       console.log(data.responseJSON.error);
+      getCheckpoints(true);
     },
   });
 }

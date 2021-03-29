@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse, JsonResponse
 from django.core import serializers
 from django.forms.models import model_to_dict
+from django.utils import timezone
 
 from .models import Teams, TeamsLeaders, Checked
 from .forms import CreateTeamForm
@@ -221,6 +222,9 @@ def manageTeam(request):
                 c=Checkpoint.objects.get(pk=c)
             except:
                 return JsonResponse({"error":"Чекпоинт не найден"}, status=400)
+            now = timezone.now()
+            if now<c.start_date or now>c.end_date:
+                return JsonResponse({"error":"Чекпоинт завершен"}, status=400)
             cd=Checked.objects.filter(checkpoint=c).filter(team=t)
             if cd.count()==0:
                 cd=Checked.objects.create(checkpoint=c, team=t)
@@ -252,6 +256,9 @@ def manageTeam(request):
                 c=Checkpoint.objects.get(pk=c)
             except:
                 return JsonResponse({"error":"Чекпоинт не найден"}, status=400)
+            now = timezone.now()
+            if now<c.start_date or now>c.end_date:
+                return JsonResponse({"error":"Чекпоинт завершен"}, status=400)
             cd=Checked.objects.filter(checkpoint=c).filter(team=t)
             if cd.count()==0:
                 cd=Checked.objects.create(checkpoint=c, team=t)
