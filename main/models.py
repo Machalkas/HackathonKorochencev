@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.exceptions import ValidationError
 
 class Settings(models.Model):
     start_date=models.DateTimeField(blank=True, null=True, verbose_name="Дата начала")
@@ -41,6 +42,19 @@ class Checkpoint(models.Model):
     end_date=models.DateTimeField(null=False, blank=False, unique=True, verbose_name="Дата окончания")
     def __str__(self):
         return self.title
+    def clean(self):
+        s=Settings.objects.all()
+        c=Checkpoint.objects.all()
+        if self.start_date>=self.end_date:
+            raise ValidationError("Дата начала должна быть меньше даты конца")
+        if len(s)>0 and (self.start_date<s[0].start_date or self.start_date>s[0].end_date or self.end_date<s[0].start_date or self.end_date>s[0].end_date):
+            raise ValidationError("Даты начала и конца должны находится в промежутке между "+ str(s[0].start_date)+" и "+str(s[0].end_date))
+        for i in c:
+            if(self.id!=i.id):
+                if (self.start_date<=i.end_date and self.start_date>=i.start_date) or (self.end_date<=i.end_date and self.end_date>=i.start_date):
+                    raise ValidationError("Введенные даты пересикаются с чекпоинтом "+i.title)
+                if (self.start_date>i.start_date and self.end_date<i.end_date) or (self.start_date<i.start_date and self.end_date>i.end_date):
+                    raise ValidationError("Включает или включен в чекпоинт "+i.title)
     class Meta:
         verbose_name = 'Чекпоинт'
         verbose_name_plural = 'Чекпоинты'

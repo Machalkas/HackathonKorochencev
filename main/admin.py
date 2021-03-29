@@ -15,9 +15,13 @@ class SettingsAdmin(admin.ModelAdmin):
         ),
     )
 
+class CheckpointAdmin(admin.ModelAdmin):
+    model=Checkpoint
+    list_display=('title', 'start_date','end_date')
+    # list_filter=('score',)
 
 admin.site.register(Settings, SettingsAdmin)
-admin.site.register(Checkpoint)
+admin.site.register(Checkpoint, CheckpointAdmin)
 admin.site.register(Rating)
 admin.site.register(News)
 # Register your models here.
