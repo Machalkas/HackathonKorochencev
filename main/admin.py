@@ -20,8 +20,13 @@ class CheckpointAdmin(admin.ModelAdmin):
     list_display=('title', 'start_date','end_date')
     # list_filter=('score',)
 
+class NewsAdmin(admin.ModelAdmin):
+    model=News
+    list_display=('title', 'created')
+    # list_filter=('score',)
+
 admin.site.register(Settings, SettingsAdmin)
 admin.site.register(Checkpoint, CheckpointAdmin)
 admin.site.register(Rating)
-admin.site.register(News)
+admin.site.register(News, NewsAdmin)
 # Register your models here.
