@@ -19,14 +19,15 @@ def viewCompanies(request):
 def viewCompany(request, key=None):
     if key==None:
         try:
-            company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.pk).company_id_id
+            company_id=CompanyRepresentatives.objects.get(user_id_id=request.user.pk).company_id
+            # company_id=company_id.company_id
             company=Company.objects.get(pk=company_id)
-            representatives_id=CompanyRepresentatives.objects.filter(company_id_id=company_id)
+            representatives_id=CompanyRepresentatives.objects.filter(company_id=company_id)
             representatives=[]
             for i in representatives_id:
                 representatives.append(User.objects.get(pk=i.user_id_id))
-        except:
-            return render(request, "company_not_exist.html")
+        except ZeroDivisionError:
+            return render(request, "company/company_not_exist.html")
     else:
         try:
             company=Company.objects.get(pk=key)
@@ -51,7 +52,7 @@ def createCompany(request):
             if form.is_valid():
                 user=User.objects.get(pk=request.user.pk)
                 company=form.save()
-                cr=CompanyRepresentatives(user_id=user, company_id=company)
+                cr=CompanyRepresentatives(user_id=user, company_id=company.pk)
                 cr.save()
                 company.save()
                 return redirect("/company/view")

@@ -9,11 +9,11 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = User
-    list_display = ('email', 'first_name', 'last_name','team','is_specialist','is_superuser')
-    list_filter = ('specialization','team','is_specialist')
+    list_display = ('email', 'first_name', 'last_name','team','is_specialist','is_superuser', 'is_auditor')
+    list_filter = ('specialization','team','is_specialist', 'is_auditor')
     fieldsets = (
         (None, {'fields': ('email', 'password',('first_name', 'last_name'), 'specialization','team')}),
-        ('Разрешения', {'fields': ('is_specialist','is_staff', 'is_active')}),
+        ('Разрешения', {'fields': ('is_specialist','is_auditor','is_staff','is_active')}),
     )
     add_fieldsets = (
         (None, {

@@ -26,7 +26,7 @@ class User(AbstractUser):
     email = models.EmailField('Email', unique=True)
     team=models.ForeignKey(Teams, models.SET_NULL, null=True, blank=True, verbose_name="Команда")
     is_specialist=models.BooleanField(default=False, verbose_name="Специалист")
-    is_auditor=models.BooleanField(default=False, verbose_name="Ревизорро")
+    is_auditor=models.BooleanField(default=False, verbose_name="Аудитор")
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']

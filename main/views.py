@@ -13,7 +13,12 @@ def index(request):
     #     if user.is_specialist:
     #         return redirect("company")
     #     return redirect("/team")
-    return render(request, "main/index.html")
+    n=News.objects.all()
+    if len(n)==0:
+        n=None
+    else:
+        n=n[len(n)-1]
+    return render(request, "main/index.html",{"news":n})
     
 def notFound(request, exception):
     # print(exception)
@@ -23,7 +28,7 @@ def serverError(request):
     return render(request, "main/500.html")
 
 def listNews(request):
-    n=News.objects.all()
+    n=News.objects.all().order_by("-created")
     p=Paginator(n, 10)
     page=request.GET.get("page")
     try:
@@ -57,7 +62,7 @@ def manageMain(request):
             except:
                 pass
             try:
-                users=User.objects.filter(is_specialist=False).filter(is_superuser=False).count()
+                users=User.objects.filter(is_specialist=False).filter(is_superuser=False).filter(is_auditor=False).count()
             except:
                 pass
             try:

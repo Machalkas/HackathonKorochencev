@@ -373,6 +373,6 @@ function update() {
 
 wait();
 getCheckpoints();
-setInterval(getCheckpoints, 6000, true);
+setInterval(getCheckpoints, 60000, true);
 // update();
 // setInterval(update, 1000);

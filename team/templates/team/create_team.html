@@ -6,6 +6,7 @@
 {% endblock head %}
 {% block title %}Хакатон | Создание команды{% endblock title %}
 {% block content %}
+{% include "empty_header.html" %}
 <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
 <form method="post" class="form mt-5" id="create_team_form">
   {% csrf_token %}

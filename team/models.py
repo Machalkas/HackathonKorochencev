@@ -32,5 +32,5 @@ class Checked(models.Model):
         return self.checkpoint.title
     class Meta:
         unique_together = (('checkpoint_id', 'team_id'),)
-        verbose_name = 'Чекпоинт'
-        verbose_name_plural = 'Чекпоинты'
+        verbose_name = 'Результат чекпоинта'
+        verbose_name_plural = 'Результаты чекпоинтов'

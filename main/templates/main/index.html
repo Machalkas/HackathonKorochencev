@@ -30,6 +30,27 @@
                 <h1 class="cover-heading display-4 mb-1">Зарегистрировано команд</h1>
                 <p class="lead big-number" id="teams">0</p>
             </div>
+
+            {%if news%}
+            <h3 class="display-4 mb-3">Новости</h3>
+            <div class="container" style="border-radius: 10px; background-color: beige; padding: 1em;">
+            <h3 class="cover-heading mb-3">{{news.title}}</h3>
+            <div class="container">
+                <a href="/media/{{news.image}}" target="_blank">
+                <img src="/media/{{news.image}}" alt="Тут картинка" style="max-width: 40em; min-width: 25em">
+                </a>
+            </div>
+            <div class="container mt-3">
+                <p>
+                    {{news.text}}
+                </p>
+            </div>
+            <div class="container">
+                <p style="font-style: italic; font-size: small;">{{news.created}}</p>
+            </div>
+            <a href="/news/" class="btn btn-primary">Еще</a>
+        </div>
+            {%endif%}
         </main>
 
     </div>
