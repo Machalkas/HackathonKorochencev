@@ -6,14 +6,22 @@ class Settings(models.Model):
     end_date=models.DateTimeField(blank=True, null=True, verbose_name="Дата окончания")
     max_teams=models.PositiveIntegerField(blank=True, null=True, verbose_name="Максимальное количество команд")
     max_members=models.PositiveIntegerField(blank=True, null=True, verbose_name="Максимальное количество участников в команде")
-    class Meta:
-        verbose_name = 'Параметры'
-        verbose_name_plural = 'Параметры'
     def save(self,*args,**kwargs):
         total_records = Settings.objects.count()
         if total_records >= 1:
             Settings.objects.all().delete()
         super().save(*args,**kwargs)
+    def clean(self):
+        c=Checkpoint.objects.all()
+        for i in c:
+            if i.start_date<self.start_date or i.start_date>self.end_date:
+                raise ValidationError({"start_date":'Чекпоинт "'+i.title+'" не попадает в указанный диапазон дат'})
+            if i.end_date<self.start_date or i.end_date>self.end_date:
+                raise ValidationError({"end_date":'Чекпоинт "'+i.title+'" не попадает в указанный диапазон дат'})
+    class Meta:
+        verbose_name = 'Параметры'
+        verbose_name_plural = 'Параметры'
+
 
 class News(models.Model):
     title=models.CharField(max_length=255, null=False, blank=False, verbose_name="Заголовок")
@@ -52,9 +60,9 @@ class Checkpoint(models.Model):
         for i in c:
             if(self.id!=i.id):
                 if (self.start_date<=i.end_date and self.start_date>=i.start_date) or (self.end_date<=i.end_date and self.end_date>=i.start_date):
-                    raise ValidationError("Введенные даты пересикаются с чекпоинтом "+i.title)
+                    raise ValidationError('Введенные даты пересикаются с чекпоинтом "'+i.title+'"')
                 if (self.start_date>i.start_date and self.end_date<i.end_date) or (self.start_date<i.start_date and self.end_date>i.end_date):
-                    raise ValidationError("Включает или включен в чекпоинт "+i.title)
+                    raise ValidationError('Включает или включен в чекпоинт "'+i.title+'"')
     class Meta:
         verbose_name = 'Чекпоинт'
         verbose_name_plural = 'Чекпоинты'
