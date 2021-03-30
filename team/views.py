@@ -107,7 +107,7 @@ def checkPoints(request):
     if request.user.is_anonymous or(not request.user.is_auditor and not request.user.is_specialist and not request.user.is_superuser):
         return render(request, "pages/access_denied.html")
     else:
-        return render(request, "team/checkpoints.html", {"checkpoints":Checkpoint.objects.all()})
+        return render(request, "team/checkpoints.html", {"checkpoints":Checkpoint.objects.all().order_by("start_date")})
 
 def manageTeam(request):
     # return JsonResponse({"error":"Пишев нахуй"}, status=400)
