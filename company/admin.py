@@ -11,8 +11,8 @@ class CompanyAdmin(admin.ModelAdmin):
 
 class CompanyRepresentativesAdmin(admin.ModelAdmin):
     model=CompanyRepresentatives
-    list_display=('company_id', 'user_id')
-    search_fields=('company_id','user_id')
+    list_display=('company', 'user_id')
+    search_fields=('company','user_id')
 
     
 admin.site.register(Company, CompanyAdmin)

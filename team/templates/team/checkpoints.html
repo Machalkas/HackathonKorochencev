@@ -28,6 +28,7 @@
             {%for i in checkpoints%}
             <div class="mt-5" id="div-checkpoint{{i.pk}}">
                 <a class="text-dark collapsed" data-toggle="collapse" href="#checkpoint{{i.pk}}" role="button" aria-expanded="false" aria-controls="checkpoint{{i.pk}}"><h3 class="dropdown-toggle">{{i.title}}</h3></a>
+                <p><span style="font-weight: bold;">С</span> {{i.start_date}}. <span style="font-weight: bold;">До</span> {{i.end_date}}.</p>
                 <div class="container collapse" id="checkpoint{{i.pk}}">
                 </div>
               </div>

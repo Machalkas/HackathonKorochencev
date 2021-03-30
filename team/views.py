@@ -334,7 +334,7 @@ def manageTeam(request):
                     checked.append(model_to_dict(i))
             elif request.user.is_specialist:
                 try:
-                    ts=Task.objects.filter(company=CompanyRepresentatives.objects.get(user_id=request.user))
+                    ts=Task.objects.filter(company=CompanyRepresentatives.objects.get(user_id=request.user).company)
                     for i in ts:
                         t=Teams.objects.filter(task=i).exclude(task=None)
                         for j in t:
@@ -343,12 +343,14 @@ def manageTeam(request):
                             for l in s:
                                 x=model_to_dict(l, exclude=["solution_file",])
                                 x["solution_file"]=l.solution_file.name
+                                x["created"]=l.created
                                 solutions.append(x)
-                            c=Checked.objects.filter(team=t)
+                            c=Checked.objects.filter(team=j)
+                            # print(c.count())
                             for l in c:
                                 checked.append(model_to_dict(l))
-                except:
-                    return JsonResponse({"error":"Вы не публиковали задания"+action},status=400)
+                except ZeroDivisionError:
+                    return JsonResponse({"error":"Вы не публиковали задания "+action},status=400)
             for i in Checkpoint.objects.all():
                 checkpoints.append(model_to_dict(i))
             for i in Rating.objects.all():
@@ -368,7 +370,7 @@ def checkPermissions(request):
     if request.POST.get("member")!=None:
         status[1]=int(request.POST.get("member"))==request.user.pk
     status[0]=request.user.pk==leader.user_id_id
-    print(status)
+    # print(status)
     return status
 
 def getScore(request):

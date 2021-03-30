@@ -20,7 +20,7 @@
 {% include "header.html" %}
 <div class="base-container d-flex w-100 h-100 p-3 mx-auto flex-column">
     <h1 class="cover-heading mb-3 display-4" id='teams'>Команды</h1>
-    {%if not request.user.is_specialist and not request.user.is_superuser and request.user.team == None%}
+    {%if not request.user.is_specialist and not request.user.is_superuser and not request.user.is_auditor and request.user.team == None%}
     <div class="container create-tack-div mb-5" id="create-tack-div">
         <button id="btn-close" type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>

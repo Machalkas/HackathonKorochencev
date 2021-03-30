@@ -44,7 +44,7 @@ def createCompany(request):
     if request.user.is_specialist:
         try:
             cr=CompanyRepresentatives.objects.get(user_id=request.user.pk).company_id
-            return redirect("/company/"+str(Company.objects.get(pk=cr).pk))
+            return redirect("/company/view/"+str(Company.objects.get(pk=cr).pk))
         except:
             pass
         if request.method=="POST":

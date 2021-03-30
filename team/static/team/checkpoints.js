@@ -35,6 +35,7 @@ function getCheckpoints(is_update = false) {
       // else{
       //   notification(data.responseJSON.error, "red");
       // }
+      notification(data.responseJSON.error, "red");
       console.log(data.responseJSON.error);
     },
   });

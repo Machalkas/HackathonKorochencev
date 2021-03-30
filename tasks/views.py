@@ -189,7 +189,7 @@ def manageTasks(request):
             for i in t:
                 teams=Teams.objects.filter(task=i.pk).count()
                 selected=False
-                if request.user.team.task==i:
+                if request.user.team!=None and request.user.team.task==i:
                     selected=True
                 tasks.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'company':i.company.name, "teams":teams, "selected":selected})
             return JsonResponse({"tasks":tasks})
