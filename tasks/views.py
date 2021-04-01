@@ -100,7 +100,7 @@ def viewTask(request, task_pk):
         #         return render(request, "tasks/view_task.html",{'title':'Ошибка', 'task':'Загружать решения может только лидер команды'})
         if form.is_valid():
             task=Task.objects.get(pk=task_pk)
-            if task==request.user.team.task:
+            if not request.user.is_anonymous and task==request.user.team.task:
                 solution=form.save()
                 solution.team=request.user.team
                 solution.task=request.user.team.task
@@ -123,7 +123,10 @@ def viewTask(request, task_pk):
             return render(request, "tasks/view_task.html",{'title':'Ошибка', 'task':'Задание не найдено'})
         else:
             form=SolutionForm()#initial={"team":request.user.team, "task":task}
-            solution=Solution.objects.filter(team=request.user.team).order_by("-created")
+            try:
+                solution=Solution.objects.filter(team=request.user.team).order_by("-created")
+            except:
+                solution=None
             return render(request, "tasks/view_task.html",{'form':form, 'pk':task.pk, 'title':task.title, 'task':task.task, 'file':task.task_file, 'company':task.company, 'is_leader':is_leader, 'solutions':solution})
 
 @login_required(login_url='/auth')
@@ -187,9 +190,9 @@ def manageTasks(request):
             t=Task.objects.all()
             tasks=[]
             for i in t:
-                teams=Teams.objects.filter(task=i.pk).count()
                 selected=False
-                if request.user.team!=None and request.user.team.task==i:
+                teams=Teams.objects.filter(task=i.pk).count()
+                if not request.user.is_anonymous and request.user.team!=None and request.user.team.task==i:
                     selected=True
                 tasks.append({'pk':i.pk, 'title':i.title, 'task':i.task, 'company':i.company.name, "teams":teams, "selected":selected})
             return JsonResponse({"tasks":tasks})
