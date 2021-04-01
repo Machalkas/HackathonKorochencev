@@ -284,6 +284,17 @@ function updateCheckpoints(data) {
   solutions = data["solutions"];
   checked = data["checked"];
   rating = data["rating"];
+    solutions.sort(function (a, b) {//Сортируем список решений по дате(сначала новые)
+    a = new Date(a.created)
+    b = new Date(b.created)
+    if ((a - b) > 0) {
+      return -1
+    }
+    if ((a - b) < 0) {
+      return 1
+    }
+    return 0
+  });
   sol_list = "";
   for (i in checkp) {
     for (j in teams) {
