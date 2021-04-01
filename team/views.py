@@ -52,7 +52,7 @@ def isFullOfMembers(team_url):
 def viewTeams(request):
     return render(request, "team/view_teams.html")
 
-@login_required(login_url='/auth')
+# @login_required(login_url='/auth')
 def viewTeam(request, key=None):
     if key!=None:
         try:
