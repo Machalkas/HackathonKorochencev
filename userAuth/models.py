@@ -27,6 +27,7 @@ class User(AbstractUser):
     team=models.ForeignKey(Teams, models.SET_NULL, null=True, blank=True, verbose_name="Команда")
     is_specialist=models.BooleanField(default=False, verbose_name="Специалист")
     is_auditor=models.BooleanField(default=False, verbose_name="Аудитор")
+    reset_token=models.CharField(max_length=250, blank=True, null=False, default="", verbose_name="Токен для смена пароля")
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['first_name', 'last_name']
