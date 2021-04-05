@@ -9,4 +9,6 @@ urlpatterns = [
     path('profile', views.profile, name="profile"),
     path('profile/<key>', views.profile, name="profile_key"),
     path('ajax', views.ajax),
+    path('resetpass', views.resetPassPage),
+    path('resetpass/<token>', views.setNewPass, name="set_new_pass"),
 ]

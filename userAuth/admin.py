@@ -9,7 +9,7 @@ class CustomUserAdmin(UserAdmin):
     add_form = CustomUserCreationForm
     form = CustomUserChangeForm
     model = User
-    readonly_fields=("reset_token",)
+    # readonly_fields=("reset_token",)
     list_display = ('email', 'first_name', 'last_name','team','is_specialist','is_superuser', 'is_auditor')
     list_filter = ('specialization','team','is_specialist', 'is_auditor')
     fieldsets = (
