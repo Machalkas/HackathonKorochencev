@@ -76,8 +76,10 @@ def profile(request, key=None):
             user=request.user
     return render(request, "userAuth/profile.html", {"user":user})
 
-def resetPassPage(request):
-    return render(request, "userAuth/reset_password_email.html")
+def resetPassPage(request, token=None):
+    if token==None:
+        return render(request, "userAuth/reset_password_email.html")
+    return render(request, "userAuth/set_new_pass.html")
 
 def ajax(request):
     if request.is_ajax and request.method=="POST":
@@ -132,8 +134,16 @@ def ajax(request):
             except:
                 return JsonResponse({"error":"Не удается отправить email"}, status=501)
             return JsonResponse({"ok":""})
+        elif action=="set-new-password":
+            try:
+                u=User.objects.get(reset_token=request.POST.get("token"))
+            except:
+                return JsonResponse({"error":"Не верный токен"}, status=404)
+            if not u.check_password(request.POST.get("password")):
+                u.set_password(request.POST.get("password"))
+                u.reset_token=""
+                u.save()
+                return JsonResponse({"ok":""})
+            return JsonResponse({"error":"Пароль не валиден"}, status=400)
     else:
         return HttpResponse("Уйди, разбойник")
-
-def setNewPass(request, token):
-    return HttpResponse(token)
