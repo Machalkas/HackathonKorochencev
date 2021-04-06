@@ -24,7 +24,6 @@ def notFound(request, exception):
     # print(exception)
     return render(request, "main/404.html")
 def serverError(request):
-    # print(exception)
     return render(request, "main/500.html")
 
 def listNews(request):
