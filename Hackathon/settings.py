@@ -24,18 +24,22 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'f!50w668(n)i*q@i_15b(#1z8i+aqpu0mc$c852yt97#$mprc@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['127.0.0.1','192.168.119.174']
 
 EMAIL_HOST='smtp.mail.ru'
 EMAIL_HOST_USER='raspberry.mail@list.ru'
+SERVER_EMAIL='raspberry.mail@list.ru'
 DEFAULT_FROM_EMAIL='raspberry.mail@list.ru'
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
 EMAIL_HOST_PASSWORD = 'Raspberri_pass'
 EMAIL_PORT = 465
 EMAIL_USE_TLS = True
 
+ADMINS = [
+        ('Александр', 'al1999dk@gmail.com'),
+]
 # Application definition
 
 INSTALLED_APPS = [

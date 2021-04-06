@@ -1,9 +1,9 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, authenticate, logout
 from .forms import SignUpForm, LoginForm
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, Http404
 from .models import User
-from django.core.mail import send_mail, EmailMultiAlternatives
+from django.core.mail import EmailMultiAlternatives
 from django.urls import reverse
 from team.urlGenerator import generate
 
@@ -77,8 +77,13 @@ def profile(request, key=None):
     return render(request, "userAuth/profile.html", {"user":user})
 
 def resetPassPage(request, token=None):
+    raise ZeroDivisionError
     if token==None:
         return render(request, "userAuth/reset_password_email.html")
+    try:
+        User.objects.get(reset_token=token)
+    except:
+        raise Http404()
     return render(request, "userAuth/set_new_pass.html")
 
 def ajax(request):
