@@ -77,7 +77,6 @@ def profile(request, key=None):
     return render(request, "userAuth/profile.html", {"user":user})
 
 def resetPassPage(request, token=None):
-    raise ZeroDivisionError
     if token==None:
         return render(request, "userAuth/reset_password_email.html")
     try:
