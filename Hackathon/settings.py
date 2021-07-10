@@ -33,7 +33,7 @@ EMAIL_HOST_USER='raspberry.mail@list.ru'
 SERVER_EMAIL='raspberry.mail@list.ru'
 DEFAULT_FROM_EMAIL='raspberry.mail@list.ru'
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
-EMAIL_HOST_PASSWORD = 'Raspberri_pass'
+EMAIL_HOST_PASSWORD = 'test_email_address'
 EMAIL_PORT = 465
 EMAIL_USE_TLS = True
 
